@@ -21,7 +21,7 @@
 # Spécifications
 - Moteurs avec encodeur
 - Châssis en aluminium
-- Capteur ultrasonic
+- Capteur ultrasonique
 - Capteur de lignes
 - Expansible
 - Carte-mère compatible avec le Arduino Mega
@@ -41,4 +41,4 @@
 ---
 
 # Références
-- [Programming mBot Ranger in Arduino](https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino){:target="_blank"}
+- <a href="https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino" target="_blank">Programming mBot Ranger in Arduino</a>
