@@ -1,6 +1,5 @@
-# Robot Ranger <!-- not in toc -->
+# Robot Ranger <!-- omit in toc -->
 
-- [Robot Ranger](#robot-ranger)
 - [Plan de leçon](#plan-de-leçon)
 - [mBot Ranger de MakeBlock](#mbot-ranger-de-makeblock)
 - [Spécifications](#spécifications)
