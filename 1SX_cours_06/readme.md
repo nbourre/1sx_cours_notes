@@ -1,4 +1,27 @@
-# Robot Ranger
+# Robot Ranger <!-- not in toc -->
+
+- [Robot Ranger](#robot-ranger)
+- [Plan de leçon](#plan-de-leçon)
+- [mBot Ranger de MakeBlock](#mbot-ranger-de-makeblock)
+- [Spécifications](#spécifications)
+- [Le robot](#le-robot)
+  - [- Code d'identification associé à l'étudiant](#--code-didentification-associé-à-létudiant)
+  - [- Compatible avec Lego](#--compatible-avec-lego)
+  - [- Roulette](#--roulette)
+  - [- Moteur avec encodeur intégré](#--moteur-avec-encodeur-intégré)
+  - [- Port d'alimentation](#--port-dalimentation)
+- [Pin out](#pin-out)
+  - [Points saillants](#points-saillants)
+  - [- Un module Bluetooth](#--un-module-bluetooth)
+- [Différences avec le Arduino Mega](#différences-avec-le-arduino-mega)
+  - [- La carte-mère est appelé "**Auriga**"](#--la-carte-mère-est-appelé-auriga)
+- [Configuration de l'environnement](#configuration-de-lenvironnement)
+- [Premier test](#premier-test)
+- [Analyse du code testé](#analyse-du-code-testé)
+- [Gyroscope](#gyroscope)
+- [Exercices](#exercices)
+  - [- Affichez dans le moniteur série la puissance de la batterie restante.](#--affichez-dans-le-moniteur-série-la-puissance-de-la-batterie-restante)
+- [Références](#références)
 
 ---
 
@@ -27,8 +50,7 @@
 - Un *buzzer*
 - Expansible
 - Carte-mère compatible avec le Arduino Mega
-- 
-
+-
 ---
 # Le robot
 
