@@ -337,7 +337,10 @@ void loop()
   - Affichez le niveau de son dans le port série
   - L'exemple de base ne fonctionne pas avec l'Auriga, lisez bien la feuille du pinout et parcourez le fichier [`MeAuriga.h`](https://github.com/Makeblock-official/Makeblock-Libraries/blob/master/src/MeAuriga.h). Quel était le problème?
 - Le gyroscope
-  - Affichez les données dans le port série
+  - Affichez dans le moniteur série les données. 
+- Le capteur de puissance
+  - Affichez dans le moniteur série la puissance de la batterie restante.
 ---
 # Références
 - <a href="https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino" target="_blank">Programming mBot Ranger in Arduino</a>
+- https://www.instructables.com/Advanced-Makeblock-Sensors-DIY/
