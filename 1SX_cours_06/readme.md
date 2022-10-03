@@ -54,7 +54,6 @@ document.querySelector("#presentation").onclick = function() {
 - [Analyse du code testé](#analyse-du-code-testé)
 - [Gyroscope](#gyroscope)
 - [Exercices](#exercices)
-  - [- Affichez dans le moniteur série la puissance de la batterie restante.](#--affichez-dans-le-moniteur-série-la-puissance-de-la-batterie-restante)
 - [Références](#références)
 
 ---
@@ -386,7 +385,9 @@ void loop()
   delay(10);
 }
 ```
+
 ---
+
 # Exercices
 À l'aide des exemples, testez les composants suivants:
 - Le capteur de son
@@ -396,7 +397,10 @@ void loop()
   - Affichez dans le moniteur série les données. 
 - Le capteur de puissance
   - Affichez dans le moniteur série la puissance de la batterie restante.
+
+
 ---
+
 # Références
 - <a href="https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino" target="_blank">Programming mBot Ranger in Arduino</a>
 - https://www.instructables.com/Advanced-Makeblock-Sensors-DIY/
