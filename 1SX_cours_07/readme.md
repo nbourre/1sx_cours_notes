@@ -1,14 +1,21 @@
 # Le déplacement <!-- omit in toc -->
 
-## Plan de leçon
-- Les moteurs du robot
-- Comment fonctionne un moteur
-- 
+## Plan de leçon <!-- omit in toc -->
+- [Les moteurs du robot](#les-moteurs-du-robot)
+- [Comment fonctionne un moteur](#comment-fonctionne-un-moteur)
+  - [Principes de base - magnétisme](#principes-de-base---magnétisme)
+  - [Principes de base - moteur](#principes-de-base---moteur)
+  - [Moteur sur le robot](#moteur-sur-le-robot)
+- [Mises en garde](#mises-en-garde)
+- [Exercices](#exercices)
+- [Références](#références)
+
+
 ---
 
 # Les moteurs du robot
 - Le robot a deux moteurs d'installer.
-- Dans un premier temps, nous allons utiliser mes librairies
+- Dans un premier temps, nous allons utiliser mon code
 - Dans un second temps soit après la relâche, nous utiliserons les librairies officielles.
 
 ---
