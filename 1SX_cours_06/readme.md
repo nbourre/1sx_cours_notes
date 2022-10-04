@@ -4,16 +4,9 @@
 - [mBot Ranger de MakeBlock](#mbot-ranger-de-makeblock)
 - [Spécifications](#spécifications)
 - [Le robot](#le-robot)
-  - [- Code d'identification associé à l'étudiant](#--code-didentification-associé-à-létudiant)
-  - [- Compatible avec Lego](#--compatible-avec-lego)
-  - [- Roulette](#--roulette)
-  - [- Moteur avec encodeur intégré](#--moteur-avec-encodeur-intégré)
-  - [- Port d'alimentation](#--port-dalimentation)
 - [Pin out](#pin-out)
   - [Points saillants](#points-saillants)
-  - [- Un module Bluetooth](#--un-module-bluetooth)
 - [Différences avec le Arduino Mega](#différences-avec-le-arduino-mega)
-  - [- La carte-mère est appelé "**Auriga**"](#--la-carte-mère-est-appelé-auriga)
 - [Configuration de l'environnement](#configuration-de-lenvironnement)
 - [Premier test](#premier-test)
 - [Analyse du code testé](#analyse-du-code-testé)
@@ -48,7 +41,7 @@
 - Un *buzzer*
 - Expansible
 - Carte-mère compatible avec le Arduino Mega
--
+
 ---
 # Le robot
 
@@ -58,36 +51,42 @@
 ---
 ![](../img/PXL_20220926_173207785.jpg)
 - Code d'identification associé à l'étudiant
+  
 ---
 ![](../img/PXL_20220926_173220149.jpg)
 - Anneau de DEL RGB
 - Bouton de mise sous tension
 - Identifiant pour les ports de connexion
-- Compatible avec Lego
+- Compatible avec Lego <!-- omit in toc -->
+
 ---
 ![](../img/PXL_20220926_173230212.jpg)
 - Capteur de lignes
 - Bloc de batterie rechargeable
-- Roulette
+- Roulette <!-- omit in toc -->
+
 ---
 ![](../img/PXL_20220926_173238651.jpg)
 - Moteur avec encodeur intégré
+
 ---
 ![](../img/PXL_20220926_173254078.jpg)
 - Bouton de mise sous tensio
 - Bouton de remise à zéro
 - Port USB type B
 - Port d'alimentation
+
 ---
 # Pin out
 ![](../img/auriga_pinout.png)
 - Observer les différentes étiquettes, elles font références aux différentes broches du Arduino
 
-## Points saillants
+## Points saillants 
 - Les broches SDA et SDL sont représentées à plusieurs reprises
 - Une anneau de DEL RGB
 - Un MPU-6050
 - Un module Bluetooth
+
 ---
 
 # Différences avec le Arduino Mega
@@ -95,6 +94,7 @@
   - Voir le Pin out
 - Les ports de connexion sont compatibles avec les connecteurs RJ25
 - La carte-mère est appelé "**Auriga**"  
+
 ---
 
 # Configuration de l'environnement
