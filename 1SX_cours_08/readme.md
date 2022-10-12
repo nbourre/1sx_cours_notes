@@ -6,12 +6,15 @@
 - [La direction de la rotation](#la-direction-de-la-rotation)
 - [L'encodeur en programmation](#lencodeur-en-programmation)
 - [Fonction `attachInterrupt`](#fonction-attachinterrupt)
+  - [Explications de l'exemple](#explications-de-lexemple)
 - [L'encodeur dans le robot](#lencodeur-dans-le-robot)
+  - [Explications de l'exemple](#explications-de-lexemple-1)
+- [Exemple Encodeur PWM](#exemple-encodeur-pwm)
   - [Explications](#explications)
 - [Références](#références)
 
 
---
+---
 
 # Problématique
 
@@ -23,7 +26,7 @@
 - Ma réponse était soit vous devez utiliser du *timing* direct ou encore vous allez voir cela dans un futur cour.
 - Ce cours c'est aujourd'hui!
 
-..
+---
 
 # L'encodeur incrémental
 
@@ -84,7 +87,8 @@
 
 > **Important**
 > 
-> Les fonctions `Serial` qui permettent d'afficher via le port USB utilisent l'interruption. **Ainsi, il est interdit de l'utiliser dans une interruption**.
+> - Les fonctions `Serial` qui permettent d'afficher via le port USB utilisent l'interruption. **Ainsi, il est interdit de l'utiliser dans une interruption**.
+> - On n'appelle pas de `delay` dans une interruption.
 
 ---
 
@@ -92,7 +96,7 @@
 - La fonction `attachInterrupt` permet d'associer une interruption à une broche et à une fonction
 - On utilise cette fonction dans le `setup`.
 - Dans le cadre du robot, la syntaxe est la suivante
-  - `attachInterrupt(encoder.getIntNum(), la_fonction, RISING);`
+  - `attachInterrupt(no_broche, la_fonction, RISING);`
   - Le premier paramètre est le numéro de la broche qui déclenchera l'interruption.
   - Le second est la fonction qui s'exécutera.
   - Le dernier est la partie du signal qui déclenchera l'interruption.
@@ -100,10 +104,11 @@
     - `FALLING` : Front descendant
     - `CHANGE` : Tout changement
 
-
 Exemple :
+
 ```cpp
-void encodeur_1_interruption(void)
+
+void interruption_encodeur_1(void)
 {
   if(digitalRead(Encoder_1.getPortB()) == 0)
   {
@@ -119,17 +124,112 @@ void encodeur_1_interruption(void)
 
 void setup()
 {
-  attachInterrupt(Encoder_1.getIntNum(), encodeur_1_interruption, RISING);
+  attachInterrupt(Encoder_1.getIntNum(), interruption_encodeur_1, RISING);
   //...
 }
 
 ```
 
+## Explications de l'exemple
+- Dans `setup`, on configure l'interruption avec `attachInterrupt`
+- La fonction `interruption_encodeur_1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et ce sur le front montant.
+- Remarquez, il n'y a aucun appel de la fonction dans la boucle principale, l'interruption s'appellera tout seul lorsque la broche aura un signal.
+
 ---
 
 # L'encodeur dans le robot
 
-Nous allons étudier l'exemple `Me_Auriga_encoder_pwm`, mais seulement avec l'encodeur 1. J'ai retiré le code qui concerne le 2e encodeur, mais ce sera le même.
+Nous allons étudier le projet `ranger_encodeur_position` qui est dans le dossier des exemples du cours.
+
+<details>
+  <summary>Afficher le code de l'exemple</summary>
+</details>
+
+```cpp
+
+#include <MeAuriga.h>
+
+unsigned long cT = 0;
+
+unsigned long serialPrevious = 0;
+unsigned long serialDelay = 250;
+
+volatile long position_pulsation = 0;
+
+MeEncoderOnBoard Encoder_1(SLOT1);
+
+void interruption_encodeur_1(void)
+{
+  if(digitalRead(Encoder_1.getPortB()) == 0)
+  {
+    Encoder_1.pulsePosMinus();
+    position_pulsation--;
+  }
+  else
+  {
+    Encoder_1.pulsePosPlus();
+    position_pulsation++;
+  }
+}
+
+void setup()
+{
+  attachInterrupt(Encoder_1.getIntNum(), interruption_encodeur_1, RISING);
+  Serial.begin(115200);
+  
+  // DÉBUT : Ne pas modifier ce code!
+  // Configuration de la fréquence du PWM
+  // Copier-coller ce code si on désire
+  // travailler avec les encodeurs
+  TCCR1A = _BV(WGM10);
+  TCCR1B = _BV(CS11) | _BV(WGM12);
+
+  TCCR2A = _BV(WGM21) | _BV(WGM20);
+  TCCR2B = _BV(CS21);
+  // FIN : Ne pas modifier ce code!
+}
+
+void serialTask() {
+  if (cT - serialPrevious < serialDelay) {
+    return;
+  }
+  
+  serialPrevious = cT;
+  
+  // Afficher la position du "curseur"
+  Serial.print("Position 1:");
+  Serial.print(Encoder_1.getCurPos());
+  Serial.print(",Pulse:");
+  Serial.print(Encoder_1.getPulsePos());
+  Serial.print(",position_pulsation:");
+  Serial.println(position_pulsation);
+}
+
+void loop()
+{
+  cT = millis();
+  
+  Encoder_1.loop();
+  serialTask();
+}
+
+```
+
+![](../img/encoder_arduino_rxtx_mon.gif)
+- Je fais tourner la roue du robot et les valeurs changent.
+
+## Explications de l'exemple
+- Dans `setup`, on configure l'interruption avec `attachInterrupt`
+- La fonction `interruption_encodeur_1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et ce sur le front montant.
+- Remarquez, il n'y a aucun appel de la fonction dans la boucle principale, l'interruption s'appellera tout seul lorsque la broche aura un signal.
+- Certains ont peut-être remarqué que lors de la déclaration de la variable `position_pulsation`, il y a le mot-clé `volatile`.   
+  - Lorsque l'on travaille avec des variables dans une interruption, il est préférable de mettre ce mot-clé devant la déclaration. La raison est qu'au lieu d'aller récupérer la variable dans le registre de stockage, il récupère la variable directement à partir de la RAM. [Source](https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/)
+
+---
+
+# Exemple Encodeur PWM
+
+Étudions l'exemple du fabricant `Me_Auriga_encoder_pwm`, mais seulement avec l'encodeur 1. J'ai retiré le code qui concerne le 2e encodeur, mais ce sera le même.
 - Comme toujours, l'exemple se retrouve dans `Exemples-->MakeBlockDrive-->Me_On_Board_encoder`
 
 <details>
