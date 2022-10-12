@@ -7,6 +7,7 @@
 - [L'encodeur en programmation](#lencodeur-en-programmation)
 - [Fonction `attachInterrupt`](#fonction-attachinterrupt)
 - [L'encodeur dans le robot](#lencodeur-dans-le-robot)
+  - [Explications](#explications)
 - [Références](#références)
 
 
@@ -79,6 +80,7 @@
 - Ainsi, il faut faire des petites opérations lors d'une interruption pour ne pas "embourber" le processeur.
 - On peut obtenir une interruption de plusieurs manières, mais celle qui nous intéresse est l'**interruption externe**.
 - Celle-ci permet d'obtenir une interruption au changement d'état d'une broche. D'où leur utilité pour les encodeurs.
+  - En effet, à chaque fois que l'encodeur enverra un signal, il interrompt le programme principal.
 
 > **Important**
 > 
@@ -105,11 +107,13 @@ void encodeur_1_interruption(void)
 {
   if(digitalRead(Encoder_1.getPortB()) == 0)
   {
+    // On retire 1 du compte
     Encoder_1.pulsePosMinus();
   }
   else
   {
-    Encoder_1.pulsePosPlus();;
+    // On ajoute 1 au compte
+    Encoder_1.pulsePosPlus();
   }
 }
 
@@ -136,6 +140,7 @@ Nous allons étudier l'exemple `Me_Auriga_encoder_pwm`, mais seulement avec l'en
 
 MeEncoderOnBoard Encoder_1(SLOT1);
 
+// fonction d'interruption
 void isr_process_encoder1(void)
 {
   if(digitalRead(Encoder_1.getPortB()) == 0)
@@ -151,6 +156,8 @@ void isr_process_encoder1(void)
 
 void setup()
 {
+  // On attache la fonction d'interruption à la broche de
+  // l'encodeur
   attachInterrupt(Encoder_1.getIntNum(), isr_process_encoder1, RISING);
   Serial.begin(115200);
   
@@ -168,6 +175,8 @@ void setup()
 
 void loop()
 {
+  // On regarde s'il y a de l'information
+  // qui a été envoyé de l'ordinateur
   if(Serial.available())
   {
     char a = Serial.read();
@@ -206,6 +215,12 @@ void loop()
 ```
 </details>
 
+## Explications
+- Dans `setup`, on configure l'interruption avec `attachInterrupt`
+- La fonction `isr_process_encoder1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et ce sur le front montant.
+- Dans `loop` :
+  - On remarque la fonction `setTarPWM`. Cette fonction permet de mettre un objectif `PWM` à atteindre pour l'`Encoder_1`.
+  - On remarque aussi `Encoder_1.loop()`. Il s'agit de la tâche que l'encodeur doit effectuer à chaque fois.
 
 ---
 
