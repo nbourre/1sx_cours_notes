@@ -8,8 +8,10 @@
 - [Fonction `attachInterrupt`](#fonction-attachinterrupt)
   - [Explications de l'exemple](#explications-de-lexemple)
 - [L'encodeur dans le robot](#lencodeur-dans-le-robot)
+  - [Exercice](#exercice)
   - [Explications de l'exemple](#explications-de-lexemple-1)
 - [Exemple Encodeur PWM](#exemple-encodeur-pwm)
+  - [Exercice](#exercice-1)
   - [Explications](#explications)
 - [Références](#références)
 
@@ -82,8 +84,10 @@
 - L'interruption n'est pas interruptible par une autre interruption.
 - Ainsi, il faut faire des petites opérations lors d'une interruption pour ne pas "embourber" le processeur.
 - On peut obtenir une interruption de plusieurs manières, mais celle qui nous intéresse est l'**interruption externe**.
-- Celle-ci permet d'obtenir une interruption au changement d'état d'une broche. D'où leur utilité pour les encodeurs.
+  - Interruption externe dans le sens où l'interruption provient d'un appareil externe branché sur une broche.
+- L'interruption externe permet d'obtenir une interruption au changement d'état d'une broche. D'où leur utilité pour les encodeurs.
   - En effet, à chaque fois que l'encodeur enverra un signal, il interrompt le programme principal.
+  - Le signal peut être le passage de 0 à 1 ou l'inverse.
 
 > **Important**
 > 
@@ -100,8 +104,8 @@
   - Le premier paramètre est le numéro de la broche qui déclenchera l'interruption.
   - Le second est la fonction qui s'exécutera.
   - Le dernier est la partie du signal qui déclenchera l'interruption.
-    - `RISING` : Front montant
-    - `FALLING` : Front descendant
+    - `RISING` : Front montant soit de 0 à 1
+    - `FALLING` : Front descendant soit de 1 à 0
     - `CHANGE` : Tout changement
 
 Exemple :
@@ -110,6 +114,8 @@ Exemple :
 
 void interruption_encodeur_1(void)
 {
+  // Si le portB est à 0, alors on décompte
+  // autrement on compte
   if(digitalRead(Encoder_1.getPortB()) == 0)
   {
     // On retire 1 du compte
@@ -141,9 +147,14 @@ void setup()
 
 Nous allons étudier le projet `ranger_encodeur_position` qui est dans le dossier des exemples du cours.
 
+> **Note**
+> Comme à l'habitude, faites un `git pull` dans le dossier `1SX_robotique` pour obtenir les exemples nouvellement créés.
+
+## Exercice
+- Téléversez et testez le code de l'exemple ci-bas.
+
 <details>
   <summary>Afficher le code de l'exemple</summary>
-</details>
 
 ```cpp
 
@@ -215,6 +226,9 @@ void loop()
 
 ```
 
+</details>
+ 
+
 ![](../img/encoder_arduino_rxtx_mon.gif)
 - Je fais tourner la roue du robot et les valeurs changent.
 
@@ -225,12 +239,16 @@ void loop()
 - Certains ont peut-être remarqué que lors de la déclaration de la variable `position_pulsation`, il y a le mot-clé `volatile`.   
   - Lorsque l'on travaille avec des variables dans une interruption, il est préférable de mettre ce mot-clé devant la déclaration. La raison est qu'au lieu d'aller récupérer la variable dans le registre de stockage, il récupère la variable directement à partir de la RAM. [Source](https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/)
 
+
 ---
 
 # Exemple Encodeur PWM
 
 Étudions l'exemple du fabricant `Me_Auriga_encoder_pwm`, mais seulement avec l'encodeur 1. J'ai retiré le code qui concerne le 2e encodeur, mais ce sera le même.
 - Comme toujours, l'exemple se retrouve dans `Exemples-->MakeBlockDrive-->Me_On_Board_encoder`
+
+## Exercice
+- Téléversez et testez le code de l'exemple ci-bas.
 
 <details>
     <summary>Cliquez ici pour afficher l'exemple</summary>
