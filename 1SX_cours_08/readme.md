@@ -13,6 +13,12 @@
 - [Exemple Encodeur PWM](#exemple-encodeur-pwm)
   - [Exercice](#exercice-1)
   - [Explications](#explications)
+- [Moteur avec motoréducteur (*gearbox*)](#moteur-avec-motoréducteur-gearbox)
+  - [Unité de mesure](#unité-de-mesure)
+- [Sur le robot](#sur-le-robot)
+- [Le code](#le-code)
+  - [Explications](#explications-1)
+- [Exercices](#exercices)
 - [Références](#références)
 
 
@@ -154,7 +160,7 @@ Nous allons étudier le projet `ranger_encodeur_position` qui est dans le dossie
 - Téléversez et testez le code de l'exemple ci-bas.
 
 <details>
-  <summary>Afficher le code de l'exemple</summary>
+  <summary><b>Afficher le code de l'exemple</b></summary>
 
 ```cpp
 
@@ -234,11 +240,10 @@ void loop()
 
 ## Explications de l'exemple
 - Dans `setup`, on configure l'interruption avec `attachInterrupt`
-- La fonction `interruption_encodeur_1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et ce sur le front montant.
+- La fonction `interruption_encodeur_1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et, ce, sur le front montant.
 - Remarquez, il n'y a aucun appel de la fonction dans la boucle principale, l'interruption s'appellera tout seul lorsque la broche aura un signal.
 - Certains ont peut-être remarqué que lors de la déclaration de la variable `position_pulsation`, il y a le mot-clé `volatile`.   
   - Lorsque l'on travaille avec des variables dans une interruption, il est préférable de mettre ce mot-clé devant la déclaration. La raison est qu'au lieu d'aller récupérer la variable dans le registre de stockage, il récupère la variable directement à partir de la RAM. [Source](https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/)
-
 
 ---
 
@@ -342,8 +347,205 @@ void loop()
 
 ---
 
+# Moteur avec motoréducteur (*gearbox*)
+- Un motoréducteur, ou *gearbox* en bon français, est un dispositif attaché à un moteur pour modifier la vitesse de rotation et la force de l'essieu sortant.
+- Le plus souvent l'objectif est d'augmenter la force de sortie du moteur, car ce dernier est trop faible pour exécuter la tâche directement.
+- En contre-partie, la sortie perd de la vitesse de rotation.
+- C'est un peu sur le même principe que les dérailleurs d'un vélo. On réduit la vitesse pour monter les pentes et on augmente celle-ci pour augmenter la vitesse de croisière.
+
+ ## Unité de mesure
+ - On utilise le terme "rapport proportionnel" (*gear ratio*) pour désigner la spécificité d'un *gearbox*.
+ - Ainsi, on pourra voir des valeurs telles que  1:20, 1:42.5, 20:1, 3:1, etc.
+ - Le premier nombre désigne le nombre de rotation du moteur et le second de celui de la sortie.
+ - Par exemple, pour un rapport de 20:1, il faudra 20 rotation à la source pour obtenir 1 rotation à la sortie.
+   - Par la bande, cela indique aussi que la sortie sera 20 fois plus forte pour le même rayon.
+ 
+---
+
+# Sur le robot
+- Le robot a deux motoréducteurs avec encodeur
+- Chacun a un rapport proportionnel de 39.267:1
+  - Ainsi il faut 39.267 rotation pour faire une rotation de roue.
+- Chaque encodeur fait 9 pulsations pour effectuer une rotation complète.
+
+Voici ce qui se retrouve à l'intérieur d'un motoréducteur du robot.
+![](../img/motor_encoder_gearbox.png)
+
+> **Question**
+> 
+> Chaque roue a un diamètre d'approximativement 6.5 cm
+> - Combien de pulsations sont nécessaire pour effectuer une rotation complète d'une roue?
+> - Combien de pulsation? sont nécessaire pour parcourir 1 mètre?
+
+---
+
+# Le code
+Étudions l'exemple `Me_Auriga_encoder_pid_pos`.
+
+> **Note**
+>
+> Ignorer les lignes avec le code `.setPosPid` et `.setSpeedPid`. Car leur explication sort du cadre du cours. Toutefois, il faudra les utiliser tel quel lors de la programmation du robot.
+
+<details>
+  <summary>Cliquer pour voir le code de l'exemple</summary>
+
+```cpp
+/**
+ * \par Copyright (C), 2012-2016, MakeBlock
+ * @file    Me_Auriga_encoder.ino
+ * @author  MakeBlock
+ * @version V1.0.0
+ * @date    2016/07/14
+ * @brief   Description: this file is sample code for auriga encoder motor device.
+ *
+ * Function List:
+ *    1. uint8_t MeEncoderOnBoard::getPortB(void);
+ *    2. uint8_t MeEncoderOnBoard::getIntNum(void);
+ *    3. void MeEncoderOnBoard::pulsePosPlus(void);
+ *    4. void MeEncoderOnBoard::pulsePosMinus(void);
+ *    5. void MeEncoderOnBoard::setMotorPwm(int pwm);
+ *    6. double MeEncoderOnBoard::getCurrentSpeed(void);
+ *    7. void MeEncoderOnBoard::setSpeedPid(float p,float i,float d);
+ *    8. void MeEncoderOnBoard::setPosPid(float p,float i,float d);
+ *    7. void MeEncoderOnBoard::setPosPid(float p,float i,float d);
+ *    8. void MeEncoderOnBoard::setPulse(int16_t pulseValue);
+ *    9. void MeEncoderOnBoard::setRatio(int16_t RatioValue);
+ *    10. void MeEncoderOnBoard::moveTo(long position,float speed,int16_t extId,cb callback);
+ *    11. void MeEncoderOnBoard::loop(void);
+ *    12. long MeEncoderOnBoard::getCurPos(void);
+ *
+ * \par History:
+ * <pre>
+ * <Author>     <Time>        <Version>      <Descr>
+ * Mark Yan     2016/07/14    1.0.0          build the new
+ * </pre>
+ */
+
+#include <MeAuriga.h>
+
+MeEncoderOnBoard Encoder_1(SLOT1);
+MeEncoderOnBoard Encoder_2(SLOT2);
+
+void isr_process_encoder1(void)
+{
+  if(digitalRead(Encoder_1.getPortB()) == 0)
+  {
+    Encoder_1.pulsePosMinus();
+  }
+  else
+  {
+    Encoder_1.pulsePosPlus();;
+  }
+}
+
+void isr_process_encoder2(void)
+{
+  if(digitalRead(Encoder_2.getPortB()) == 0)
+  {
+    Encoder_2.pulsePosMinus();
+  }
+  else
+  {
+    Encoder_2.pulsePosPlus();
+  }
+}
+
+void setup()
+{
+  attachInterrupt(Encoder_1.getIntNum(), isr_process_encoder1, RISING);
+  attachInterrupt(Encoder_2.getIntNum(), isr_process_encoder2, RISING);
+  Serial.begin(115200);
+  
+  //Set PWM 8KHz
+  TCCR1A = _BV(WGM10);
+  TCCR1B = _BV(CS11) | _BV(WGM12);
+
+  TCCR2A = _BV(WGM21) | _BV(WGM20);
+  TCCR2B = _BV(CS21);
+
+  Encoder_1.setPulse(9);
+  Encoder_2.setPulse(9);
+  Encoder_1.setRatio(39.267);
+  Encoder_2.setRatio(39.267);
+  Encoder_1.setPosPid(1.8,0,1.2);
+  Encoder_2.setPosPid(1.8,0,1.2);
+  Encoder_1.setSpeedPid(0.18,0,0);
+  Encoder_2.setSpeedPid(0.18,0,0);
+}
+
+void loop()
+{
+  if(Serial.available())
+  {
+    char a = Serial.read();
+    switch(a)
+    {
+      case '0':
+      Encoder_1.moveTo(0,50);
+      Encoder_2.moveTo(0,50);
+      break;
+      case '1':
+      Encoder_1.moveTo(360);
+      Encoder_2.moveTo(-360);
+      break;
+      case '2':
+      Encoder_1.moveTo(1800);
+      Encoder_2.moveTo(-1800);
+      break;
+      case '3':
+      Encoder_1.moveTo(3600);
+      Encoder_2.moveTo(-3600);
+      break;
+      case '4':
+      Encoder_1.moveTo(-360);
+      Encoder_2.moveTo(360);
+      break;
+      case '5':
+      Encoder_1.moveTo(-1800);
+      Encoder_2.moveTo(1800);
+      break;
+      case '6':
+      Encoder_1.moveTo(-3600);
+      Encoder_2.moveTo(3600);
+      break;
+      default:
+      break;
+    }
+  }
+  Encoder_1.loop();
+  Encoder_2.loop();
+  Serial.print("Spped 1:");
+  Serial.print(Encoder_1.getCurrentSpeed());
+  Serial.print(" ,Spped 2:");
+  Serial.print(" ,CurPos 1:");
+  Serial.print(Encoder_1.getCurPos());
+  Serial.print(" ,CurPos 2:");
+  Serial.println(Encoder_2.getCurPos());
+}
+```
+
+</details>
+
+## Explications
+Nous allons nous attarder sur les lignes `setPulse` et `setRatio`.
+
+`setPulse` permet d'indiquer à l'objet le nombre de pulsation par rotation. Dans le cas de notre robot, ce sera 9.
+
+`setRatio` permet d'indiquer le rapport proportionnel du motoréducteur.
+
+Ces lignes sont importantes si l'on désire avoir des résultats précis avec le robot.
+
+# Exercices
+- Modifier le code de l'exemple pour parcourir approximativement 1 mètre.
+- Modifier le code de l'exemple pour faire approximativement 10 rotations.
+- Modifier votre code pour avoir une fonction appelée `goTo(float distance)`.
+  - Cette fonction doit indiquer au robot de parcourir la distance indiquée en paramètre.
+
+
 # Références
 - [LOCODuino - les interruptions](https://www.locoduino.org/spip.php?article64)
 - [Incremental Encoder - How it works](https://www.youtube.com/watch?v=zzHcsJDV3_o)
 - [How Rotary Encoder Works and Interface It with Arduino](https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/)
 - [`attachInterrupt`](https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/)
+- [Démontage du motoréducteur MakeBlock](https://www.youtube.com/watch?v=oy374XhbXVg)
+- [DC motor position control using PID](https://www.youtube.com/watch?v=jTIRUXJKMX4)
