@@ -348,7 +348,7 @@ void loop()
 ---
 
 # Moteur avec motoréducteur (*gearbox*)
-- Un motoréducteur, ou *gearbox* en bon français, est un dispositif attaché à un moteur pour modifier la vitesse de rotation et la force de l'essieu sortant.
+- Un motoréducteur, ou *gearbox* en bon français, est un dispositif attaché à un moteur pour modifier la vitesse de rotation et la force de l'arbre de sortie.
 - Le plus souvent l'objectif est d'augmenter la force de sortie du moteur, car ce dernier est trop faible pour exécuter la tâche directement.
 - En contre-partie, la sortie perd de la vitesse de rotation.
 - C'est un peu sur le même principe que les dérailleurs d'un vélo. On réduit la vitesse pour monter les pentes et on augmente celle-ci pour augmenter la vitesse de croisière.
@@ -356,20 +356,27 @@ void loop()
  ## Unité de mesure
  - On utilise le terme "rapport proportionnel" (*gear ratio*) pour désigner la spécificité d'un *gearbox*.
  - Ainsi, on pourra voir des valeurs telles que  1:20, 1:42.5, 20:1, 3:1, etc.
- - Le premier nombre désigne le nombre de rotation du moteur et le second de celui de la sortie.
+ - Le premier nombre désigne le nombre de rotation du moteur et le second de celui de l'arbre de sortie.
  - Par exemple, pour un rapport de 20:1, il faudra 20 rotation à la source pour obtenir 1 rotation à la sortie.
    - Par la bande, cela indique aussi que la sortie sera 20 fois plus forte pour le même rayon.
  
 ---
 
 # Sur le robot
+Voici ce qui se retrouve à l'intérieur d'un motoréducteur du robot.
+![](../img/motor_encoder_gearbox.png)
+
 - Le robot a deux motoréducteurs avec encodeur
-- Chacun a un rapport proportionnel de 39.267:1
+- Selon les exemples de code dans les exemples du fabricant, chacun a un rapport proportionnel de 39.267:1
   - Ainsi il faut 39.267 rotation pour faire une rotation de roue.
 - Chaque encodeur fait 9 pulsations pour effectuer une rotation complète.
 
-Voici ce qui se retrouve à l'intérieur d'un motoréducteur du robot.
-![](../img/motor_encoder_gearbox.png)
+> **Alerte aux bogues!**
+> 
+> La fonction `setRatio` n'accepte que les entiers, mais les exemples fournient envoie un `float`. Ce qui porte à confusion.
+> 
+> Pour corriger le bug, on modifie la fonction `setRatio` dans la librairie pour accepter un float.
+
 
 > **Question**
 > 
@@ -538,6 +545,8 @@ Ces lignes sont importantes si l'on désire avoir des résultats précis avec le
 # Exercices
 - Modifier le code de l'exemple pour parcourir approximativement 1 mètre.
 - Modifier le code de l'exemple pour faire approximativement 10 rotations.
+
+**Défi**
 - Modifier votre code pour avoir une fonction appelée `goTo(float distance)`.
   - Cette fonction doit indiquer au robot de parcourir la distance indiquée en paramètre.
 
