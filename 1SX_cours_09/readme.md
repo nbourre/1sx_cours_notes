@@ -102,6 +102,19 @@ void calculatePid (float kp, float ki, float kd) {
 
 Si on regarde le tableau des méthodes, on remarque la présence des méthodes `setPosPid` et `setSpeedPid`. Elles représentent l'implémentation d'un PID. Il suffit d'ajuster les coefficients au besoin. Pour ajuster les méthodes, il faut faire des essaies, car cela dépendra de chaque système.
 
+Les valeurs par défaut qui sont dans les exemples répondent bien pour nos besoins. Ainsi nous allons utiliser celles-ci.
+
+```cpp
+Encoder_1.setPosPid(1.8,0,1.2);
+Encoder_1.setSpeedPid(0.18,0,0);
+```
+
+> **Extra**
+> 
+> Si vous avez de l'intérêt pour fouiller un peu, regardez les fonctions `PID_angle_compute` et `PID_speed_compute` dans l'exemple `Firmware_for_Auriga`. Essayez de trouver les éléments vues dans la théorie précédente.
+
+
+
 -- 
 
 
