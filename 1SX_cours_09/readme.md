@@ -4,32 +4,33 @@
 - [La précision avec une boucle d'asservissement](#la-précision-avec-une-boucle-dasservissement)
   - [Principe](#principe)
   - [Régulateur PID](#régulateur-pid)
+- [Faire rouler le robot droit](#faire-rouler-le-robot-droit)
 
 # Les principales méthodes de la classe
 
 Voici un tableau avec la description des principales méthodes pour utiliser la classe `MeEncoderOnBoard`.
 
-| Méthode                                                                  | Description                                                                                                                  |
-| :----------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
-| `int getPortA()`, `getPortB()`                                           | Retourne l'état du port                                                                                                      |
-| `long getPulsePos()`                                                     | Retourne la valeur du compteur de pulsation. Cette valeur incrémente ou décrémente continuellement jusqu'à la remise à zéro. |
-| `void setPulsePos(long pulse_pos)`                                            | Sert à régler la position du compteur. Généralement pour remettre à la zéro le compteur.                                     |
-| `void pulsePosPlus()`, `void pulsePosMinus()`                                      | Incrémente ou décrémente le compteur.                                                                                        |
-| `void setCurrentSpeed(float speed)`, `float getCurrentSpeed()`                | Configure et retourne la vitesse du moteur.                                                                                  |
-| `int getCurPwm()`                                                        | Retourne le pwm actuelle                                                                                                     |
-| `void setTarPwm(int pwm)`                                                     | Configure le pwm ciblé                                                                                                       |
-| `void setMotorPwm(int pwm)`                                                   | Configure le pwm au moteur. Affecte le moteur directement.                                                                   |
-| `long getCurPos()`                                                       | Retourne la position actuelle en degrés.                                                                                     |
-| `void runSpeed(float speed)`                                                  | Indique la vitesse ciblée pour le moteur. La vitesse est en rpm.                                                             |
-| `void move(long position,float speed = 100)` | Le moteur se déplace à la position **relative**. <ul><li>`position` : Angle relatif que le moteur doit aller. Ex : `90` va indiquer au moteur de se déplacer de 90°.</li>[`speed`] : Vitesse à laquelle effectuer le mouvement.</ul>J'ai volontairement omis des paramètres optionnels pour alléger le contenu.|
-|`void moveTo(long position,float speed = 100)`| Le moteur se déplace à la position **absolue**. C'est-à-dire par rapport au zéro initial. L'unité est en degré.|
-|`long distanceToGo()`|Distance en degrés à parcourir avant d'atteindre la cible.|
-|`void setSpeedPid(float p,float i,float d);`|Configure les paramètres PID de la vitesse de l'encodeur|
-|`void setPosPid(float p,float i,float d);`|Configure les paramètres PID de la position de l'encodeur|
-|`void setPulse(int16_t pulseValue);`|Configure le nombre de pulsation par rotation de l'encodeur. **Doit être 9**.|
-|`void setRatio(float ratio);`|Configure le ratio de la boîte de motoréduction. **Doit être 39.267**.|
-|`void setMotionMode(PID_MODE\|PWM_MODE)`|Configure le mode de déplacement. Les valeurs possibles sont `PID_MODE` ou `PWM_MODE`.|
-|`void loop()`|Fonction qui doit être appelée sans blocage dans la boucle principale.|
+| Méthode                                                        | Description                                                                                                                                                                                                                                                                                                     |
+| :------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `int getPortA()`, `getPortB()`                                 | Retourne l'état du port                                                                                                                                                                                                                                                                                         |
+| `long getPulsePos()`                                           | Retourne la valeur du compteur de pulsation. Cette valeur incrémente ou décrémente continuellement jusqu'à la remise à zéro.                                                                                                                                                                                    |
+| `void setPulsePos(long pulse_pos)`                             | Sert à régler la position du compteur. Généralement pour remettre à la zéro le compteur.                                                                                                                                                                                                                        |
+| `void pulsePosPlus()`, `void pulsePosMinus()`                  | Incrémente ou décrémente le compteur.                                                                                                                                                                                                                                                                           |
+| `void setCurrentSpeed(float speed)`, `float getCurrentSpeed()` | Configure et retourne la vitesse du moteur.                                                                                                                                                                                                                                                                     |
+| `int getCurPwm()`                                              | Retourne le pwm actuelle                                                                                                                                                                                                                                                                                        |
+| `void setTarPwm(int pwm)`                                      | Configure le pwm ciblé                                                                                                                                                                                                                                                                                          |
+| `void setMotorPwm(int pwm)`                                    | Configure le pwm au moteur. Affecte le moteur directement.                                                                                                                                                                                                                                                      |
+| `long getCurPos()`                                             | Retourne la position actuelle en degrés.                                                                                                                                                                                                                                                                        |
+| `void runSpeed(float speed)`                                   | Indique la vitesse ciblée pour le moteur. La vitesse est en rpm.                                                                                                                                                                                                                                                |
+| `void move(long position,float speed = 100)`                   | Le moteur se déplace à la position **relative**. <ul><li>`position` : Angle relatif que le moteur doit aller. Ex : `90` va indiquer au moteur de se déplacer de 90°.</li>[`speed`] : Vitesse à laquelle effectuer le mouvement.</ul>J'ai volontairement omis des paramètres optionnels pour alléger le contenu. |
+| `void moveTo(long position,float speed = 100)`                 | Le moteur se déplace à la position **absolue**. C'est-à-dire par rapport au zéro initial. L'unité est en degré.                                                                                                                                                                                                 |
+| `long distanceToGo()`                                          | Distance en degrés à parcourir avant d'atteindre la cible.                                                                                                                                                                                                                                                      |
+| `void setSpeedPid(float p,float i,float d);`                   | Configure les paramètres PID de la vitesse de l'encodeur                                                                                                                                                                                                                                                        |
+| `void setPosPid(float p,float i,float d);`                     | Configure les paramètres PID de la position de l'encodeur                                                                                                                                                                                                                                                       |
+| `void setPulse(int16_t pulseValue);`                           | Configure le nombre de pulsation par rotation de l'encodeur. **Doit être 9**.                                                                                                                                                                                                                                   |
+| `void setRatio(float ratio);`                                  | Configure le ratio de la boîte de motoréduction. **Doit être 39.267**.                                                                                                                                                                                                                                          |
+| `void setMotionMode(PID_MODE\|PWM_MODE)`                       | Configure le mode de déplacement. Les valeurs possibles sont `PID_MODE` ou `PWM_MODE`.                                                                                                                                                                                                                          |
+| `void loop()`                                                  | Fonction qui doit être appelée sans blocage dans la boucle principale.                                                                                                                                                                                                                                          |
 
 ---
 
@@ -113,9 +114,12 @@ Encoder_1.setSpeedPid(0.18,0,0);
 > 
 > Si vous avez de l'intérêt pour fouiller un peu, regardez les fonctions `PID_angle_compute` et `PID_speed_compute` dans l'exemple `Firmware_for_Auriga`. Essayez de trouver les éléments vues dans la théorie précédente.
 
+---
 
+# Faire rouler le robot droit
+Maintenant que l'on a vu la science derrière les encodeurs, on peut maintenant apprécier les fonctions qui font appels à de la précision comme `setMotorPwm()` ou encore `setMotorSpeed()`.
 
--- 
+Ainsi pour s'assurer que le robot suit une ligne droite, il suffira d'utiliser les fonctions adéquates à cet effet. Il ne faudra pas oublier de configurer les PID, l'encodeur et le ratio du motoréducteur.
 
 
 
