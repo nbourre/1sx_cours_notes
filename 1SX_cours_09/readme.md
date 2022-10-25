@@ -6,6 +6,7 @@
   - [Régulateur PID](#régulateur-pid)
 - [Faire rouler le robot droit](#faire-rouler-le-robot-droit)
 - [Pivoter le robot à un angle précis](#pivoter-le-robot-à-un-angle-précis)
+- [Exercices](#exercices)
 
 # Les principales méthodes de la classe
 
@@ -32,6 +33,7 @@ Voici un tableau avec la description des principales méthodes pour utiliser la 
 | `void setRatio(float ratio);`                                  | Configure le ratio de la boîte de motoréduction. **Doit être 39.267**.                                                                                                                                                                                                                                          |
 | `void setMotionMode(PID_MODE\|PWM_MODE)`                       | Configure le mode de déplacement. Les valeurs possibles sont `PID_MODE` ou `PWM_MODE`.                                                                                                                                                                                                                          |
 | `void loop()`                                                  | Fonction qui doit être appelée sans blocage dans la boucle principale.                                                                                                                                                                                                                                          |
+| `bool isTarPosReached()` | Fonction qui retourne vrai ou faux si la cible de position est atteinte. |
 
 ---
 
@@ -159,7 +161,11 @@ Donc les calculs seront les suivants :
 > 
 > Ceci est la théorie où on ne prend pas en considération le niveau de la pile, le frottement, le glissement, etc.
 
+---
 
+# Exercices
+1. Faire avancer le robot à 1 mètre ±5%.
+2. Faire avancer le robot à 1 mètre ±5% et revenir à son point de départ.
 
 
 
