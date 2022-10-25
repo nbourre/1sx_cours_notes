@@ -5,6 +5,7 @@
   - [Principe](#principe)
   - [Régulateur PID](#régulateur-pid)
 - [Faire rouler le robot droit](#faire-rouler-le-robot-droit)
+- [Pivoter le robot à un angle précis](#pivoter-le-robot-à-un-angle-précis)
 
 # Les principales méthodes de la classe
 
@@ -121,7 +122,42 @@ Maintenant que l'on a vu la science derrière les encodeurs, on peut maintenant 
 
 Ainsi pour s'assurer que le robot suit une ligne droite, il suffira d'utiliser les fonctions adéquates à cet effet. Il ne faudra pas oublier de configurer les PID, l'encodeur et le ratio du motoréducteur.
 
+Dans le cas présent, il faut utiliser les méthodes `runSpeed` avec les valeurs désirées.
 
+Par exemple, on pourrait créer et utiliser la fonction suivnate :
+
+```cpp
+void moveAtSpeed(speed) {
+  encoderLeft.runSpeed(-speed);
+  encoderRight.runSpeed(speed);
+}
+```
+
+Vous pouvez tester avec le projet `ranger_encoder_ligne_droite` qui sont dans mes exemples.
+
+---
+
+# Pivoter le robot à un angle précis
+Pour faire pivoter le robot plus précisément, il faudra se rappeler de sa géométrie. Voici une image avec les différentes mesures.
+
+![](../img/ranger_calculs.jpg)
+
+Il faut faire 1/4 tour pour tourner le robot de 90°.
+
+Donc les calculs seront les suivants :
+
+- Trouver la distance pour 1/4 tour.
+  - $quartTour = circRobot / 4$
+- Trouver le nombre de tours de roue
+  - $nbTours = quartTour / circRoue$
+- Trouver le nombre de pulsation pour effectuer 1/4 tour.
+  - $nbPulsations = nbTours * 9 * 39.267$
+- Faire avancer/reculer le moteur de `nbPulsations`
+
+
+> **IMPORTANT!!!**
+> 
+> Ceci est la théorie où on ne prend pas en considération le niveau de la pile, le frottement, le glissement, etc.
 
 
 
