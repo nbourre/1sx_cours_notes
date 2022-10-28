@@ -57,7 +57,7 @@ Il y a une méthode simple qui permet à un mécanisme d'atteindre sa cible rapi
 La fonction complète pour calculer est la suivante:
 <details><summary><b>Attention!! Équation mathématique épeurante! Cliquez pour la voir...</b></summary>
 
-$$ u(t) = k_\text{p} e(t) + k_\text{i} \int_0^t e(\tau) \,\mathrm{d}\tau + k_\text{d} \frac{\mathrm{d}e(t)}{\mathrm{d}t},$$
+$$ u(t) = k_\text{p} e(t) + k_\text{i} \int_0^t e(\tau) \mathrm{d}\tau + k_\text{d} \frac{\mathrm{d}e(t)}{\mathrm{d}t},$$
 
 - $k_x$ sont des coefficients arbitraire que l'on obtient en faisant des tests.
 - $e$ est l'erreur
