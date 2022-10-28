@@ -23,7 +23,7 @@ Voici un tableau avec la description des principales méthodes pour utiliser la 
 | `void setTarPwm(int pwm)`                                      | Configure le pwm ciblé                                                                                                                                                                                                                                                                                          |
 | `void setMotorPwm(int pwm)`                                    | Configure le pwm au moteur. Affecte le moteur directement.                                                                                                                                                                                                                                                      |
 | `long getCurPos()`                                             | Retourne la position actuelle en degrés.                                                                                                                                                                                                                                                                        |
-| `void runSpeed(float speed)`                                   | Indique la vitesse ciblée pour le moteur. La vitesse est en rpm.                                                                                                                                                                                                                                                |
+| `void runSpeed(float speed)`                                   | Indique la vitesse ciblée pour le moteur. La vitesse est en rpm. Utilise le mode PID.                                                                                                                                                                                                                                               |
 | `void move(long position,float speed = 100)`                   | Le moteur se déplace à la position **relative**. <ul><li>`position` : Angle relatif que le moteur doit aller. Ex : `90` va indiquer au moteur de se déplacer de 90°.</li>[`speed`] : Vitesse à laquelle effectuer le mouvement.</ul>J'ai volontairement omis des paramètres optionnels pour alléger le contenu. |
 | `void moveTo(long position,float speed = 100)`                 | Le moteur se déplace à la position **absolue**. C'est-à-dire par rapport au zéro initial. L'unité est en degré.                                                                                                                                                                                                 |
 | `long distanceToGo()`                                          | Distance en degrés à parcourir avant d'atteindre la cible.                                                                                                                                                                                                                                                      |
@@ -129,7 +129,7 @@ Dans le cas présent, il faut utiliser les méthodes `runSpeed` avec les valeurs
 Par exemple, on pourrait créer et utiliser la fonction suivnate :
 
 ```cpp
-void moveAtSpeed(speed) {
+void moveAtSpeed(int speed) {
   encoderLeft.runSpeed(-speed);
   encoderRight.runSpeed(speed);
 }
