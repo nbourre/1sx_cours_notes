@@ -10,10 +10,10 @@ Le capteur de ligne est un capteur binaire qui permet de détecter la présence 
 
 <table>
     <tr>
-        <td>
+        <td width="50%">
         <image src="../img/makeblock-me-ir-line-finder_1.jpg" />
         </td>
-        <td>
+        <td width="50%">
         <image src="../img/makeblock-me-ir-line-finder-1.jpg" />
         </td>
     </tr>
