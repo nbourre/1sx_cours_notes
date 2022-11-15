@@ -11,9 +11,12 @@
 - [Capteur de température](#capteur-de-température)
   - [Exemple de code](#exemple-de-code-2)
 - [Capteur gyroscopique](#capteur-gyroscopique)
-  - [Exemple de code pour afficher](#exemple-de-code-pour-afficher)
+  - [Exemple de code - Afficher le gyro](#exemple-de-code---afficher-le-gyro)
+  - [Exemple de code - Collision](#exemple-de-code---collision)
   - [Cas d'utilisation](#cas-dutilisation-2)
 - [Avertisseur sonore](#avertisseur-sonore)
+  - [Exemple de code simple](#exemple-de-code-simple)
+  - [Jouer une mélodie](#jouer-une-mélodie)
 - [Exercices](#exercices)
 - [Références](#références)
 
@@ -154,11 +157,13 @@ float calculate_temp(int16_t In_temp)
 ---
 
 # Capteur gyroscopique
+Voir le [Cours 06](../1SX_cours_06/readme.md) pour plus de détail sur le gyroscope.
+
 - Modèle MPU-6050
 - Configuré sur l'adresse 0x69 pour le `MeAuriga`
 - Utiliser la classe `MeGyro`
 
-## Exemple de code pour afficher
+## Exemple de code - Afficher le gyro
 
 ```cpp
 #include <MeAuriga.h>
@@ -185,21 +190,136 @@ void loop()
 }
 ```
 
+## Exemple de code - Collision
+
+```cpp
+#include <MeAuriga.h>
+#include <Wire.h>
+
+unsigned long cT = 0;
+
+MeGyro gyro(0, 0x69); // Constructeur
+
+unsigned long serialPrevious = 0;
+int serialInterval = 250;
+
+unsigned long bumpPrevious = 0;
+int bumpInterval = 10;
+float bumpDetectLimit = 1;
+char bumpDetected = 0;
+
+float dx = 0.0;
+float axp = 0;
+float ax = 0;
+
+void gyroTask() {
+  gyro.update();
+
+  ax = gyro.getAngleX();
+
+  if (cT - bumpPrevious >= bumpInterval){
+    bumpPrevious = cT;
+
+    // Facteur de multiplication
+    // car abs(...) retourne un entier
+    dx = abs((ax - axp) * 10);
+    axp = ax;
+
+    if (dx >= bumpDetectLimit) {
+      bumpDetected = 1;
+    }
+  }
+}
+
+void serialOutputTask() {
+  // On bypass le délai s'il y a eu une collision
+  if (bumpDetected) {
+    bumpDetected = 0;
+    Serial.print("Collision detected!! --");
+    Serial.print("dx:");
+    Serial.println(dx);
+  }
+
+  if (cT - serialPrevious < serialInterval ) return;
+
+  serialPrevious = cT;
+
+  // Tache d'impression ici
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  gyro.begin();
+}
+
+void loop()
+{
+  cT = millis();
+
+  gyroTask();
+  serialOutputTask();
+}
+```
+
 ## Cas d'utilisation
 - Détection de chute, mouvement, collision, etc.
 - Ajustement de la position
 - Drone
-- Équilibrage de robot
+- Équilibrage de robot (Voir firmware_for_Auriga)
 
 ---
 
 # Avertisseur sonore
-D45
+L'Auriga est équipé d'un buzzer. Il est branché sur la broche D45.
+
+
+## Exemple de code simple
+
+```cpp
+#include "MeAuriga.h"
+
+MeBuzzer buzzer;
+
+void setup() 
+{
+  buzzer.setpin(45);
+}
+
+void loop()
+{
+  buzzerOn();
+  delay(1000);
+  buzzerOff();
+  delay(1000);
+}
+```
+
+## Jouer une mélodie
+
+Il est possible de jouer des notes avec la fonction `tone()`.
+La méthode `noTone()` permet d'arrêter la note.
+
+La syntaxe est la suivante:
+
+```cpp
+tone(frequence, duration);
+```
+
+Où:
+- `frequence` est la fréquence de la note à jouer
+- `duration` est la durée de la note en millisecondes
+
 
 ---
 
 # Exercices
+- Programmer le robot pour qu'il avance vers la source lumineuse la plus forte et avec les propriétés suivantes :
+  - Lorqu'il détecte une collision, un son retentit pendant 1 seconde, la lumière s'affiche en rouge et il s'arrête.
+  - Si l'on claque des mains, il recule pendant 0.5 seconde
 
 ---
 
 # Références
+- [Super Mario theme song](https://www.princetronics.com/supermariothemesong/)
+- [In-Depth: Arduino and the MPU-6050](https://lastminuteengineers.com/mpu6050-accel-gyro-arduino-tutorial/)
