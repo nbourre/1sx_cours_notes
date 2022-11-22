@@ -5,6 +5,7 @@
 - [Cours 09 - Utiliser la classe `MeEncoderOnBoard`](1SX_cours_09/readme.md)
 - [Cours 10 - Le capteur de ligne](1SX_cours_10/readme.md)
 - [Cours 11 - La machine à état fini](1SX_cours_11/machineEtatFini.md)
+- [Cours 12 - Le capteur de distance](1SX_cours_12/capteurs.md)
 
 # Extra
 - [Anneau de DELS](extra/anneau_dels.md)
