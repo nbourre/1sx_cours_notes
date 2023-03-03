@@ -453,6 +453,8 @@ const byte pinLedOrange = 9;
 const byte pinLedJaune = 10;
 const byte pinLedVerte = 11;
 
+unsigned long currentTime;
+
 // On introduit le temps comme évènement supplémentaire
 unsigned long chrono; // attention, type unsigned long comme millis()
 const unsigned long TimeOut = 15000ul; // 15 secondes (le ul à la fin pour unsigned long)
@@ -575,13 +577,15 @@ void setup() {
 }
 
 void loop() {
+  currentTime = millis();
+
   // On vérifie l'état des boutons, ce qui déclenche l'appel d'une des fonctions callBack si nécessaire
   button.tick();
 
   // On vérifie le timer et on déclenche l'évènement si nécéssaire
   // rajouter dans la condition “&& (etatCourant != REPOS)” si vous ne souhaitez pas
   // appeler la fonction au repos
-  if (millis() - chrono >= TimeOut) {
+  if (currentTime - chrono >= TimeOut) {
     timeOut();
     chrono = millis(); // on ré-arme notre chronomètre
   }
