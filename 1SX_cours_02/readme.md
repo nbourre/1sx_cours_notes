@@ -10,7 +10,9 @@
 - [Communication série](#communication-série)
   - [Comment utiliser la communication série](#comment-utiliser-la-communication-série)
     - [Exemple pour envoyer des données à l'ordinateur](#exemple-pour-envoyer-des-données-à-lordinateur)
+  - [Formatage des données](#formatage-des-données)
   - [Envoyer des données à l'Arduino](#envoyer-des-données-à-larduino)
+    - [Exemple de lecture d'un nombre entier](#exemple-de-lecture-dun-nombre-entier)
   - [Autres fonctions d'intérêt](#autres-fonctions-dintérêt)
   - [Résumé](#résumé-1)
 - [Références](#références)
@@ -183,7 +185,7 @@ void loop() {
 - La fonction `Serial.begin(baudrate)` sert à initialiser le port série.
   - La vitesse de transfert est en bauds. (bits par seconde)
   - Les vitesses de transfert les plus courantes sont 9600, 19200, 38400, 57600, 115200.
-  - La vitesse de transfert doit être la même pour l'ordinateur et le microcontrôleur.
+  - **La vitesse de transfert doit être la même pour l'ordinateur et le microcontrôleur.**
 - Pour envoyer des données, on utilise la fonction `Serial.print()` ou `Serial.println()`
   - On peut envoyer des nombres, des caractères, des chaînes de caractères, etc.
 
@@ -219,7 +221,50 @@ void loop() {
 </tr>
 </table>
 
+> **Important :** Comme mentionner précédemment, il faut que les vitesses d'échange entre les appareils soient la même. Sinon, on risque de se retrouver avec des données corrompues.
+> 
+> Par exemple : `3??f<ÌxÌ▯▯▯ü³??f<`
+
+## Formatage des données
+On peut formater les données que l'on désire envoyer avec le paramètre `format` de la fonction `Serial.print()`.
+- `DEC` : Décimal
+- `BIN` : Binaire
+- `OCT` : Octal
+- `HEX` : Hexadécimal
+
+```cpp
+char chrValue = 65;  // Lettre A en ascii
+int intValue  = 65;
+float floatValue = 65.0;
+
+void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop() {
+  Serial.print("chrValue: ");
+  Serial.print(chrValue); Serial.print("\t");
+  Serial.println(chrValue,DEC);
+  Serial.print("intValue: ");
+  Serial.print(intValue); Serial.print("\t");
+  Serial.print(intValue,DEC); Serial.print("\t");
+  Serial.print(intValue,HEX); Serial.print("\t");
+  Serial.print(intValue,OCT); Serial.print("\t");
+  Serial.println(intValue,BIN);
+  Serial.print("floatValue: ");
+  Serial.println(floatValue);
+  delay(1000);
+  chrValue++;
+  intValue++;
+}
+```
+
 ## Envoyer des données à l'Arduino
+Problématique : On veut recevoir de l'information d'un ordinateur ou d'un autre appareil série. Par exemple pour contrôler un robot.
+
+Solution : On peut envoyer des données à l'Arduino avec le moniteur série et des fonctions de lecture.
+
 - Pour envoyer des données à l'Arduino, on utilise le moniteur série.
 - On peut envoyer des données en texte ou en binaire.
 - Pour envoyer des données en texte, on utilise le champ de texte en bas du moniteur série.
@@ -228,10 +273,65 @@ void loop() {
 
 - Il faut aussi programmer l'Arduino pour qu'il puisse lire les données qu'il reçoit.
 - Les fonctions importantes sont les suivantes :
-  - [`Serial.available()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/available) : Indique le nombre d'octets disponibles dans le buffer de réception.
+  - [`Serial.available()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/available) : Indique le nombre d'octets disponibles dans le buffer de réception. S'il y a des données, la valeur sera > 0. Ainsi, on peut la mettre dans un `if`.
   - [`Serial.read()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/read) : Lit un octet du buffer de réception.
   - [`Serial.parseInt()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/parseint) : Lit un nombre entier du buffer de réception.
   - [`Serial.parseFloat()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/parsefloat) : Lit un nombre décimal du buffer de réception.	
+
+### Exemple de lecture d'un nombre entier
+
+Voici un exemple :
+
+<table><tr>
+<td>
+  
+```cpp
+int   blinkRate=0; // taux de rafraichissement sauvegardé
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop()
+{
+  if ( Serial.available()) // Vérifier si l'on a au moins 1 octet de dispo
+  {
+    char ch = Serial.read(); // Lire le prochain octet
+    if(ch >= '0' && ch <= '9') // Est-ce que c'est une valeur entre '0' et '9'
+    {
+       blinkRate = (ch - '0');      // Valeur ASCII converti en numérique
+       blinkRate = blinkRate * 100; // Interval
+    }
+  }
+  blink();
+}
+
+// Faire clignoter le LED
+void blink()
+{
+  digitalWrite(LED_BUILTIN,HIGH);
+  delay(blinkRate);
+  digitalWrite(LED_BUILTIN,LOW);
+  delay(blinkRate);
+}
+
+```
+
+</td>
+<td>
+
+![Alt text](img/05_rx_blink.gif)
+
+</td>
+</tr>
+</table>
+
+> ***Astuce :*** Le caractère ‘0’ vaut 48 en code ASCII. Pour convertir, un chiffre en valeur numérique, il suffit de lui soustraire ‘0’.
+> 
+> Rappel : Le type ‘char’ est un octet non signé. Il peut donc contenir des valeurs entre 0 et 255. (2^8 - 1)
+
 
 ## Autres fonctions d'intérêt
 
@@ -242,8 +342,15 @@ void loop() {
 
 La liste des fonctions est disponible sur la page [Arduino - Communication série](https://www.arduino.cc/reference/fr/language/functions/communication/serial/).
 
-## Résumé
 
+## Résumé
+La communication série est très utile pour :
+- Envoyer des données à l'ordinateur pour les afficher.
+- Envoyer des données à l'Arduino pour contrôler le programme.
+- Envoyer des données à un autre microcontrôleur pour communiquer entre eux.
+- Etc.
+
+On doit mettre un délai lorsque l'on envoie des données à l'ordinateur pour ne pas ralentir le microcontrôleur.
 
 # Références
 - [Arduino - Communication série](https://www.arduino.cc/reference/fr/language/functions/communication/serial/)
