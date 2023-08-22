@@ -11,6 +11,7 @@
   - [Comment utiliser la communication série](#comment-utiliser-la-communication-série)
     - [Exemple pour envoyer des données à l'ordinateur](#exemple-pour-envoyer-des-données-à-lordinateur)
   - [Envoyer des données à l'Arduino](#envoyer-des-données-à-larduino)
+  - [Autres fonctions d'intérêt](#autres-fonctions-dintérêt)
   - [Résumé](#résumé-1)
 - [Références](#références)
 
@@ -227,15 +228,24 @@ void loop() {
 
 - Il faut aussi programmer l'Arduino pour qu'il puisse lire les données qu'il reçoit.
 - Les fonctions importantes sont les suivantes :
-  - `Serial.available()` : Indique le nombre d'octets disponibles dans le buffer de réception.
-  - `Serial.read()` : Lit un octet du buffer de réception.
+  - [`Serial.available()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/available) : Indique le nombre d'octets disponibles dans le buffer de réception.
+  - [`Serial.read()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/read) : Lit un octet du buffer de réception.
+  - [`Serial.parseInt()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/parseint) : Lit un nombre entier du buffer de réception.
+  - [`Serial.parseFloat()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/parsefloat) : Lit un nombre décimal du buffer de réception.	
+
+## Autres fonctions d'intérêt
+
   - `Serial.readBytes(tampon, longueur)` : Lit un tableau d'octets de longueur déterminé.
-  - 
+  - [`Serial.readBytesUntil(caractère, tampon, longueur)`](https://www.arduino.cc/reference/fr/language/functions/communication/stream/streamreadbytesuntil/) : Lit un tableau d'octets jusqu'à un caractère déterminé et l'enregistre dans le buffer.
   - `Serial.readString()` : Lit une chaîne de caractères du buffer de réception.
-  - 
+  - `Serial.readStringUntil(caractère)` : Lit une chaîne de caractères jusqu'à un caractère déterminé.
+
+La liste des fonctions est disponible sur la page [Arduino - Communication série](https://www.arduino.cc/reference/fr/language/functions/communication/serial/).
 
 ## Résumé
 
 
 # Références
 - [Arduino - Communication série](https://www.arduino.cc/reference/fr/language/functions/communication/serial/)
+
+**[Retour au sommaire](../README.md)**
