@@ -274,4 +274,4 @@ On doit mettre un délai lorsque l'on envoie des données à l'ordinateur pour n
 # Références
 - [Arduino - Communication série](https://www.arduino.cc/reference/fr/language/functions/communication/serial/)
 
-**[Retour au sommaire de la leçon](./README.md)**
+**[Retour au sommaire de la leçon](./readme.md)**

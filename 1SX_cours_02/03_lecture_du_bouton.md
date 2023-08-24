@@ -64,4 +64,4 @@ void loop() {
 
 ---
 
-**[Retour au sommaire de la leçon](./README.md)**
+**[Retour au sommaire de la leçon](./readme.md)**
