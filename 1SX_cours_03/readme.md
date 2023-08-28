@@ -304,6 +304,7 @@ void loop() {
   - Faire changer l’intensité d’une DEL automatiquement
   - Faire un mouvement d’essuie-glace avec le servomoteur
   - Faire changer l’intensité d’une DEL à l’aide du potentiomètre
+  - Contrôler le servo avec le potentiomètre ou joystick
 
 ---
 
