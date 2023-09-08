@@ -103,6 +103,9 @@ On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la 
   - Cela va faciliter la suite des notes
 
 ### Code - basic_readings
+
+<details><summary>Afficher le code</summary>
+
 ```cpp
 // Basic demo for accelerometer readings from Adafruit MPU6050
 
@@ -222,6 +225,8 @@ void loop() {
   delay(500);
 }
 ```
+
+</details>
 
 ---
 
