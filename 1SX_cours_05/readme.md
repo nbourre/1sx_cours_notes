@@ -1,11 +1,7 @@
-# Communication i2c {ignore=true}
+# Communication i2c
 Article qui indique comment exploiter la communication i2c avec divers appareils électroniques. On n'explore pas la science derrière ce protocole, mais plutôt sont utilisation.
 
-# Table des matières {ignore=true}
-
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
-
-<!-- code_chunk_output -->
+# Table des matières
 
 - [Introduction](#introduction)
 - [Branchement](#branchement)
@@ -20,7 +16,6 @@ Article qui indique comment exploiter la communication i2c avec divers appareils
 - [Exercices](#exercices)
 - [Références](#références)
 
-<!-- /code_chunk_output -->
 
 # Introduction
 À date, nous avons vu l'échange de données à partir du port série. Nous avons vu que le port série est un protocole de communication asynchrone. C'est-à-dire que les données sont envoyées les unes après les autres, sans synchronisation entre l'émetteur et le récepteur.
