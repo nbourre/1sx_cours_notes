@@ -2,12 +2,22 @@
 
 # Table des matières <!-- omit in toc -->
 - [Capteur de distance](#capteur-de-distance)
-  - [Le sonar à ultrason](#le-sonar-à-ultrason)
-  - [Le sonar HC-SR-0](#le-sonar-hc-sr-0)
-- [Importation de librairie](#importation-de-librairie)
+    - [Le sonar à ultrason](#le-sonar-à-ultrason)
+    - [Le sonar HC-SR-0](#le-sonar-hc-sr-0)
+    - [Algorithme](#algorithme)
+    - [Exemple de code](#exemple-de-code)
+- [Importation de bibliothèque](#importation-de-bibliothèque)
 - [Capteur à température et humidité](#capteur-à-température-et-humidité)
+  - [DHT11 - Spécifications](#dht11---spécifications)
+  - [DHT11 - Librairie](#dht11---librairie)
+  - [DHT11 - Branchement et code](#dht11---branchement-et-code)
 - [Écran LCD](#écran-lcd)
+  - [Dans le kit](#dans-le-kit)
+  - [LCD - Code](#lcd---code)
 - [Exercices](#exercices)
+  - [Sonar sans librairie](#sonar-sans-librairie)
+  - [Sonar avec librairie](#sonar-avec-librairie)
+  - [Sonar, DHT11 et LCD](#sonar-dht11-et-lcd)
 - [Références](#références)
 
 ---
