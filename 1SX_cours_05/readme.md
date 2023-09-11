@@ -1,20 +1,26 @@
-# Communication i2c
+# Communication i2c <!-- omit in toc -->
 Article qui indique comment exploiter la communication i2c avec divers appareils électroniques. On n'explore pas la science derrière ce protocole, mais plutôt sont utilisation.
 
-# Table des matières
-
+# Table des matières <!-- omit in toc -->
+- [Important - Examen](#important---examen)
 - [Introduction](#introduction)
 - [Branchement](#branchement)
 - [L'accéléromètre](#laccéléromètre)
   - [Utilité](#utilité)
   - [Fonctionnement](#fonctionnement)
   - [Utilisation](#utilisation)
-    - [Code - basic_readings](#code---basic_readings)
+    - [Code - basic\_readings](#code---basic_readings)
   - [Analyse du code de configuration](#analyse-du-code-de-configuration)
   - [Analyse du code de la boucle](#analyse-du-code-de-la-boucle)
 - [Gyroscope](#gyroscope)
 - [Exercices](#exercices)
 - [Références](#références)
+
+
+# Important - Examen
+- Comme inscrit dans le plan de cours, il y aura un examen.
+- Il aura lieu jeudi le 21 septembre
+- Ce sera la matière vue jusqu'à cette semaine
 
 
 # Introduction
