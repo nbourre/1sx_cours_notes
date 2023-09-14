@@ -3,6 +3,7 @@
 - [Cours 02 - Rappel sur l'Arduino 01](1SX_cours_02/readme.md)
 - [Cours 03 - PWM et lecture analogique](1SX_cours_03/readme.md)
 - [Cours 04 - Les capteurs](1SX_cours_04/readme.md)
+- [Cours 05 - Les appareils i2c](1SX_cours_05/readme.md)
 - [Cours 06 - Initiation au mBot Ranger](1SX_cours_06/readme.md)
 - [Cours 07 - Les moteurs](1SX_cours_07/readme.md)
 - [Cours 08 - Les moteurs avec encodeur](1SX_cours_08/readme.md)

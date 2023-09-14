@@ -13,7 +13,13 @@ Article qui indique comment exploiter la communication i2c avec divers appareils
   - [Analyse du code de configuration](#analyse-du-code-de-configuration)
   - [Analyse du code de la boucle](#analyse-du-code-de-la-boucle)
 - [Gyroscope](#gyroscope)
-- [Exercices](#exercices)
+- [L'écran OLED SSD 1306](#lécran-oled-ssd-1306)
+  - [Librairie `Adafruit_SSD1306`](#librairie-adafruit_ssd1306)
+    - [Récupération de la bibliothèque](#récupération-de-la-bibliothèque)
+    - [Ouvrir un exemple](#ouvrir-un-exemple)
+    - [Analyse du code](#analyse-du-code)
+    - [Exercices](#exercices)
+- [Exercices](#exercices-1)
 - [Références](#références)
 
 
@@ -295,6 +301,51 @@ mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 > **Note :** Les robots sur deux roues ou encore les overboard utilisent entres autres un gyroscope pour garder l'équilibre.
 
 ![Alt text](img/hoverboard.jpg)
+
+---
+
+# L'écran OLED SSD 1306
+- L'écran OLED SSD 1306 est un écran qui utilise la technologie OLED (Organic Light-Emitting Diode)
+- Le modèle utilisé en classe communique avec le protocole i2c
+- Il s'agit d'un écran monochrome avec une résolution de 128x64 pixels
+
+![Alt text](img/SSD1306.jpg)
+
+> **Question :** À partir de la photo, quel indice nous indique l'appareil fonctionne avec le protocole `i2c`?
+
+- Nous allons utiliser la librairie `Adafruit_SSD1306` **modifiée** pour contrôler l'écran
+
+## Librairie `Adafruit_SSD1306`
+
+### Récupération de la bibliothèque
+Pour récupérer la librairie, il faudra cloner mon projet sur github.
+1. Aller dans le dossier qui contient les librairies Arduino
+  - Généralement, il se retrouve dans `Documents/Arduino/libraries`
+2. Dans la barre d'adresse, taper `cmd` et appuyer sur Entrée
+  - Cela ouvrira une fenêtre de commande dans le dossier courant
+3. Cloner le dépôt de code avec la commande suivante
+  - `git clone https://github.com/nbourre/Adafruit_SSD1306.git`
+  - Vous pouvez copier l'adresse directement à partir de github
+
+Si tout est bien configuré, vous devriez avoir un dossier `Adafruit_SSD1306` dans le dossier `libraries` de votre Arduino. Vous pouvez maintenant utiliser la librairie.
+
+### Ouvrir un exemple
+1. Ouvrir l'IDE Arduino
+2. Dans le menu `Fichier`, sélectionner `Exemples`
+3. Dans le sous-menu `Adafruit SSD1306`, sélectionner `ssd1306_128x64_i2c`
+4. Téléverser l'exemple dans votre Arduino
+
+S'assurer que les branchements sont corrects. Vous devriez voir du contenu qui s'affiche sur l'écran.
+
+### Analyse du code
+// TODO Rédiger l'analyse du code!
+
+### Exercices
+1. Faites défiler votre nom à l'écran
+2. Tracez une maison dans l'écran
+3. Faites une lettre qui rebondit sur les bords de l'écran
+   - Chaque lettre a un format de 8x8
+
 
 ---
 
