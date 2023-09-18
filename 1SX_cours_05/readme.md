@@ -743,7 +743,7 @@ void testanimate(const uint8_t *bitmap, uint8_t w, uint8_t h) {
 ```
 
 
-</detais>
+</details>
 
 ### Analyse du code
 Malgré la longueur du code, il y a beaucoup de lignes très similaire.
@@ -753,6 +753,7 @@ Pour utiliser l'écran, il faut inclure les librairies suivantes: `Wire.h`, `Ada
 - La librairie `Wire.h` est utilisée pour la communication i2c.
 - La librairie `Adafruit_GFX.h` est utilisée pour dessiner sur l'écran.
 - La librairie `Adafruit_SSD1306.h` est utilisée pour contrôler l'écran.
+- **Note :** `SPI.h` n'est pas requis dans notre situation.
 
 #### Variables et objets initialisés
 - La variable `logo_bmp` est un tableau d'`unsigned char` qui contient l'image d'un étoile.
