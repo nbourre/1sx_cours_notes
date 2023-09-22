@@ -27,9 +27,8 @@
 
 # mBot Ranger de MakeBlock
 - Le robot utilisé sera le mBot Ranger de la compagnie MakeBlock
-- <a href="https://www.makeblock.com/steam-kits/mbot-ranger" target="_blank">Page officielle</a>
-
-<!-- [Page officielle](https://www.makeblock.com/steam-kits/mbot-ranger) -->  
+- [Page officielle](https://www.makeblock.com/steam-kits/mbot-ranger)
+  
 ![](../img/mBot-Ranger_500_EN.png)
 
 ---
@@ -72,7 +71,7 @@
 
 ---
 ![](../img/PXL_20220926_173254078.jpg)
-- Bouton de mise sous tensio
+- Bouton de mise sous tension
 - Bouton de remise à zéro
 - Port USB type B
 - Port d'alimentation
@@ -83,7 +82,7 @@
 - Observer les différentes étiquettes, elles font références aux différentes broches du Arduino
 
 ## Points saillants 
-- Les broches SDA et SDL sont représentées à plusieurs reprises
+- Les broches SDA et SDL sont dans tous les ports de connexion
 - Une anneau de DEL RGB
 - Un MPU-6050
 - Un module Bluetooth
@@ -93,7 +92,7 @@
 # Différences avec le Arduino Mega
 - Plusieurs ports sont occupés par les différents composants
   - Voir le Pin out
-- Les ports de connexion sont compatibles avec les connecteurs RJ25
+- Les ports de connexion sont compatibles avec les connecteurs RJ25 6P6C
 - La carte-mère est appelé "**Auriga**"  
 
 ---
@@ -101,7 +100,7 @@
 # Configuration de l'environnement
 - Avoir la dernière version de l'Arduino IDE
 - Télécharger la dernière version des librairies MakeBlock
-  - https://github.com/Makeblock-official/Makeblock-Libraries
+  - https://github.com/nbourre/Makeblock-Libraries
   - Si ça ne fonctionne pas télécharger cette [version](https://github.com/s-urbaniak/Makeblock-Libraries/tree/fix-supervariable)
     - Au moment d'écrire ces lignes, il y avait un bogue avec une fonction.
     - Possibilité de corriger le bogue en modifiant le type de retour de `void *` pour `bool` à l'endroit de l'erreur.
@@ -310,6 +309,7 @@ Il se peut qu'Arduino IDE ne reconnaisse pas la carte du robot. Il faudra alors 
 - Dans la liste des *BOARDS*, taper `Mega`
 - Sélectionner le bon port COM
 - Cliquer sur Ok
+
 ![](../img/arduino_board_screenshot.png)
 
 
