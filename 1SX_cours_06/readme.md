@@ -27,8 +27,9 @@
 
 # mBot Ranger de MakeBlock
 - Le robot utilisé sera le mBot Ranger de la compagnie MakeBlock
-- [Page officielle](https://www.makeblock.com/steam-kits/mbot-ranger)
-  
+- <a href="https://www.makeblock.com/steam-kits/mbot-ranger" target="_blank">Page officielle</a>
+
+<!-- [Page officielle](https://www.makeblock.com/steam-kits/mbot-ranger) -->  
 ![](../img/mBot-Ranger_500_EN.png)
 
 ---
