@@ -52,6 +52,8 @@
   - les broches 48, 49 et 11 sont respectivement les `IN1`, `IN2` et `PWM` du moteur 1
   - les broches 47, 46 et 10 sont respectivement les `IN1` et `IN2` et `PWM` du moteur 2
 
+![Alt text](../img/moteur_pinout.png)
+
 - Regardons le code ci-bas
 
 ```cpp
@@ -205,14 +207,14 @@ void TurnRight() {
 
 ---
 # Exercices
-Dans tous les cas, programmer des fonctions pour effectuer la tâche.
+Dans tous les cas, programmez des fonctions pour effectuer la tâche. Par exemple, si vous voulez que le robot avance, vous devez programmer une fonction `Forward` qui prend en paramètre la vitesse de déplacement.
 
 Exemple : `void Forward(int speed)`
 
 1. Programmer les exercices du cours précédent
 2. Programmer le robot pour qu'il avance/recule
 3. Programmer le robot pour qu'il pivote à gauche/droite
-4. Programmer le robot pour qu'il trace approximativement un carré
+4. Programmer le robot pour qu'il trace *approximativement* un carré
 
 ---
 # Références
