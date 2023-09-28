@@ -211,7 +211,7 @@ void loop() {
   - Sur le Mega A0-A15, sur le Uno A0-A5
 - Pour lire des valeurs analogues, il faut ce que l’on appelle un ADC soit un **C**onvertisseur **A**nalogue à **D**igitale.
   - Le ADC permet de lire des valeurs de 0v à 5v
-  - Il a une résolution de 10 bit. Ainsi 210 - 1 1023
+  - Il a une résolution de 10 bit. Ainsi $2^{10} - 1 = 1023$
 - Les valeurs retournées sont entre 0 (0v) et 1023 (5v)
 
 ---

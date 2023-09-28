@@ -16,7 +16,7 @@
 # Les moteurs du robot
 - Le robot a deux moteurs d'installer.
 - Dans un premier temps, nous allons utiliser mon code
-- Dans un second temps soit après la relâche, nous utiliserons les librairies officielles.
+- Dans un second temps, nous utiliserons les librairies officielles.
 
 ---
 
@@ -45,6 +45,9 @@
 ## Moteur sur le robot
 - Maintenant qu'on connaît les principles de base, on va pouvoir comprendre la logique derrière le code.
 - Selon le schéma électrique et la documentation, l'Auriga possède un contrôleur de moteur [TB6612](https://learn.adafruit.com/adafruit-tb6612-h-bridge-dc-stepper-motor-driver-breakout)
+  
+  ![Alt text](img/H-bridge_mod.png)
+  
 - Voici un tableau que j'ai récupéré sur la feuille de données (*datasheet*) du [TB6612](https://cdn-shop.adafruit.com/datasheets/TB6612FNG_datasheet_en_20121101.pdf)
   ![](../img/tabelau_TB6612.jpg)
 - J'ai encadré ce qui était d'intérêt pour les programmeurs
@@ -53,6 +56,10 @@
   - les broches 47, 46 et 10 sont respectivement les `IN1` et `IN2` et `PWM` du moteur 2
 
 ![Alt text](../img/moteur_pinout.png)
+
+Voici la logique de fonctionnement du contrôleur de moteur
+
+![Alt text](img/H-Bridge-Working-Motor-Direction-Control-Animation.gif)
 
 - Regardons le code ci-bas
 
@@ -211,10 +218,12 @@ Dans tous les cas, programmez des fonctions pour effectuer la tâche. Par exempl
 
 Exemple : `void Forward(int speed)`
 
-1. Programmer les exercices du cours précédent
+1. Continuer les exercices du cours précédent surtout le capteur de distance
 2. Programmer le robot pour qu'il avance/recule
 3. Programmer le robot pour qu'il pivote à gauche/droite
 4. Programmer le robot pour qu'il trace *approximativement* un carré
+
+> **Question :** Pour quelle raison entendons nous un bruit lorsque les moteurs roulent? [Indice ici](https://docs.arduino.cc/learn/microcontrollers/analog-output) et [ici](https://fr.wikipedia.org/wiki/Champ_auditif)
 
 ---
 # Références
