@@ -1,5 +1,7 @@
 # Le déplacement <!-- omit in toc -->
 
+> **Note pour prof pour A24:** Importer les notions de LED du cours 08 ici pour préparer le labo plus tôt.
+
 ## Plan de leçon <!-- omit in toc -->
 - [Les moteurs du robot](#les-moteurs-du-robot)
 - [Comment fonctionne un moteur](#comment-fonctionne-un-moteur)

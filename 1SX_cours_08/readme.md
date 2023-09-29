@@ -1,7 +1,11 @@
-# Le déplacement précis <!-- omit in toc -->
+# Lumière sur le déplacement précis <!-- omit in toc -->
 
 ## Plan de leçon <!-- omit in toc -->
-- [Problématique](#problématique)
+- [Lumière avant tout!](#lumière-avant-tout)
+  - [Exemple](#exemple)
+    - [Explication du code](#explication-du-code)
+  - [Les principales méthodes](#les-principales-méthodes)
+- [Problématique des déplacements](#problématique-des-déplacements)
 - [L'encodeur incrémental](#lencodeur-incrémental)
 - [La direction de la rotation](#la-direction-de-la-rotation)
 - [L'encodeur en programmation](#lencodeur-en-programmation)
@@ -20,11 +24,113 @@
   - [Explications](#explications-1)
 - [Exercices](#exercices)
 - [Références](#références)
+  - [Anneau de DEL](#anneau-de-del)
+  - [Encodeurs](#encodeurs)
 
 
 ---
 
-# Problématique
+# Lumière avant tout!
+Le robot est équipé d'un anneau de 12 DELs RGB.
+
+Voici les caractéristiques à savoir :
+- L'anneau est branché sur le `PORT_0`
+- Il faut utiliser la broche #44
+- Il est composé de DEL RGB soit de couleurs
+
+Il faut utiliser la classe `MeRGBLed` pour pouvoir manipuler l'anneau de led.
+
+Avec un objet de type `MeRGBLed`, on pourra effectuer des manipulations sur l'anneau.
+
+## Exemple
+
+Voici un exemple simple de l'utilisation des méthodes de base
+
+```cpp
+#include <MeAuriga.h>
+
+#define LEDNUM  12
+#define LEDPIN  44
+#define RINGALLLEDS 0
+
+MeRGBLed led( PORT0, LEDNUM );
+
+unsigned long currentTime = 0;
+
+
+void setup() {
+  led.setpin(LEDPIN); // OBLIGATOIRE Configuration de la broche
+}
+
+void loop() {
+  currentTime = millis();  
+  ledTask(currentTime);
+}
+
+void ledTask(unsigned long cT) {
+  static short idx = 1; // 0 = anneau complet
+  static unsigned long lastTime = 0;
+  int rate = 100;
+  
+  if (cT - lastTime < rate) return;
+  
+  lastTime = cT;
+  // led.setColor(100, 100, 0); // Configure la couleur jaune
+  led.setColor (0, 0, 0); // reset tous les leds
+  led.setColor(idx, 0, 0, 5);
+  
+  idx = idx >= LEDNUM ? 1 : idx + 1;
+  
+  led.show(); // Active l'anneau avec la couleur  
+}
+
+```
+
+### Explication du code
+**Le constructeur**
+
+Pour les besoins, le constructeur prend 2 paramètres soit le port sur le robot ainsi que le nombre de DEL.
+
+**setpin**
+
+Cette méthode **obligatoire** permet d'indiquer la broche sur laquelle le code doit travailler.
+
+On la met dans la configuration.
+
+**setColor**
+
+- `setColor()` permet d'indiquer la couleur que l'on désire en format `RGB`.
+- `setColor(uint8_t r, uint8_t g, uint8_t b)` affecte la couleur à l'anneau au complet.
+- `setColor(uint8_t index, uint8_t r, uint8_t g, uint8_t b)` affecte la couleur à une DEL spécifique.
+
+
+> **Important :** 
+>
+> - La valeur assignée est persistante. C'est-à-dire que si on ne change pas la couleur, elle restera tant et aussi longtemps que l'on ne change pas la couleur d'où la ligne `led.setColor (0, 0, 0);` qui permet de remettre toutes les DEL à 0.
+> - La nouvelle couleur ne s'affiche pas tant et aussi longtemps que l'on appelle pas la méthode `show()`
+
+**show**
+
+Permet d'envoyer et d'activer les couleurs configurées pour l'anneau.
+
+Lorsqu'il y a changement de couleur pour affecter l'anneau, il faut faire appelle à la méthode `show`.
+
+## Les principales méthodes
+Voici les principales méthodes pour manipuler l'anneau.
+
+`setColor (int r, int g, int b)` : Configure la couleur pour l'ensemble de l'anneau en utilisant les couleurs RGB.
+
+`setColorAt (int index, int r, int g, int b)` : Configure la couleur d'une DEL spécifique en utilisant les couleurs RGB.
+
+`setColor (int index, long value)` : Configure la couleur d'une DEL spécifique en utilisant les couleurs RGB en format hexadécimal. Exemple `0xf03c15` pour un rouge.
+- **Attention 1!** L'index 0 représente l'anneau au complet. Autrement, l'index débute à 1 au lieu de 0.
+- **Attention 2!** Utilisez la version de la librairie qui est sur mon [GitHub](https://github.com/nbourre/Makeblock-Libraries), car il y a un bogue sur la version officielle.
+
+`show()` : Active la configuration des couleurs. La couleur restera tant et aussi longtemps que l'on ne la change pas.
+
+---
+
+# Problématique des déplacements
 
 - Nous avons jusqu'à maintenant exploré les moteurs du robot en contrôlant directement les broches ENA et ENB.
 - Cela répondait à un certain besoin soit de déplacer le robot.
@@ -552,6 +658,11 @@ Ces lignes sont importantes si l'on désire avoir des résultats précis avec le
 
 
 # Références
+## Anneau de DEL
+- La classe [MeRGBLed](https://github.com/nbourre/Makeblock-Libraries/blob/master/src/MeRGBLed.h)
+- L'exemple [MeAurigaOnBoardLEDRing](https://github.com/nbourre/Makeblock-Libraries/blob/master/examples/Me_RGBLed/MeAurigaOnBoardLEDRing/MeAurigaOnBoardLEDRing.ino)
+- 
+## Encodeurs
 - [LOCODuino - les interruptions](https://www.locoduino.org/spip.php?article64)
 - [Incremental Encoder - How it works](https://www.youtube.com/watch?v=zzHcsJDV3_o)
 - [How Rotary Encoder Works and Interface It with Arduino](https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/)
