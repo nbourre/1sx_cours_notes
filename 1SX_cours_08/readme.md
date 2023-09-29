@@ -6,6 +6,8 @@
     - [Explication du code](#explication-du-code)
   - [Les principales méthodes](#les-principales-méthodes)
 - [Problématique des déplacements](#problématique-des-déplacements)
+- [Le gyroscope](#le-gyroscope)
+  - [Exemple](#exemple-1)
 - [L'encodeur incrémental](#lencodeur-incrémental)
 - [La direction de la rotation](#la-direction-de-la-rotation)
 - [L'encodeur en programmation](#lencodeur-en-programmation)
@@ -142,9 +144,52 @@ Voici les principales méthodes pour manipuler l'anneau.
 
 ---
 
+# Le gyroscope
+Dans un cours précédent, nous avons rapidement survolé le gyroscope. Nous n'avions pas vu comment l'exploiter.
+
+- Le gyroscope dans le robot permet de connaître l'angle de rotation du robot à partir de sa position initiale.
+- Le gyroscope dans le robot est une des fonctionnalités du MPU-6050.
+- La librairie `MeGyro` offre les fonctions suivantes :
+  - `getAngleX|Y|Z()` : Retourne l'angle de rotation sur l'axe X|Y|Z
+  - `getGyroX|Y|Z()` : Retourne la vitesse angulaire sur l'axe X|Y
+    - Télécharger la version 3.27.0 de la librairie pour avoir accès à `getGyroZ()`
+  - `resetData()` : Réinitialise les données du gyroscope
+
+## Exemple
+Voici un exemple qui retourne en degrée l'angle de rotation du robot. Utilisez le traceur série pour afficher les valeurs.
+
+```cpp
+#include <MeAuriga.h>
+
+MeGyro gyro;
+
+void setup()
+{
+  Serial.begin(115200);
+  gyro.begin();
+}
+
+void loop()
+{
+  gyro.update();
+  Serial.read();
+  Serial.print("X:");
+  Serial.print(gyro.getAngleX() );
+  Serial.print(" Y:");
+  Serial.print(gyro.getAngleY() );
+  Serial.print(" Z:");
+  Serial.println(gyro.getAngleZ() );
+  delay(10);
+}
+```
+
+
+
+---
+
 # L'encodeur incrémental
 
-- Pour palier aux problèmes cités précédemment, il y a un mécanisme qui s'appelle un encodeur.
+- Pour palier aux problèmes cités au début de l'article, il y a un mécanisme qui s'appelle un encodeur.
 - Dans sa forme la plus basique, un encodeur consiste en un disque rotatif percé de plusieurs trous autour de la circonférence. Un faisceau lumineux est positionné devant les trous et un capteur est placé derrière les trous.
 - Lorsque le disque tourne, le capteur reçoit de la lumière ou non selon la position des trous. (Voir l'illustration ci-bas)
 
@@ -174,27 +219,31 @@ Voici les principales méthodes pour manipuler l'anneau.
 
 # La direction de la rotation
 
-- Nous avons vu l'encodeur incrémental
+- On vient de discuter de l'encodeur incrémental
 - Le modèle vu permet d'indiquer la vitesse et la position
 - Toutefois, il ne permet pas d'obtenir le sens de la rotation
 - En effet, une seule impulsion n'indique pas assez d'information.
 - Pour combler ce problème, on introduit l'**encodeur en quadrature**.
-- Il s'agit du même type d'encodeur, mais au lieu d'avoir une seule piste, il y a deux pistes qui sont décalées.
+- Il s'agit du même type d'encodeur, mais au lieu d'avoir une seule piste, il y a soit deux pistes qui sont décalées ou encore une piste avec deux signaux décalés. L'illustration suivante montre la version avec 2 pistes.
 
 ![](../img/encoder_quadrature.gif)
 
+L'illustration suivante montre la version avec une piste et deux signaux décalés.
+
+![Alt text](img/rotary-encoder-working-animation.gif)
+
 - Ainsi, on peut savoir de sens de rotation du disque ou de la roue.
-- Sur le robot du cours, c'est ce type d'encodeur qui est utilisé.
+- Sur le robot du cours, c'est ce type d'encodeur.
 
 ---
 
 # L'encodeur en programmation
 - Jusqu'ici, nous avons vu la programmation séquentielle, c'est-à-dire que l'on programme une séquence d'instructions à exécuter.
 - Pour utiliser un encodeur, on doit utiliser ce qu'on appelle une **interruption**.
-- Une interruption, comme son nom l'indique, consiste à interrompre momentanément le programme que l'Arduino exécute pour qu'il effectuer un autre travail. Quand cet autre travail est terminé, l'Arduino retourne à l'exécution du programme principal et reprend exactement où il l'avait laissé.
+- Une interruption, comme son nom l'indique, consiste à interrompre momentanément le programme que l'Arduino exécute pour qu'il effectue un autre travail. Quand cet autre travail est terminé, l'Arduino retourne à l'exécution du programme principal et reprend exactement où il l'avait laissé.
 - Cet autre travail s'appelle une **fonction d'interruption** ou *ISR* (*Interrupt Service Routine*).
 - L'interruption n'est pas interruptible par une autre interruption.
-- Ainsi, il faut faire des petites opérations lors d'une interruption pour ne pas "embourber" le processeur.
+- Ainsi, il faut faire des opérations courtes lors d'une interruption pour ne pas "embourber" le processeur.
 - On peut obtenir une interruption de plusieurs manières, mais celle qui nous intéresse est l'**interruption externe**.
   - Interruption externe dans le sens où l'interruption provient d'un appareil externe branché sur une broche.
 - L'interruption externe permet d'obtenir une interruption au changement d'état d'une broche. D'où leur utilité pour les encodeurs.
@@ -272,10 +321,7 @@ Nous allons étudier le projet `ranger_encodeur_position` qui est dans le dossie
 
 #include <MeAuriga.h>
 
-unsigned long cT = 0;
-
-unsigned long serialPrevious = 0;
-unsigned long serialDelay = 250;
+unsigned long currentTime = 0;
 
 volatile long position_pulsation = 0;
 
@@ -312,12 +358,24 @@ void setup()
   // FIN : Ne pas modifier ce code!
 }
 
-void serialTask() {
-  if (cT - serialPrevious < serialDelay) {
+void loop()
+{
+  currentTime = millis();
+  
+  Encoder_1.loop();
+  serialTask(currentTime);
+}
+
+
+void serialTask(unsigned long cT) {
+  static unsigned long lastTime = 0;
+  const int rate = 250;
+
+  if (cT - lastTime < rate) {
     return;
   }
   
-  serialPrevious = cT;
+  lastTime = cT;
   
   // Afficher la position du "curseur"
   Serial.print("Position 1:");
@@ -326,14 +384,6 @@ void serialTask() {
   Serial.print(Encoder_1.getPulsePos());
   Serial.print(",position_pulsation:");
   Serial.println(position_pulsation);
-}
-
-void loop()
-{
-  cT = millis();
-  
-  Encoder_1.loop();
-  serialTask();
 }
 
 ```
