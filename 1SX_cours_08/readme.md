@@ -161,7 +161,8 @@ Voici un exemple qui retourne en degrée l'angle de rotation du robot. Utilisez 
 ```cpp
 #include <MeAuriga.h>
 
-MeGyro gyro;
+// Pour le Auriga, il faut utiliser l'adresse 0x69.
+MeGyro gyro(PORT_0, 0x69);
 
 void setup()
 {
@@ -172,7 +173,6 @@ void setup()
 void loop()
 {
   gyro.update();
-  Serial.read();
   Serial.print("X:");
   Serial.print(gyro.getAngleX() );
   Serial.print(" Y:");
