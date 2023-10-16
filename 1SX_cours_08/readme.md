@@ -11,9 +11,10 @@
   - [Utilisation](#utilisation)
 - [L'encodeur incrémental](#lencodeur-incrémental)
 - [La direction de la rotation](#la-direction-de-la-rotation)
-- [L'encodeur en programmation](#lencodeur-en-programmation)
-- [Fonction `attachInterrupt`](#fonction-attachinterrupt)
-  - [Explications de l'exemple](#explications-de-lexemple)
+- [L'Encodeur en Programmation](#lencodeur-en-programmation)
+- [Utilisation de la Fonction `attachInterrupt`](#utilisation-de-la-fonction-attachinterrupt)
+  - [Exemple](#exemple-2)
+    - [Explications de l'exemple](#explications-de-lexemple)
 - [L'encodeur dans le robot](#lencodeur-dans-le-robot)
   - [Exercice](#exercice)
   - [Explications de l'exemple](#explications-de-lexemple-1)
@@ -162,7 +163,8 @@ Voici un exemple qui retourne en degrée l'angle de rotation du robot. Utilisez 
 ```cpp
 #include <MeAuriga.h>
 
-MeGyro gyro;
+// Pour le Auriga, il faut utiliser l'adresse 0x69.
+MeGyro gyro(PORT_0, 0x69);
 
 void setup()
 {
@@ -173,7 +175,6 @@ void setup()
 void loop()
 {
   gyro.update();
-  Serial.read();
   Serial.print("X:");
   Serial.print(gyro.getAngleX() );
   Serial.print(" Y:");
@@ -241,18 +242,19 @@ L'illustration suivante montre la version avec une piste et deux signaux décal�
 
 ---
 
-# L'encodeur en programmation
-- Jusqu'ici, nous avons vu la programmation séquentielle, c'est-à-dire que l'on programme une séquence d'instructions à exécuter.
-- Pour utiliser un encodeur, on doit utiliser ce qu'on appelle une **interruption**.
-- Une interruption, comme son nom l'indique, consiste à interrompre momentanément le programme que l'Arduino exécute pour qu'il effectue un autre travail. Quand cet autre travail est terminé, l'Arduino retourne à l'exécution du programme principal et reprend exactement où il l'avait laissé.
-- Cet autre travail s'appelle une **fonction d'interruption** ou *ISR* (*Interrupt Service Routine*).
-- L'interruption n'est pas interruptible par une autre interruption.
-- Ainsi, il faut faire des opérations courtes lors d'une interruption pour ne pas "embourber" le processeur.
-- On peut obtenir une interruption de plusieurs manières, mais celle qui nous intéresse est l'**interruption externe**.
-  - Interruption externe dans le sens où l'interruption provient d'un appareil externe branché sur une broche.
-- L'interruption externe permet d'obtenir une interruption au changement d'état d'une broche. D'où leur utilité pour les encodeurs.
-  - En effet, à chaque fois que l'encodeur enverra un signal, il interrompt le programme principal.
-  - Le signal peut être le passage de 0 à 1 ou l'inverse.
+# L'Encodeur en Programmation
+
+- Jusqu'à présent, nous avons étudié la programmation séquentielle, où nous créons une séquence d'instructions à exécuter dans un ordre précis.
+- Lorsque nous utilisons un encodeur, nous devons utiliser une technique appelée **interruption**.
+- Une interruption, comme son nom l'indique, consiste à interrompre temporairement le programme en cours d'exécution par le microcontrôleur afin de lui faire effectuer une tâche différente. Une fois cette tâche terminée, le microcontrôleur revient à l'exécution du programme principal et reprend exactement là où il s'était arrêté.
+- Cette tâche différente est appelée une **fonction d'interruption**, également connue sous le nom de *ISR* (*Interrupt Service Routine*).
+- Il est important de noter qu'une interruption ne peut pas être interrompue par une autre interruption.
+- Par conséquent, il est essentiel de maintenir des opérations courtes lors de l'exécution d'une interruption, afin de ne pas surcharger le processeur.
+- Il existe plusieurs façons d'obtenir une interruption, mais celle qui nous intéresse ici est l'**interruption externe**.
+  - L'interruption externe provient d'un appareil externe connecté à une broche.
+  - L'interruption externe est particulièrement utile pour les encodeurs, car chaque fois que l'encodeur envoie un signal, il interrompt l'exécution du programme principal.
+  - Ce signal peut être déclenché par un changement d'état de la broche, que ce soit de 0 à 1 ou inversement.
+
 
 > **Important**
 > 
@@ -261,19 +263,23 @@ L'illustration suivante montre la version avec une piste et deux signaux décal�
 
 ---
 
-# Fonction `attachInterrupt`
-- La fonction `attachInterrupt` permet d'associer une interruption à une broche et à une fonction
-- On utilise cette fonction dans le `setup`.
-- Dans le cadre du robot, la syntaxe est la suivante
-  - `attachInterrupt(no_broche, la_fonction, RISING);`
-  - Le premier paramètre est le numéro de la broche qui déclenchera l'interruption.
-  - Le second est la fonction qui s'exécutera.
-  - Le dernier est la partie du signal qui déclenchera l'interruption.
-    - `RISING` : Front montant soit de 0 à 1
-    - `FALLING` : Front descendant soit de 1 à 0
-    - `CHANGE` : Tout changement
+# Utilisation de la Fonction `attachInterrupt`
 
-Exemple :
+- La fonction `attachInterrupt` permet d'établir une connexion entre une interruption, une broche et une fonction.
+- Cette fonction est généralement utilisée dans la partie de configuration (`setup`) du programme.
+- Pour configurer une interruption sur un robot, voici la syntaxe usuelle :
+  - `attachInterrupt(num_broche, nom_de_la_fonction, FRONT_MONTOYANT);`
+  - Le premier paramètre spécifie le numéro de la broche qui déclenchera l'interruption.
+  - Le deuxième paramètre indique quelle fonction sera exécutée lorsque l'interruption se produira.
+  - Le dernier paramètre détermine quel changement du signal déclenchera l'interruption.
+    - `RISING` : Ce choix déclenche l'interruption lors du passage de 0 à 1, soit le front montant du signal.
+    - `FALLING` : L'interruption est déclenchée lors du passage de 1 à 0, soit le front descendant du signal.
+    - `CHANGE` : L'interruption se produit à chaque changement de l'état du signal.
+
+Cela permet de lier une broche à une action spécifique lorsqu'un certain événement se produit sur cette broche, ce qui peut être très utile dans le contexte de la programmation d'un robot.
+
+
+## Exemple
 
 ```cpp
 
@@ -301,10 +307,12 @@ void setup()
 
 ```
 
-## Explications de l'exemple
+### Explications de l'exemple
 - Dans `setup`, on configure l'interruption avec `attachInterrupt`
 - La fonction `interruption_encodeur_1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et ce sur le front montant.
 - Remarquez, il n'y a aucun appel de la fonction dans la boucle principale, l'interruption s'appellera tout seul lorsque la broche aura un signal.
+- L'objet `Encoder_1` est de type `MeEncoderOnBoard` et est déclaré dans la partie globale du programme.
+  - Nous verrons plus loin les différentes fonctions de cette classe.
 
 ---
 
@@ -503,7 +511,7 @@ void loop()
 - La fonction `isr_process_encoder1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et ce sur le front montant.
 - Dans `loop` :
   - On remarque la fonction `setTarPWM`. Cette fonction permet de mettre un objectif `PWM` à atteindre pour l'`Encoder_1`.
-  - On remarque aussi `Encoder_1.loop()`. Il s'agit de la tâche que l'encodeur doit effectuer à chaque fois.
+  - On remarque aussi `Encoder_1.loop()`. Il s'agit de la tâche que l'encodeur doit effectuer à chaque fois. Cette appel de fonction est obligatoire.
 
 ---
 
@@ -514,7 +522,7 @@ void loop()
 - C'est un peu sur le même principe que les dérailleurs d'un vélo. On réduit la vitesse pour monter les pentes et on augmente celle-ci pour augmenter la vitesse de croisière.
 
  ## Unité de mesure
- - On utilise le terme "rapport proportionnel" (*gear ratio*) pour désigner la spécificité d'un *gearbox*.
+ - On utilise le terme **rapport proportionnel** (*gear ratio*) pour désigner la spécificité d'un *gearbox*.
  - Ainsi, on pourra voir des valeurs telles que  1:20, 1:42.5, 20:1, 3:1, etc.
  - Le premier nombre désigne le nombre de rotation du moteur et le second de celui de l'arbre de sortie.
  - Par exemple, pour un rapport de 20:1, il faudra 20 rotation à la source pour obtenir 1 rotation à la sortie.
@@ -529,7 +537,7 @@ Voici ce qui se retrouve à l'intérieur d'un motoréducteur du robot.
 - Le robot a deux motoréducteurs avec encodeur
 - Selon les exemples de code dans les exemples du fabricant, chacun a un rapport proportionnel de 39.267:1
   - Ainsi il faut 39.267 rotation pour faire une rotation de roue.
-- Chaque encodeur fait 9 pulsations pour effectuer une rotation complète.
+- Chaque encodeur fait 9 pulsations pour effectuer une rotation complète à la sortie du moteur.
 
 > **Alerte aux bogues!**
 > 
@@ -541,8 +549,8 @@ Voici ce qui se retrouve à l'intérieur d'un motoréducteur du robot.
 > **Question**
 > 
 > Chaque roue a un diamètre d'approximativement 6.5 cm
-> - Combien de pulsations sont nécessaire pour effectuer une rotation complète d'une roue?
-> - Combien de pulsation? sont nécessaire pour parcourir 1 mètre?
+> - Combien de pulsations sont nécessaire pour effectuer une rotation complète d'une roue?<!-- 9 * 39.267 -->
+> - Combien de pulsation? sont nécessaire pour parcourir 1 mètre?<!-- (100 / (6.5 * PI)) * 9 * 39.267 -->
 
 ---
 
@@ -551,43 +559,12 @@ Voici ce qui se retrouve à l'intérieur d'un motoréducteur du robot.
 
 > **Note**
 >
-> Ignorer les lignes avec le code `.setPosPid` et `.setSpeedPid`. Car leur explication sort du cadre du cours. Toutefois, il faudra les utiliser tel quel lors de la programmation du robot.
+> Malgré leur importance primordiale en mécatronique, ignorer les lignes avec le code `.setPosPid` et `.setSpeedPid`. Car leur explication sort du cadre du cours. Toutefois, il faudra les utiliser tel quel lors de la programmation du robot.
 
 <details>
   <summary>Cliquer pour voir le code de l'exemple</summary>
 
 ```cpp
-/**
- * \par Copyright (C), 2012-2016, MakeBlock
- * @file    Me_Auriga_encoder.ino
- * @author  MakeBlock
- * @version V1.0.0
- * @date    2016/07/14
- * @brief   Description: this file is sample code for auriga encoder motor device.
- *
- * Function List:
- *    1. uint8_t MeEncoderOnBoard::getPortB(void);
- *    2. uint8_t MeEncoderOnBoard::getIntNum(void);
- *    3. void MeEncoderOnBoard::pulsePosPlus(void);
- *    4. void MeEncoderOnBoard::pulsePosMinus(void);
- *    5. void MeEncoderOnBoard::setMotorPwm(int pwm);
- *    6. double MeEncoderOnBoard::getCurrentSpeed(void);
- *    7. void MeEncoderOnBoard::setSpeedPid(float p,float i,float d);
- *    8. void MeEncoderOnBoard::setPosPid(float p,float i,float d);
- *    7. void MeEncoderOnBoard::setPosPid(float p,float i,float d);
- *    8. void MeEncoderOnBoard::setPulse(int16_t pulseValue);
- *    9. void MeEncoderOnBoard::setRatio(int16_t RatioValue);
- *    10. void MeEncoderOnBoard::moveTo(long position,float speed,int16_t extId,cb callback);
- *    11. void MeEncoderOnBoard::loop(void);
- *    12. long MeEncoderOnBoard::getCurPos(void);
- *
- * \par History:
- * <pre>
- * <Author>     <Time>        <Version>      <Descr>
- * Mark Yan     2016/07/14    1.0.0          build the new
- * </pre>
- */
-
 #include <MeAuriga.h>
 
 MeEncoderOnBoard Encoder_1(SLOT1);
@@ -696,7 +673,7 @@ void loop()
 ## Explications
 Nous allons nous attarder sur les lignes `setPulse` et `setRatio`.
 
-`setPulse` permet d'indiquer à l'objet le nombre de pulsation par rotation. Dans le cas de notre robot, ce sera 9.
+`setPulse` permet d'indiquer à l'objet le nombre de pulsations par rotation au niveau de la sortie du moteur. Dans le cas de notre robot, ce sera 9.
 
 `setRatio` permet d'indiquer le rapport proportionnel du motoréducteur.
 
@@ -715,7 +692,8 @@ Ces lignes sont importantes si l'on désire avoir des résultats précis avec le
 ## Anneau de DEL
 - La classe [MeRGBLed](https://github.com/nbourre/Makeblock-Libraries/blob/master/src/MeRGBLed.h)
 - L'exemple [MeAurigaOnBoardLEDRing](https://github.com/nbourre/Makeblock-Libraries/blob/master/examples/Me_RGBLed/MeAurigaOnBoardLEDRing/MeAurigaOnBoardLEDRing.ino)
-- 
+
+
 ## Encodeurs
 - [LOCODuino - les interruptions](https://www.locoduino.org/spip.php?article64)
 - [Incremental Encoder - How it works](https://www.youtube.com/watch?v=zzHcsJDV3_o)
