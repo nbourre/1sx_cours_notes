@@ -5,6 +5,7 @@
   - [Principe](#principe)
   - [Régulateur PID](#régulateur-pid)
 - [Faire rouler le robot droit](#faire-rouler-le-robot-droit)
+  - [Mais ça ne marche pas!!!](#mais-ça-ne-marche-pas)
 - [Pivoter le robot à un angle précis](#pivoter-le-robot-à-un-angle-précis)
 - [Exercices](#exercices)
 
@@ -21,12 +22,12 @@ Voici un tableau avec la description des principales méthodes pour utiliser la 
 | `void setCurrentSpeed(float speed)`, `float getCurrentSpeed()` | Configure et retourne la vitesse du moteur.                                                                                                                                                                                                                                                                     |
 | `int getCurPwm()`                                              | Retourne le pwm actuelle                                                                                                                                                                                                                                                                                        |
 | `void setTarPwm(int pwm)`                                      | Configure le pwm ciblé                                                                                                                                                                                                                                                                                          |
-| `void setMotorPwm(int pwm)`                                    | Configure le pwm au moteur. Affecte le moteur directement.                                                                                                                                                                                                                                                      |
+| `void setMotorPwm(int pwm)`                                    | Configure le pwm au moteur.  Il s'agit de la seule méthode qui contrôle les broches du moteur.                                                                                                                                                                                                                                            |
 | `long getCurPos()`                                             | Retourne la position actuelle en degrés.                                                                                                                                                                                                                                                                        |
 | `void runSpeed(float speed)`                                   | Indique la vitesse ciblée pour le moteur. La vitesse est en rpm. Utilise le mode PID.                                                                                                                                                                                                                                               |
 | `void move(long position,float speed = 100)`                   | Le moteur se déplace à la position **relative**. <ul><li>`position` : Angle relatif que le moteur doit aller. Ex : `90` va indiquer au moteur de se déplacer de 90°.</li>[`speed`] : Vitesse à laquelle effectuer le mouvement.</ul>J'ai volontairement omis des paramètres optionnels pour alléger le contenu. |
 | `void moveTo(long position,float speed = 100)`                 | Le moteur se déplace à la position **absolue**. C'est-à-dire par rapport au zéro initial. L'unité est en degré.                                                                                                                                                                                                 |
-| `long distanceToGo()`                                          | Distance en degrés à parcourir avant d'atteindre la cible.                                                                                                                                                                                                                                                      |
+| `long distanceToGo()`                                          | Distance en degrés à parcourir avant d'atteindre la cible. <br>360° = 1 rotation.                                                                                                                                                                |
 | `void setSpeedPid(float p,float i,float d);`                   | Configure les paramètres PID de la vitesse de l'encodeur                                                                                                                                                                                                                                                        |
 | `void setPosPid(float p,float i,float d);`                     | Configure les paramètres PID de la position de l'encodeur                                                                                                                                                                                                                                                       |
 | `void setPulse(int16_t pulseValue);`                           | Configure le nombre de pulsation par rotation de l'encodeur. **Doit être 9**.                                                                                                                                                                                                                                   |
@@ -137,6 +138,70 @@ void moveAtSpeed(int speed) {
 
 Vous pouvez tester avec le projet `ranger_encoder_ligne_droite` qui sont dans mes exemples.
 
+## Mais ça ne marche pas!!!
+En effet, certains robots tendent vers la droite ou la gauche. C'est dû à plusieurs facteurs. Voici quelques-uns :
+- Le poids du robot n'est pas équilibré.
+- Les roues ne sont pas bien alignées.
+- Les roues ne sont pas bien fixées.
+- Les roues ne sont pas bien calibrées.
+- Etc.
+
+Vous constatez qu'il y a plusieurs facteurs possibles. Cela est principalement dû à qualité des pièces. Il faut donc faire des ajustements pour compenser.
+
+Nous pouvons utiliser le gyroscope pour compenser. Il suffit de lire la valeur du gyroscope et de faire une correction en conséquence.
+
+Le projet [`ranger_straight`](https://github.com/nbourre/1SX_robotique/blob/master/cours_08_encodeurs/ranger_straight/ranger_straight.ino) est un exemple qui utilise le gyroscope pour corriger la trajectoire du robot.
+
+Voici la principale fonction qui permet au robot d'aller droit :
+
+```cpp
+void goStraight(short speed = 100, short firstRun = 0) {
+    static double zAngleGoal = 0.0;
+    
+    static double error = 0.0;
+    static double previousError = 0.0;
+    static double output = 0;
+    
+    // Boucle de contrôle PD
+    // Modifier les valeurs pour ajuster la réaction du robot
+    // kp = coefficient proportionnel
+    // kp plus élevé = plus réactif, peut avoir de l'oscillation
+    // kp plus bas = moins réactif, mais moins d'oscillation
+    //
+    // kd = coefficient dérivé
+    // kd plus élevé = limite l'oscillation, la bonne valeur arrête l'oscillation
+    const double kp = 3.0;
+    const double kd = 1.0;    
+    
+    // Premier appel de la fonction
+    // On initialise les variables
+    if (firstRun) {
+      gyro.resetData();
+      zAngleGoal = gyro.getAngleZ();
+      firstRun = 0;
+      Serial.println ("Setting speed");
+      
+      encoderLeft.setTarPWM(speed);
+      encoderRight.setTarPWM(-speed);
+      
+      return;
+    }
+    
+    // On calcule l'erreur
+    error = gyro.getAngleZ() - zAngleGoal;
+    
+    // On calcule la sortie
+    output = kp * error + kd * (error - previousError);
+    
+    // On garde en mémoire l'erreur précédente
+    previousError = error;
+    
+    // On applique la correction
+    encoderLeft.setTarPWM(speed - output);
+    encoderRight.setTarPWM(-speed - output);
+}
+```
+
 ---
 
 # Pivoter le robot à un angle précis
@@ -159,25 +224,10 @@ Donc les calculs seront les suivants :
 
 > **IMPORTANT!!!**
 > 
-> Ceci est la théorie où on ne prend pas en considération le niveau de la pile, le frottement, le glissement, etc.
+> Ceci est la théorie où on ne prend pas en considération le niveau de la pile, le frottement, le glissement, etc. On pourra compenser avec le gyroscope.
 
 ---
 
 # Exercices
 1. Faire avancer le robot à 1 mètre ±5%.
 2. Faire avancer le robot à 1 mètre ±5% et revenir à son point de départ.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
