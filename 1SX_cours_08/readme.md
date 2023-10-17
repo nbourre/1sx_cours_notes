@@ -8,6 +8,7 @@
 - [Problématique des déplacements](#problématique-des-déplacements)
 - [Le gyroscope](#le-gyroscope)
   - [Exemple](#exemple-1)
+  - [Utilisation](#utilisation)
 - [L'encodeur incrémental](#lencodeur-incrémental)
 - [La direction de la rotation](#la-direction-de-la-rotation)
 - [L'Encodeur en Programmation](#lencodeur-en-programmation)
@@ -184,7 +185,10 @@ void loop()
 }
 ```
 
-
+## Utilisation
+- Le gyroscope peut être utilisé pour qu'un actuateur (moteur) se déplace à un angle précis.
+- On peut aussi l'utiliser pour que le robot se déplace en ligne droite. En corrigeant la trajectoire à chaque fois que l'angle de rotation change.
+  - Exemple : Avant d'aller en ligne droite, il faut lire la valeur actuelle du gyroscope en Z. Ensuite, on active les deux moteurs. À chaque fois que l'on lit le gyroscope, on compare la valeur actuelle avec la valeur initiale. Si la valeur est différente, on ajuste la vitesse des moteurs pour que le robot se déplace en ligne droite.
 
 ---
 
