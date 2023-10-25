@@ -304,7 +304,8 @@ Dans votre kit, nous avons un circuit imprimé (PCB) qui permet d'étendre les p
 ![Alt text](assets/nick1.1_top_view.jpg)
 Ce circuit imprimé permet entre autres de sortir les broches pour la communication I2C. Nous allons utiliser ce modole pour communiquer avec l'[écran SSD1306](/1SX_cours_05/readme.md#lécran-oled-ssd-1306) et nous permettre de nous **déboguer plus facilement**. En effet, nous allons pouvoir écrire des messages directement sur l'écran.
 
-<video src="assets/nick1.1_video.mp4" controls title="Title"></video>
+<video src="https://github.com/nbourre/1sx_cours_notes/assets/2332679/a430667b-88e5-41e9-83e4-7794a7be14a4" controls autoplay title="Nick1.1"></video>
+
 
 Votre kit aura maintenant les éléments suivant supplémentaires :
 - Module Nick1.1
