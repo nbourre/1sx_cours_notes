@@ -318,7 +318,8 @@ J'ai réalisé un petit projet nommé `ssd1306_test_debug` dans le dossier `autr
 # Exercices
 1. Testez le code pour suivre un tracer noir sur fond blanc.
 2. Ajustez le code pour que le robot suive une ligne plus précisément.
-3. Améliorez le code en essayant d'implémenter un PID (sans la partie intégrale) pour suivre la ligne.
+3. Ajoutez de l'information de débogage tel que l'affichage de l'état des capteurs sur l'écran SSD1306.
+4. Améliorez le code en essayant d'implémenter un PID (sans la partie intégrale) pour suivre la ligne.
 
 ---
 
