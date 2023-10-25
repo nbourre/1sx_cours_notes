@@ -7,7 +7,8 @@ Cours sur l'utilisation du capteur de ligne du robot Ranger.
 - [Utilisation dans le code](#utilisation-dans-le-code)
 - [Suivre une ligne](#suivre-une-ligne)
   - [Méthode 1 : Suivre une ligne avec un seul capteur](#méthode-1--suivre-une-ligne-avec-un-seul-capteur)
-  - [Méthode 2 : Suivre une ligne avec une varialble d'ajustement](#méthode-2--suivre-une-ligne-avec-une-varialble-dajustement)
+  - [Méthode 2 : Suivre une ligne avec une variable d'ajustement](#méthode-2--suivre-une-ligne-avec-une-variable-dajustement)
+- [Utiliser l'écran SSD1306 avec le robot](#utiliser-lécran-ssd1306-avec-le-robot)
 - [Exercices](#exercices)
 
 # Introduction
@@ -25,7 +26,7 @@ Le capteur de ligne est un capteur binaire qui permet de détecter la présence 
     </tr>
 </table>
 
-Lorsque le capteur est placé sur une ligne noire, la lumière IR est absorbée par la ligne noire et le phototransistor est activé. Lorsque le capteur est placé sur un fond blanc, la lumière IR est réfléchie par le fond blanc et le phototransistor est désactivé.
+Lorsque le capteur est placé sur une ligne noire, la lumière IR est absorbée par la ligne noire et le phototransistor est désactivé. Lorsque le capteur est placé sur un fond blanc, la lumière IR est réfléchie par le fond blanc et le phototransistor est activé.
 
 ![](../img/line_follower_logic.jpg)
 
@@ -33,8 +34,6 @@ Une DEL bleue indicatrice s'allume lorsque le capteur voit un fond pâle.
 
 Voici les situations possibles :
 ![](../img/line_follower_case.png)
-
-
 
 ## Configuration sur le robot
 
@@ -97,20 +96,20 @@ Voici la portion de code qui utilise les constantes.
 ```cpp
 switch (sensors) {
   case S1_IN_S2_IN:
-    Serial.println("Les deux capteurs voit la ligne noire.");
+    Serial.println("GAUCHE: 1 \t DROITE: 1");
     break;      
   case S1_IN_S2_OUT:
-    Serial.println("S1 voit la ligne et S2 ne voit pas la ligne");
+    Serial.println("GAUCHE: 1 \t DROITE: 0");
     break;      
   case S1_OUT_S2_IN:
-    Serial.println("S1 ne voit pas la ligne et S2 voit la ligne");
+    Serial.println(F("GAUCHE: 0 \t DROITE: 1"));
     break;      
   case S1_OUT_S2_OUT:
-    Serial.println("Les deux capteurs ne voit pas la ligne");
+    Serial.println("GAUCHE: 0 \t DROITE: 0");
     break;
 }
 ```
-Beaucoup plus lisible!
+Beaucoup plus lisible! N'oubliez pas que la lisibilité du code est très importante.
 
 ---
 
@@ -118,7 +117,7 @@ Beaucoup plus lisible!
 Plusieurs méthodes sont possibles pour suivre une ligne. Nous allons voir deux méthodes.
 
 ## Méthode 1 : Suivre une ligne avec un seul capteur
-Cette méthode est très simple. Il suffit de lire la valeur du capteur de gauche et de tourner le robot en fonction de la valeur lue.
+Cette méthode est très simple. Il suffit de lire la valeur des capteurs et de tourner le robot en fonction de la valeur lue.
 
 ```cpp
 #include <MeAuriga.h>
@@ -127,14 +126,9 @@ MeLineFollower lineFollower(PORT_9);
 MeEncoderOnBoard encoderRight(SLOT1);
 MeEncoderOnBoard encoderLeft(SLOT2);
 
-int moveSpeed = 120;
-
+int moveSpeed = 100;
 
 unsigned long currentTime = 0;
-
-unsigned long serialPrevious = 0;
-int serialInterval = 500;
-String msg = "";
 
 void setup() {
   Serial.begin(115200);
@@ -146,18 +140,18 @@ void loop() {
   currentTime = millis();
   
   byte lines = lineFollower.readSensors();
-  
+
   switch (lines) {
     case S1_IN_S2_IN:
       Forward();
-      msg = "S1 et S2 voit la ligne";
+      msg = "GAUCHE et DROITE voit la ligne";
       break;
     case S1_IN_S2_OUT:
-      msg = "S1 voit la ligne et S2 ne voit pas la ligne";
+      msg = "GAUCHE voit la ligne et DROITE ne voit pas la ligne";
       TurnLeft();
       break;
     case S1_OUT_S2_IN:
-      msg = "S1 ne voit pas la ligne et S2 voit la ligne";
+      msg = "GAUCHE ne voit pas la ligne et DROITE voit la ligne";
       TurnRight();
       break;
     case S1_OUT_S2_OUT:
@@ -165,19 +159,14 @@ void loop() {
       msg = "Les deux capteurs ne voit pas la ligne";
       break;
   }
-  
-  serialPrintTask();
-  
-  
+
+  encodersTask();
 }
 
-/// Attention!
-/// Le code suivant doit être ajusté pour votre robot
-/// et l'environment dans lequel il est utilisé. 
 
 void Forward() {
-  encoderLeft.setMotorPwm(moveSpeed);  
-  encoderRight.setMotorPwm(-moveSpeed);  
+  encoderLeft.setTarPWM(moveSpeed);  
+  encoderRight.setTarPWM(-moveSpeed);  
 }
 
 void TurnLeft() {
@@ -199,6 +188,8 @@ void Spin() {
   encoderLeft.setMotorPwm(moveSpeed);  
   encoderRight.setMotorPwm(moveSpeed);  
 }
+
+//#region <Interruption>
 
 // Fonction d'interruption pour le moteur droit
 void encoderRight_interrupt(void)
@@ -226,6 +217,8 @@ void encoderLeft_interrupt(void)
   }
 }
 
+//#endregion
+
 // Configuration des encodeurs
 void encoderSetup() {
   attachInterrupt(encoderRight.getIntNum(), encoderRight_interrupt, RISING);
@@ -242,58 +235,60 @@ void encoderSetup() {
   encoderLeft.setPosPid(1.8,0,1.2);
   encoderRight.setSpeedPid(0.18,0,0);
   encoderLeft.setSpeedPid(0.18,0,0);
-  
-  // Pour le capteur de ligne, nous n'avons pas besoin
-  // de gérer le PId des moteurs
   encoderRight.setMotionMode(DIRECT_MODE);
   encoderLeft.setMotionMode(DIRECT_MODE);
 }
 
-
-void serialPrintTask() {
-  if (currentTime - serialPrevious < serialInterval) return;
-
-  serialPrevious = currentTime;
-
-  if (msg != "") {
-    Serial.println(msg);
-    msg = "";
-  }
-
+void encodersTask() {
+  encoderLeft.loop();
+  encoderRight.loop();
 }
 
 ```
 
-## Méthode 2 : Suivre une ligne avec une varialble d'ajustement
+Cette méthode simpliste fonctionne un peu, mais le robot a tendance à dévier de sa trajectoire. Il faut donc trouver une autre méthode.
+
+## Méthode 2 : Suivre une ligne avec une variable d'ajustement
 Cette méthode est un peu plus complexe. Elle permet de suivre une ligne avec une variable d'ajustement. La variable d'ajustement permet de corriger la trajectoire du robot.
 
 Voici un résumé du code à modifier.
 
 ```cpp
 // Variable inialisée au début du code
-int lineFollowFlag=0;
+int error = 0;
 
 //..
 switch (lines) {
   case S1_IN_S2_IN:
+    error = 0;
     Forward();
-    lineFollowFlag=10;
-    msg = "S1 et S2 voit la ligne";
+    msg = "GAUCHE et DROITE voit la ligne";
     break;
   case S1_IN_S2_OUT:
-    if (lineFollowFlag<1) lineFollowFlag--;
-    msg = "S1 voit la ligne et S2 ne voit pas la ligne";
+    error--;
+    speedAdjust(moveSpeed, error);
+    msg = "GAUCHE voit la ligne et DROITE ne voit pas la ligne";
     break;
   case S1_OUT_S2_IN:
-    if (lineFollowFlag<20) lineFollowFlag++;
-    msg = "S1 ne voit pas la ligne et S2 voit la ligne";
+    error++;
+    speedAdjust(moveSpeed, error);
+    msg = "GAUCHE ne voit pas la ligne et DROITE voit la ligne";
     break;
   case S1_OUT_S2_OUT:
-    if(lineFollowFlag==10) Backward();
-    if(lineFollowFlag<10) TurnLeft();
-    if(lineFollowFlag>10) TurnRight();
+    if (error < 0) {
+      SpinRight();
+    } else if (error > 0) {
+      SpinLeft();
+    } else {
+      Backward();
+    }
     msg = "Les deux capteurs ne voit pas la ligne";
     break;
+}
+
+void speedAdjust(int speed, int error) {
+  encoderLeft.setMotorPwm(speed + error);  
+  encoderRight.setMotorPwm(-speed + error);   
 }
 //..
 ```
@@ -304,9 +299,25 @@ Ainsi, si la variable est égale à 10, le robot a simplement dépasser la ligne
 
 ---
 
+# Utiliser l'écran SSD1306 avec le robot
+Dans votre kit, nous avons un circuit imprimé (PCB) qui permet d'étendre les ports du robot.
+![Alt text](assets/nick1.1_top_view.jpg)
+Ce circuit imprimé permet entre autres de sortir les broches pour la communication I2C. Nous allons utiliser ce modole pour communiquer avec l'[écran SSD1306](/1SX_cours_05/readme.md#lécran-oled-ssd-1306) et nous permettre de nous **déboguer plus facilement**. En effet, nous allons pouvoir écrire des messages directement sur l'écran.
+
+<video src="assets/nick1.1_video.mp4" controls title="Title"></video>
+
+Votre kit aura maintenant les éléments suivant supplémentaires :
+- Module Nick1.1
+- Écran SSD1306
+- Câble RJ-25
+- Support pour l'ensemble
+
+J'ai réalisé un petit projet nommé `ssd1306_test_debug` dans le dossier `autres` des projets du cours. Vous pourrez l'adapter à vos besoins.
+
 # Exercices
 1. Testez le code pour suivre un tracer noir sur fond blanc.
 2. Ajustez le code pour que le robot suive une ligne plus précisément.
+3. Améliorez le code en essayant d'implémenter un PID (sans la partie intégrale) pour suivre la ligne.
 
 ---
 

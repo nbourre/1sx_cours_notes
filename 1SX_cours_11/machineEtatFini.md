@@ -1,7 +1,6 @@
 # Machine à état fini <!-- omit in toc -->
 Cet article est une retranscription de l'excellent poste de [J-M-L](https://forum.arduino.cc/t/programmation-automate-fini-machine-a-etat/452532) sur le forum d'Arduino.
 
-
 ---
 
 - [Définition](#définition)

@@ -273,7 +273,6 @@ void loop()
 # Avertisseur sonore
 L'Auriga est équipé d'un buzzer. Il est branché sur la broche D45.
 
-
 ## Exemple de code simple
 
 ```cpp
