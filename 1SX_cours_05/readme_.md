@@ -2,27 +2,22 @@
   
 Article qui indique comment exploiter la communication i2c avec divers appareils électroniques. On n'explore pas la science derrière ce protocole, mais plutôt sont utilisation.
   
-#  Table des matières
-  
-  
-  
-  
-  
-  
-- [Introduction](#introduction )
-- [Branchement](#branchement )
-- [L'accéléromètre](#laccéléromètre )
-  - [Utilité](#utilité )
-  - [Fonctionnement](#fonctionnement )
-  - [Utilisation](#utilisation )
-    - [Code - basic_readings](#code---basic_readings )
-  - [Analyse du code de configuration](#analyse-du-code-de-configuration )
-  - [Analyse du code de la boucle](#analyse-du-code-de-la-boucle )
-- [Gyroscope](#gyroscope )
-- [Exercices](#exercices )
-- [Références](#références )
-  
-  
+#  Table des matières  
+- [Communication i2c](#communication-i2c)
+- [Table des matières](#table-des-matières)
+- [Introduction](#introduction)
+- [Branchement](#branchement)
+- [L'accéléromètre](#laccéléromètre)
+  - [Utilité](#utilité)
+  - [Fonctionnement](#fonctionnement)
+  - [Utilisation](#utilisation)
+    - [Code - basic\_readings](#code---basic_readings)
+  - [Analyse du code de configuration](#analyse-du-code-de-configuration)
+  - [Analyse du code de la boucle](#analyse-du-code-de-la-boucle)
+- [Gyroscope](#gyroscope)
+- [Exercices](#exercices)
+- [Références](#références)
+   
   
   
 #  Introduction
