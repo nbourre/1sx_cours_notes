@@ -21,5 +21,6 @@ Voici une liste de questions typiques qui pourraient être posées lors de l'év
 - Décris ce qu'est une fonction d'interruption et à quoi elle peut servir.
 - Quelle est la différence entre une fonction d'interruption et une fonction normale?
 - Pourquoi est-il mieux d'utiliser une machine à état fini au lieu d'un programme séquentiel pour contrôler le robot?
+- J'ai plusieurs appareils fonctionnant avec le protocole I2C. Je voudrais les connecter sur le port I2C du robot. Conceptuellement, comment puis-je faire cela? Qu'est-ce qui permet de différencier à quel appareil le code communique?
 
 Si vous avez des questions ou commentaires, posez-les en utilisant l'onglet `Issues` en haut de la page.
