@@ -21,5 +21,6 @@ Voici une liste de questions typiques qui pourraient être posées lors de l'év
 - Décris ce qu'est une fonction d'interruption et à quoi elle peut servir.
 - Quelle est la différence entre une fonction d'interruption et une fonction normale?
 - Pourquoi est-il mieux d'utiliser une machine à état fini au lieu d'un programme séquentiel pour contrôler le robot?
+- Lorsque j'active le moniteur série, je reçois des caractères bizarres comme-ci "`3??à.□□□□" Pourquoi?
 
 Si vous avez des questions ou commentaires, posez-les en utilisant l'onglet `Issues` en haut de la page.
