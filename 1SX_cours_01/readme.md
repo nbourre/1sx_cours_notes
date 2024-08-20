@@ -13,7 +13,7 @@
 
 
 # Présentation
-Présentation de moi-même et des étudiants.
+Présentation du professeur.
 
 # Plan de cours
 Lecture du plan de cours.
@@ -34,7 +34,7 @@ Lecture du plan de cours.
 - La robotique est l'ensemble des techniques permettant la conception et la réalisation de machines automatiques ou de robots – *Wikipédia*
 - Ce qui nous concerne en tant que futur développeur :
   - Programmation sur microcontrôleur (µC)
-  - Création de programme pour l’exploitation de capteurs ou de mécanismes
+  - Création de programmes pour l’exploitation de capteurs ou de mécanismes
   - Échange d’information diverse
 
 # Nos outils de travail
@@ -46,7 +46,7 @@ Lecture du plan de cours.
 
 # Exercice - 10 minutes
 - Sur votre ordinateur, téléchargez et installez la dernière version du logiciel Arduino IDE
-  - Pour vous faire pratiquer de vos talents de technicien, je vous laisse chercher où le récupérer et comment l’installer
+  - Pour vous faire pratiquer vos talents de technicien, je vous laisse chercher où le récupérer et comment l’installer
 - Une fois l’installation complétée, démarrez l’application
   - Si Windows demande si l’on veut donner l’accès Internet à Arduino, confirmez l’accès
 
