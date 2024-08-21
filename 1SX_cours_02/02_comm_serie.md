@@ -14,8 +14,6 @@
 
 ---
 
-
-
 # Communication série
 
 - La communication série permet de transférer des données entre périphériques.
