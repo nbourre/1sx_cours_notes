@@ -16,6 +16,7 @@
 - [La fonction map()](#la-fonction-map)
   - [Exemple](#exemple-1)
 - [Exercices](#exercices)
+  - [Exercice de rappel](#exercice-de-rappel)
 - [Références](#références)
 
 
@@ -305,6 +306,12 @@ void loop() {
   - Faire un mouvement d’essuie-glace avec le servomoteur
   - Faire changer l’intensité d’une DEL à l’aide du potentiomètre
   - Contrôler le servo avec le potentiomètre ou joystick
+
+## Exercice de rappel
+- Faites un branchement avec 1 servo, 2 DEL et le joystick.
+  - Placez les DELs à chaque extrémité du servo
+  - Contrôlez la position du servo avec le joystick
+  - Les DELs devront changer d’intensité selon la position du servo, i.e. au milieu, les 2 DELs sont à 50% de leur intensité, à l’extrémité, une des DELs est à 100% et l’autre à 0%
 
 ---
 
