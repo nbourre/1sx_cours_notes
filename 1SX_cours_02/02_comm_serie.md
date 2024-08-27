@@ -14,8 +14,6 @@
 
 ---
 
-
-
 # Communication série
 
 - La communication série permet de transférer des données entre périphériques.
@@ -131,7 +129,7 @@ Solution : On peut envoyer des données à l'Arduino avec le moniteur série et 
 
 - Il faut aussi programmer l'Arduino pour qu'il puisse lire les données qu'il reçoit.
 - Les fonctions importantes sont les suivantes :
-  - [`Serial.available()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/available) : Indique le nombre d'octets disponibles dans le buffer de réception. S'il y a des données, la valeur sera > 0. Ainsi, on peut la mettre dans un `if`.
+  - [`Serial.available()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/available) : Indique le nombre d'octets disponibles dans le tampon (*buffer*) de réception. S'il y a des données, la valeur sera > 0. Ainsi, on peut la mettre dans un `if`.
   - [`Serial.read()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/read) : Lit un octet du buffer de réception.
   - [`Serial.parseInt()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/parseint) : Lit un nombre entier du buffer de réception.
   - [`Serial.parseFloat()`](https://www.arduino.cc/reference/fr/language/functions/communication/serial/parsefloat) : Lit un nombre décimal du buffer de réception.	
@@ -170,7 +168,7 @@ void loop()
 void blink()
 {
   digitalWrite(LED_BUILTIN,HIGH);
-  delay(blinkRate);
+  delay(blinkRate); // J'utilise delay seulement pour l'exemple!
   digitalWrite(LED_BUILTIN,LOW);
   delay(blinkRate);
 }
@@ -186,9 +184,9 @@ void blink()
 </tr>
 </table>
 
-> ***Astuce :*** Le caractère ‘0’ vaut 48 en code ASCII. Pour convertir, un chiffre en valeur numérique, il suffit de lui soustraire ‘0’.
+> ***Astuce :*** Le caractère '0' vaut 48 en code **ASCII**. Pour convertir, un chiffre en valeur numérique, il suffit de lui soustraire ‘0’.
 > 
-> Rappel : Le type ‘char’ est un octet non signé. Il peut donc contenir des valeurs entre 0 et 255. (2^8 - 1)
+> Rappel : Le type `char` est un octet non signé. Il peut donc contenir des valeurs entre 0 et 255. (2^8 - 1)
 
 ### Exemple - Lecture d'un nombre entier avec `parseInt()` et `read()`
 
@@ -255,8 +253,7 @@ void loop() {
 ## Autres fonctions d'intérêt
 
   - `Serial.readBytes(tampon, longueur)` : Lit un tableau d'octets de longueur déterminé.
-  - [`Serial.readBytesUntil(caractère, tampon, longueur)`](https://www.arduino.cc/reference/fr/language/functions/communication/stream/streamreadbytesuntil/) : Lit un tableau d'octets jusqu'à un caractère déterminé et l'enregistre dans le buffer.
-  - `Serial.readString()` : Lit une chaîne de caractères du buffer de réception.
+  - [`Serial.readBytesUntil(caractère, tampon, longueur)`](https://www.arduino.cc/reference/fr/language/functions/communication/stream/streamreadbytesuntil/) : Lit un tableau d'octets jusqu'à un caractère déterminé et l'enregistre dans le tampon.
   - `Serial.readStringUntil(caractère)` : Lit une chaîne de caractères jusqu'à un caractère déterminé.
 
 La liste des fonctions est disponible sur la page [Arduino - Communication série](https://www.arduino.cc/reference/fr/language/functions/communication/serial/).

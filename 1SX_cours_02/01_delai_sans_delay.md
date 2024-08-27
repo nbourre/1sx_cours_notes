@@ -60,7 +60,7 @@ void loop() {
 ---
 
 # Délai sans `delay()`
-- La fonction `delay()` est très pratique pour gérer des délais dans un programme. Cependant, elle bloque l’exécution du programme pendant le délai. Il est donc impossible de faire autre chose pendant ce temps.
+- La fonction `delay()` est pratique pour gérer des délais dans un programme. Cependant, elle bloque l’exécution du programme pendant le délai. Il est donc impossible de faire autre chose pendant ce temps.
 - Par exemple, si on voulait faire un clignoter un DEL, mais que l’on puisse lire un bouton pendant la pause, ça ne fonctionnerait pas.
 
 ```cpp
@@ -82,10 +82,10 @@ void loop() {
 - Il y a quelques méthodes pour simuler un délai sans faire de pause
 - Celle que je vous présente est simple à comprendre
 - En gros, je compare le temps actuel avec la dernière fois qu’il a été comparé
-- Il faut 3 variables dont 2 par actions que l'on désire effectuer
+- Il faut 3 variables par actions (fonctions) que l'on désire effectuer
   - `currentTime` <-- Temps actuel
-  - `xPrevious` <-- La dernière fois que l'on a fait l'action x. Par exemple `blinkPrevious`
-  - `xRate` <-- Le délai entre chaque action x. Par exemple `blinkRate = 1000`
+  - `lastTime` <-- Variable statique pour sauvegarder le temps de la exécution de l'action.
+  - `rate` <-- Variable ou constante pour déterminer le délai entre les actions.
 
 ## Exemple pour clignoter un DEL sans `delay()`
 
@@ -95,9 +95,6 @@ void loop() {
 
 ```cpp
 unsigned long currentTime;
-unsigned long blinkPrevious = 0;
-unsigned long blinkRate = 500;
-short ledState = 0;  // Peut être un autre type entier
 
 void setup() {
   // Configuration de la pin
@@ -107,15 +104,29 @@ void setup() {
 void loop() {
   // Sauvegarde du temps actuel
   currentTime = millis();
-  // On compare avec la dernière exécution
-  if (currentTime - blinkPrevious >= blinkRate) {
-    blinkPrevious = currentTime;
-    // On inverse l'état
-    ledState = !ledState;
-    // On écrit la valeur dans la pin
-    digitalWrite(LED_BUILTIN, ledState);
-  }
+
+  // Appel de la fonction pour clignoter le DEL
+  blinkLED();
 }
+
+void blinkLED() {
+    // Variables statiques pour sauvegarder le temps
+    static unsigned long lastTime = 0;
+    static bool ledState = LOW;
+
+    // Délai entre les clignotements
+    const unsigned long rate = 1000;
+
+    // Comparaison du temps actuel avec le dernier temps
+    if (currentTime - lastTime >= rate) {
+      // Inversion de l'état du DEL
+      ledState = !ledState;
+      digitalWrite(LED_BUILTIN, ledState);
+      // Sauvegarde du temps actuel
+      lastTime = currentTime;
+    }
+}
+
 ```
 
 </td>
@@ -131,7 +142,7 @@ void loop() {
 
 **Important :** Comprendre ce mécanisme est primordial pour pouvoir développer des applications qui nécessitent de réaliser des tâches *simultanées*.
 
-- On peut utiliser cette méthode pour ensuite faire d’autres actions
+- On peut utiliser cette méthode pour ensuite faire d’autres actions sans bloquer le programme
 - Par exemple
   - Envoyer de l’information à l’ordinateur à toutes les X secondes
   - Lire l’état des roues d'un robot
