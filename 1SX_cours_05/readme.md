@@ -2,7 +2,6 @@
 Article qui indique comment exploiter la communication i2c avec divers appareils électroniques. On n'explore pas la science derrière ce protocole, mais plutôt sont utilisation.
 
 # Table des matières <!-- omit in toc -->
-- [Important - Examen](#important---examen)
 - [Introduction](#introduction)
 - [Branchement](#branchement)
 - [L'accéléromètre](#laccéléromètre)
@@ -18,15 +17,16 @@ Article qui indique comment exploiter la communication i2c avec divers appareils
     - [Récupération de la bibliothèque](#récupération-de-la-bibliothèque)
     - [Ouvrir un exemple](#ouvrir-un-exemple)
     - [Analyse du code](#analyse-du-code)
+      - [Les inclusions](#les-inclusions)
+      - [Variables et objets initialisés](#variables-et-objets-initialisés)
+      - [`setup()`](#setup)
+      - [Fonctions importantes](#fonctions-importantes)
+        - [Gestion de l'affichage](#gestion-de-laffichage)
+        - [Dessin](#dessin)
+        - [Texte](#texte)
     - [Exercices](#exercices)
 - [Exercices](#exercices-1)
 - [Références](#références)
-
-
-# Important - Examen
-- Comme inscrit dans le plan de cours, il y aura un examen.
-- Il aura lieu jeudi le 21 septembre
-- Ce sera la matière vue jusqu'à cette semaine
 
 
 # Introduction
