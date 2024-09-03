@@ -1,14 +1,16 @@
 # Robot Ranger <!-- omit in toc -->
 
 - [Plan de leçon](#plan-de-leçon)
+- [Distribution du matériel](#distribution-du-matériel)
 - [mBot Ranger de MakeBlock](#mbot-ranger-de-makeblock)
 - [Spécifications](#spécifications)
 - [Le robot](#le-robot)
-- [Pin out](#pin-out)
+- [Sortie des broches (*pinout*)](#sortie-des-broches-pinout)
   - [Points saillants](#points-saillants)
 - [Différences avec le Arduino Mega](#différences-avec-le-arduino-mega)
 - [Configuration de l'environnement](#configuration-de-lenvironnement)
 - [Premier test](#premier-test)
+  - [Dépannage](#dépannage)
 - [Analyse du code testé](#analyse-du-code-testé)
 - [Gyroscope](#gyroscope)
 - [Exercices](#exercices)
@@ -25,6 +27,15 @@
 
 ---
 
+# Distribution du matériel
+- **Vous êtes responsable de ce robot.**
+- Chacun d'entre vous recevra un robot mBot Ranger.
+- Chaque robot a un numéro d'identification qui vous sera assigné.
+- Vous ne pourrez pas sortir des murs du cégep avec le robot.
+- Vous devrez faire vos travaux dans nos locaux.
+
+---
+
 # mBot Ranger de MakeBlock
 - Le robot utilisé sera le mBot Ranger de la compagnie MakeBlock
 - [Page officielle](https://www.makeblock.com/steam-kits/mbot-ranger)
@@ -32,6 +43,7 @@
 ![](../img/mBot-Ranger_500_EN.png)
 
 ---
+
 # Spécifications
 - Moteurs avec encodeur
 - Châssis en aluminium
@@ -77,21 +89,23 @@
 - Port d'alimentation
 
 ---
-# Pin out
+# Sortie des broches (*pinout*)
 ![](../img/auriga_pinout.png)
 - Observer les différentes étiquettes, elles font références aux différentes broches du Arduino
 
 ## Points saillants 
-- Les broches SDA et SDL sont dans tous les ports de connexion
+- Les broches `SDA` et `SDL` sont dans la majorité des ports de connexion
 - Une anneau de DEL RGB
 - Un MPU-6050
 - Un module Bluetooth
+- Deux détecteurs de lumière
+- Un détecteur de son
 
 ---
 
 # Différences avec le Arduino Mega
 - Plusieurs ports sont occupés par les différents composants
-  - Voir le Pin out
+  - Voir le *pinout* pour plus de détails
 - Les ports de connexion sont compatibles avec les connecteurs RJ25 6P6C
 - La carte-mère est appelé "**Auriga**"  
 
@@ -100,12 +114,7 @@
 # Configuration de l'environnement
 - Avoir la dernière version de l'Arduino IDE
 - Télécharger la dernière version des librairies MakeBlock
-  - https://github.com/nbourre/Makeblock-Libraries
-  - Si ça ne fonctionne pas télécharger cette [version](https://github.com/s-urbaniak/Makeblock-Libraries/tree/fix-supervariable)
-    - Au moment d'écrire ces lignes, il y avait un bogue avec une fonction.
-    - Possibilité de corriger le bogue en modifiant le type de retour de `void *` pour `bool` à l'endroit de l'erreur.
-- Pour installer une librairie ZIP dans Arduino IDE
-  - Sketch --> Include Library --> Add .ZIP Library...
+  - Rechercher "MakeBlock" dans le gestionnaire de librairies et prenez la version titrée "MakeBlock Drive Updated"
 
 ---
 
@@ -303,13 +312,13 @@ float temp_task() {
 }
 ```
 
-**Note**
+## Dépannage
+
 Il se peut qu'Arduino IDE ne reconnaisse pas la carte du robot. Il faudra alors la configurer manuellement.
 - À l'endroit où l'on sélectionne le board, il y a dans le bas de la liste "*Select other board and port*". Cliquer sur cette option.
 - Dans la liste des *BOARDS*, taper `Mega`
 - Sélectionner le bon port COM
 - Cliquer sur Ok
-
 ![](../img/arduino_board_screenshot.png)
 
 
