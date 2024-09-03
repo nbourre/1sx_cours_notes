@@ -41,7 +41,7 @@
 - Le robot utilisé sera le mBot Ranger de la compagnie MakeBlock
 - [Page officielle](https://www.makeblock.com/steam-kits/mbot-ranger)
   
-![](../img/mBot-Ranger_500_EN.png)
+![](assets/mBot-Ranger_500_EN.png)
 
 ---
 
@@ -58,32 +58,32 @@
 ---
 # Le robot
 
-![](../img/PXL_20220926_173204042.jpg)
+![](assets/PXL_20220926_173204042.jpg)
 - Capteur ultrason
 
 ---
-![](../img/PXL_20220926_173207785.jpg)
+![](assets/PXL_20220926_173207785.jpg)
 - Code d'identification associé à l'étudiant
   
 ---
-![](../img/PXL_20220926_173220149.jpg)
+![](assets/PXL_20220926_173220149.jpg)
 - Anneau de DEL RGB
 - Bouton de mise sous tension
 - Identifiant pour les ports de connexion
 - Compatible avec Lego <!-- omit in toc -->
 
 ---
-![](../img/PXL_20220926_173230212.jpg)
+![](assets/PXL_20220926_173230212.jpg)
 - Capteur de lignes
 - Bloc de batterie rechargeable
 - Roulette <!-- omit in toc -->
 
 ---
-![](../img/PXL_20220926_173238651.jpg)
+![](assets/PXL_20220926_173238651.jpg)
 - Moteur avec encodeur intégré
 
 ---
-![](../img/PXL_20220926_173254078.jpg)
+![](assets/PXL_20220926_173254078.jpg)
 - Bouton de mise sous tension
 - Bouton de remise à zéro
 - Port USB type B
@@ -91,7 +91,7 @@
 
 ---
 # Sortie des broches (*pinout*)
-![](../img/auriga_pinout.png)
+![](assets/auriga_pinout.png)
 - Observer les différentes étiquettes, elles font références aux différentes broches du Arduino
 
 ## Points saillants 
@@ -320,7 +320,7 @@ Il se peut qu'Arduino IDE ne reconnaisse pas la carte du robot. Il faudra alors 
 - Dans la liste des *BOARDS*, taper `Mega`
 - Sélectionner le bon port COM
 - Cliquer sur Ok
-![](../img/arduino_board_screenshot.png)
+![](assets/arduino_board_screenshot.png)
 
 
 ---
@@ -373,7 +373,6 @@ void loop()
   - Affichez dans le moniteur série les données. 
 - Le capteur de puissance
   - Affichez dans le moniteur série la puissance de la batterie restante.
-
 
 ---
 
