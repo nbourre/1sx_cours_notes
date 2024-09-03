@@ -1,5 +1,6 @@
 # Robot Ranger <!-- omit in toc -->
 
+# Table des matières <!-- omit in toc -->
 - [Plan de leçon](#plan-de-leçon)
 - [Distribution du matériel](#distribution-du-matériel)
 - [mBot Ranger de MakeBlock](#mbot-ranger-de-makeblock)
