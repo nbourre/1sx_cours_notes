@@ -12,7 +12,6 @@
 - [Exercices](#exercices)
 - [Références](#références)
 
-
 ---
 
 # Les moteurs du robot
