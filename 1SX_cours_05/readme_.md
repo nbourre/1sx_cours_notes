@@ -68,7 +68,7 @@ On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la 
 #  L'accéléromètre
   
 - L'accéléromètre est un appareil dit "Centrale à inertie" (*Inertial measurement unit*, IMU).
-- Dans le kit, il y a un accéléromètre à 6 dof (degree of freedom)
+- Dans le kit, il y a un accéléromètre à 6 dof (*degree of freedom*)
 - Il s’agit du modèle MPU6050 (Google that! ;))
 - Ce modèle a un accéléromètre sur 3 degrés, un gyroscope sur 3 degrés ainsi qu’un thermomètre
 - Il est peu dispendieux soit quelques sous
