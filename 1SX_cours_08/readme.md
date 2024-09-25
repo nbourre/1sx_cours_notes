@@ -36,7 +36,6 @@
 - Cela répondait à un certain besoin soit de déplacer le robot.
 - Certains d'entre-vous aviez demandé comment effectuer des déplacements précis tel que pivoter à X degré ou encore avancer de Y cm.
 - D'autres ont remarqué que le robot n'avançait pas droit
-
 - Ma réponse était soit vous devez utiliser du *timing* direct ou encore vous allez voir cela dans un futur cour.
 - Ce cours c'est aujourd'hui!
 
@@ -105,7 +104,7 @@ void loop()
 - Ainsi, en comptant le nombre de pulsations dans un temps donné, on pourra calculer la vitesse de rotation.
 - En comptant le nombre de pulsations, on peut aussi connaître la position de la roue.
 
-**Question** : Quelles informations doit-on avoir pour connaître la position de la roue en cm?
+**Question de déduction** : Quelles informations doit-on avoir pour connaître la position de la roue en cm?
 
 <details>
     <summary>Réponses</summary>
