@@ -16,7 +16,6 @@
   - [Exercices](#exercices-1)
 - [Références](#références)
 
-
 ---
 
 # Lumière avant tout!

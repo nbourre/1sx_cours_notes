@@ -27,7 +27,6 @@
   - [Anneau de DEL](#anneau-de-del)
   - [Encodeurs](#encodeurs)
 
-
 ---
 
 # Problématique des déplacements
@@ -49,7 +48,6 @@ Dans un cours précédent, nous avons rapidement survolé le gyroscope. Nous n'a
 - La librairie `MeGyro` offre les fonctions suivantes :
   - `getAngleX|Y|Z()` : Retourne l'angle de rotation sur l'axe X|Y|Z
   - `getGyroX|Y|Z()` : Retourne la vitesse angulaire sur l'axe X|Y
-    - Télécharger la version 3.27.0 de la librairie pour avoir accès à `getGyroZ()`
   - `resetData()` : Réinitialise les données du gyroscope
 
 ## Exemple
@@ -144,7 +142,7 @@ L'illustration suivante montre la version avec une piste et deux signaux décal�
 - Une interruption, comme son nom l'indique, consiste à interrompre temporairement le programme en cours d'exécution par le microcontrôleur afin de lui faire effectuer une tâche différente. Une fois cette tâche terminée, le microcontrôleur revient à l'exécution du programme principal et reprend exactement là où il s'était arrêté.
 - Cette tâche différente est appelée une **fonction d'interruption**, également connue sous le nom de *ISR* (*Interrupt Service Routine*).
 - Il est important de noter qu'une interruption ne peut pas être interrompue par une autre interruption.
-- Par conséquent, il est essentiel de maintenir des opérations courtes lors de l'exécution d'une interruption, afin de ne pas surcharger le processeur.
+- Par conséquent, **il est essentiel de maintenir des opérations courtes** lors de l'exécution d'une interruption, afin de ne pas surcharger le processeur.
 - Il existe plusieurs façons d'obtenir une interruption, mais celle qui nous intéresse ici est l'**interruption externe**.
   - L'interruption externe provient d'un appareil externe connecté à une broche.
   - L'interruption externe est particulièrement utile pour les encodeurs, car chaque fois que l'encodeur envoie un signal, il interrompt l'exécution du programme principal.
@@ -153,8 +151,8 @@ L'illustration suivante montre la version avec une piste et deux signaux décal�
 
 > **Important**
 > 
-> - Les fonctions `Serial` qui permettent d'afficher via le port USB utilisent l'interruption. **Ainsi, il est interdit de l'utiliser dans une interruption**.
-> - On n'appelle pas de `delay` dans une interruption.
+> - Les fonctions `Serial` qui permettent d'afficher via le port USB **utilisent l'interruption**. **Ainsi, il est interdit de l'utiliser dans une interruption**.
+> - On n'appelle jamais de `delay` dans une interruption!!!!!!!!!
 
 ---
 
@@ -163,16 +161,17 @@ L'illustration suivante montre la version avec une piste et deux signaux décal�
 - La fonction `attachInterrupt` permet d'établir une connexion entre une interruption, une broche et une fonction.
 - Cette fonction est généralement utilisée dans la partie de configuration (`setup`) du programme.
 - Pour configurer une interruption sur un robot, voici la syntaxe usuelle :
-  - `attachInterrupt(num_broche, nom_de_la_fonction, FRONT_MONTOYANT);`
+  - `attachInterrupt(num_broche, nom_de_la_fonction, FRONT_MONTANT | FRONT_DESCENDANT | TOUT_CHANGEMENT);`
   - Le premier paramètre spécifie le numéro de la broche qui déclenchera l'interruption.
   - Le deuxième paramètre indique quelle fonction sera exécutée lorsque l'interruption se produira.
   - Le dernier paramètre détermine quel changement du signal déclenchera l'interruption.
-    - `RISING` : Ce choix déclenche l'interruption lors du passage de 0 à 1, soit le front montant du signal.
-    - `FALLING` : L'interruption est déclenchée lors du passage de 1 à 0, soit le front descendant du signal.
+    - `RISING` : Ce choix déclenche l'interruption lors du passage de 0 à 1, soit le **front montant** du signal.
+    - `FALLING` : L'interruption est déclenchée lors du passage de 1 à 0, soit le **front descendant** du signal.
     - `CHANGE` : L'interruption se produit à chaque changement de l'état du signal.
 
 Cela permet de lier une broche à une action spécifique lorsqu'un certain événement se produit sur cette broche, ce qui peut être très utile dans le contexte de la programmation d'un robot.
 
+![alt text](img/signal_numerique_interruption.svg)
 
 ## Exemple
 
@@ -181,15 +180,15 @@ Cela permet de lier une broche à une action spécifique lorsqu'un certain évé
 void interruption_encodeur_1(void)
 {
   // Si le portB est à 0, alors on décompte
-  // autrement on compte
+  // sinon on compte
   if(digitalRead(Encoder_1.getPortB()) == 0)
   {
-    // On retire 1 du compte
+    // On retire 1 du compteur de pulsation
     Encoder_1.pulsePosMinus();
   }
   else
   {
-    // On ajoute 1 au compte
+    // On ajoute 1 au compteur de pulsation
     Encoder_1.pulsePosPlus();
   }
 }
@@ -269,6 +268,7 @@ void loop()
 {
   currentTime = millis();
   
+  // Appeler pour mettre à jour la position
   Encoder_1.loop();
   serialTask(currentTime);
 }
@@ -298,12 +298,12 @@ void serialTask(unsigned long cT) {
 </details>
  
 
-![](../img/encoder_arduino_rxtx_mon.gif)
+![](img/encoder_arduino_rxtx_mon.gif)
 - Je fais tourner la roue du robot et les valeurs changent.
 
 ## Explications de l'exemple
 - Dans `setup`, on configure l'interruption avec `attachInterrupt`
-- La fonction `interruption_encodeur_1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et, ce, sur le front montant.
+- La fonction `interruption_encodeur_1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et, ce, sur le front montant (`RISING`).
 - Remarquez, il n'y a aucun appel de la fonction dans la boucle principale, l'interruption s'appellera tout seul lorsque la broche aura un signal.
 - Certains ont peut-être remarqué que lors de la déclaration de la variable `position_pulsation`, il y a le mot-clé `volatile`.   
   - Lorsque l'on travaille avec des variables dans une interruption, il est préférable de mettre ce mot-clé devant la déclaration. La raison est qu'au lieu d'aller récupérer la variable dans le registre de stockage, il récupère la variable directement à partir de la RAM. [Source](https://www.arduino.cc/reference/en/language/variables/variable-scope-qualifiers/volatile/)
@@ -313,7 +313,7 @@ void serialTask(unsigned long cT) {
 # Exemple Encodeur PWM
 
 Étudions l'exemple du fabricant `Me_Auriga_encoder_pwm`, mais seulement avec l'encodeur 1. J'ai retiré le code qui concerne le 2e encodeur, mais ce sera le même.
-- Comme toujours, l'exemple se retrouve dans `Exemples-->MakeBlockDrive-->Me_On_Board_encoder`
+- Comme toujours, l'exemple se retrouve dans `Exemples-->MakeBlock Drive Updated-->Me_On_Board_encoder`
 
 ## Exercice
 - Téléversez et testez le code de l'exemple ci-bas.
@@ -427,7 +427,7 @@ void loop()
 
 # Sur le robot
 Voici ce qui se retrouve à l'intérieur d'un motoréducteur du robot.
-![](../img/motor_encoder_gearbox.png)
+![](img/motor_encoder_gearbox.png)
 
 - Le robot a deux motoréducteurs avec encodeur
 - Selon les exemples de code dans les exemples du fabricant, chacun a un rapport proportionnel de 39.267:1
