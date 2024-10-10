@@ -5,6 +5,7 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 - [Introduction](#introduction)
   - [Caractéristiques techniques](#caractéristiques-techniques)
 - [Utilisation dans le code](#utilisation-dans-le-code)
+  - [Visualisation des valeurs des capteurs](#visualisation-des-valeurs-des-capteurs)
 - [Suivre une ligne](#suivre-une-ligne)
   - [Méthode 1 : Suivre une ligne en fonction de la valeur des capteurs](#méthode-1--suivre-une-ligne-en-fonction-de-la-valeur-des-capteurs)
   - [Méthode 2 : Ajustement dynamique en fonction des lectures analogiques](#méthode-2--ajustement-dynamique-en-fonction-des-lectures-analogiques)
@@ -69,6 +70,12 @@ void loop() {
 ```
 
 Dans cet exemple, les valeurs analogiques des cinq capteurs sont lues et affichées dans la console série. Ces valeurs varient en fonction de l'intensité de la réflexion de la lumière infrarouge (plus la valeur est basse, plus il est probable que le capteur détecte une ligne noire).
+
+## Visualisation des valeurs des capteurs
+
+Voici une vidéo montrant comment les valeurs des capteurs changent en fonction de la position du LyneTracker par rapport à une ligne noire :
+
+[![LyneTracker Data example](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2Fp_WWJNkt0SE)](https://youtu.be/p_WWJNkt0SE)
 
 ---
 
