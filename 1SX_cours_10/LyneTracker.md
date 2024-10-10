@@ -13,9 +13,11 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 
 
 # Introduction
-Le LyneTracker est un capteur de ligne spécialement conçu pour les projets éducatifs sur le robot Makeblock Ranger. Contrairement au capteur qui provient dans le kit original qui utilise des valeurs binaires (0 ou 1) pour détecter la ligne, le LyneTracker est équipé de **cinq capteurs infrarouges** qui retournent des **valeurs analogiques**, ce qui permet une détection plus précise de la position de la ligne.
+Le LyneTracker est un capteur de ligne spécialement conçu au département pour les projets du cours de robotique. Il est compatible avec le robot Makeblock Ranger. Contrairement au capteur qui provient dans le kit original qui utilise des valeurs binaires (0 ou 1) pour détecter la ligne, le LyneTracker est équipé de **cinq capteurs infrarouges** qui retournent des **valeurs analogiques**, ce qui permet une détection plus précise de la position de la ligne.
 
 Le LyneTracker fonctionne en utilisant la puce [**Adafruit Attiny1616 Seesaw**](https://www.adafruit.com/product/5690), qui nécessite l'utilisation de la librairie Seesaw fournie par Adafruit. Grâce à ses valeurs analogiques, il est possible d'obtenir une granularité plus fine et d'ajuster plus précisément la trajectoire du robot.
+
+> **Note** : Étant en nombre relativement limité, on vous demande de ne pas retirer le module ATtiny1616 du LyneTracker, car cela pourrait l'endommager à la longue.
 
 ## Caractéristiques techniques
 - **Nombre de capteurs** : 5 capteurs infrarouges.
@@ -39,27 +41,29 @@ Exemple de code de base pour lire les valeurs des capteurs :
 ```cpp
 #include <Adafruit_seesaw.h>
 
+#define NB_IR 5
+
 Adafruit_seesaw ss;
-int sensorValues[5];  // Tableau pour stocker les valeurs des capteurs
+int sensorValues[NB_IR];  // Tableau pour stocker les valeurs des capteurs
 
 void setup() {
     Serial.begin(115200);
 
-    if (!ss.begin(0x49)) {
+    if (!ss.begin()) {
         Serial.println("Erreur de connexion au LyneTracker");
         while (1);
     }
-    Serial.println("Connexion réussie au LyneTracker !");
+    Serial.println("Connexion réussie au LyneTracker!");
 }
 
 void loop() {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < NB_IR; i++) {
         sensorValues[i] = ss.analogRead(i);
-        Serial.print("Capteur ");
-        Serial.print(i);
-        Serial.print(": ");
-        Serial.println(sensorValues[i]);
+        Serial.print("IR"); Serial.print(i); Serial.print(":");
+        Serial.print(sensorValues[i]);
+        Serial.print("\t");
     }
+    Serial.println();
     delay(100);
 }
 ```
