@@ -352,10 +352,9 @@ Dans tous les cas, programmez des fonctions pour effectuer la tâche. Par exempl
 
 Exemple : `void Forward(int speed)`
 
-1. Continuer les exercices du cours précédent surtout le capteur de distance
-2. Programmer le robot pour qu'il avance/recule
-3. Programmer le robot pour qu'il pivote à gauche/droite
-4. Programmer le robot pour qu'il trace *approximativement* un carré
+1. Programmer le robot pour qu'il avance/recule
+2. Programmer le robot pour qu'il pivote à gauche/droite
+3. Programmer le robot pour qu'il trace *approximativement* un carré
 
 > **Question :** Pour quelle raison entendons nous un bruit lorsque les moteurs roulent? [Indice ici](https://docs.arduino.cc/learn/microcontrollers/analog-output) et [ici](https://fr.wikipedia.org/wiki/Champ_auditif)
 
