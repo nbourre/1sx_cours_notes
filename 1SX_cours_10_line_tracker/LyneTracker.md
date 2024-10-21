@@ -80,7 +80,7 @@ Voici une vidéo montrant comment les valeurs des capteurs changent en fonction 
 ---
 
 # Suivre une ligne
-Il existe plusieurs méthodes pour suivre une ligne avec le LyneTracker. En voici deux, allant de la plus simple à la plus complexe.
+Il existe plusieurs méthodes pour suivre une ligne avec capteur de ligne. Je présente ici deux méthodes courantes pour suivre une ligne noire sur un fond blanc.
 
 ## Méthode 1 : Suivre une ligne en fonction de la valeur des capteurs
 Cette méthode consiste à lire les valeurs des capteurs et à ajuster le robot en fonction des seuils de détection. Si un capteur détecte une ligne noire (valeur basse), le robot tourne ou ajuste sa direction.
