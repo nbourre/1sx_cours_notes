@@ -2,7 +2,12 @@
 Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 
 ## Sommaire <!-- omit in toc -->
-- [Introduction](#introduction)
+- [Introduction au suivi de ligne](#introduction-au-suivi-de-ligne)
+  - [Définition](#définition)
+  - [Applications](#applications)
+  - [Démonstration](#démonstration)
+- [Les capteurs infra-rouges](#les-capteurs-infra-rouges)
+- [Le capteur LyneTracker](#le-capteur-lynetracker)
   - [Caractéristiques techniques](#caractéristiques-techniques)
 - [Utilisation dans le code](#utilisation-dans-le-code)
   - [Visualisation des valeurs des capteurs](#visualisation-des-valeurs-des-capteurs)
@@ -12,7 +17,40 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 - [Exercices](#exercices)
 
 
-# Introduction
+# Introduction au suivi de ligne
+
+## Définition
+Le suivi de ligne consiste à guider un appareil en occurence un robot pour notre cas, le long d'une trajectoire définie par une ligne. Souvent la ligne est noire sur un fond pâle. Le robot utilise des capteurs de ligne pour détecter la position de la ligne et ajuster sa trajectoire en conséquence. Le suivi de ligne est une tâche courante dans les compétitions de robotique et les projets de robotique éducative.
+
+## Applications
+On retrouve le suivi de ligne dans de nombreuses applications, notamment :
+- Robots de livraison autonomes
+- Robots mobiles en production industrielle
+- Véhicules autonomes
+- Etc.
+
+## Démonstration 
+
+Voici une vidéo montrant un robot suivant une ligne noire sur un fond pâle à l'aide de capteurs de ligne :
+
+[![Suivi de ligne](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FRQCW7ib3Avs)](https://youtu.be/RQCW7ib3Avs)
+
+> **Note** : Le robot n'est pas équipé du LyneTracker, mais d'un capteur de ligne de base. Le LyneTracker permettra une détection plus précise de la ligne grâce à ses valeurs analogiques.
+
+# Les capteurs infra-rouges
+On dit capteur de ligne, mais en réalité, il s'agit de capteurs infra-rouges. Les capteurs infra-rouges sont des capteurs qui utilisent la lumière infrarouge pour détecter le taux de réflexion de la lumière sur une surface. 
+
+Si le capteur est sur une surface blanche, la lumière est réfléchie et le capteur renvoie une valeur élevée. Si le capteur est sur une surface noire, la lumière est absorbée et le capteur renvoie une valeur basse. En utilisant ces valeurs, on peut déterminer si le capteur est sur une ligne noire ou non.
+
+![](assets/line_follower_logic.jpg)
+
+Voici un gif montrant des possibilités de position de la ligne par rapport aux capteurs :
+
+![alt text](assets/LyneTracker_possible_line.gif)
+
+Question : Quelles seraient les valeurs des capteurs dans chaque cas?
+
+# Le capteur LyneTracker
 Le LyneTracker est un capteur de ligne spécialement conçu au département pour les projets du cours de robotique. Il est compatible avec le robot Makeblock Ranger. Contrairement au capteur qui provient dans le kit original qui utilise des valeurs binaires (0 ou 1) pour détecter la ligne, le LyneTracker est équipé de **cinq capteurs infrarouges** qui retournent des **valeurs analogiques**, ce qui permet une détection plus précise de la position de la ligne.
 
 Le LyneTracker fonctionne en utilisant la puce [**Adafruit Attiny1616 Seesaw**](https://www.adafruit.com/product/5690), qui nécessite l'utilisation de la librairie Seesaw fournie par Adafruit. Grâce à ses valeurs analogiques, il est possible d'obtenir une granularité plus fine et d'ajuster plus précisément la trajectoire du robot.
@@ -32,6 +70,7 @@ Voici à quoi ressemble le LyneTracker :
 ![](assets/LyneTracker_bottom_view.jpg)
 
 ---
+
 
 # Utilisation dans le code
 Pour utiliser le LyneTracker dans sa forme la plus simple, il faut d'abord inclure la librairie Seesaw d'Adafruit dans votre projet Arduino. Ensuite, vous pouvez lire les valeurs analogiques de chaque capteur via la fonction `analogRead()`.
