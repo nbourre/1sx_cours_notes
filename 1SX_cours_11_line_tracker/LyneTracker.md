@@ -1,6 +1,8 @@
 # Le capteur LyneTracker <!-- omit in toc -->
 Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 
+![alt text](assets/DALL·E%202024-10-22%2013.57.23%20robot.webp)
+
 ## Sommaire <!-- omit in toc -->
 - [Introduction au suivi de ligne](#introduction-au-suivi-de-ligne)
   - [Définition](#définition)
@@ -12,8 +14,13 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 - [Utilisation dans le code](#utilisation-dans-le-code)
   - [Visualisation des valeurs des capteurs](#visualisation-des-valeurs-des-capteurs)
 - [Suivre une ligne](#suivre-une-ligne)
-  - [Méthode 1 : Suivre une ligne en fonction de la valeur des capteurs](#méthode-1--suivre-une-ligne-en-fonction-de-la-valeur-des-capteurs)
-  - [Méthode 2 : Ajustement dynamique en fonction des lectures analogiques](#méthode-2--ajustement-dynamique-en-fonction-des-lectures-analogiques)
+  - [Méthode : Suivre une ligne en fonction de la valeur des capteurs](#méthode--suivre-une-ligne-en-fonction-de-la-valeur-des-capteurs)
+- [Calibration des données](#calibration-des-données)
+  - [Calibration automatique](#calibration-automatique)
+- [Contrôleur PID](#contrôleur-pid)
+  - [Étape 1 : Normalisation des valeurs des capteurs](#étape-1--normalisation-des-valeurs-des-capteurs)
+  - [Étape 2 : Calcul de la position de la ligne](#étape-2--calcul-de-la-position-de-la-ligne)
+  - [Étape 3 : Utilisation du PID](#étape-3--utilisation-du-pid)
 - [Exercices](#exercices)
 
 
@@ -120,7 +127,7 @@ Voici une vidéo montrant comment les valeurs des capteurs changent en fonction 
 # Suivre une ligne
 Il existe plusieurs méthodes pour suivre une ligne avec capteur de ligne. Je présente ici deux méthodes courantes pour suivre une ligne noire sur un fond blanc.
 
-## Méthode 1 : Suivre une ligne en fonction de la valeur des capteurs
+## Méthode : Suivre une ligne en fonction de la valeur des capteurs
 Cette méthode consiste à lire les valeurs des capteurs et à ajuster le robot en fonction des seuils de détection. Si un capteur détecte une ligne noire (valeur basse), le robot tourne ou ajuste sa direction.
 
 ```cpp
@@ -149,40 +156,170 @@ void loop() {
 }
 ```
 
-## Méthode 2 : Ajustement dynamique en fonction des lectures analogiques
-Cette méthode consiste à ajuster la direction du robot en fonction des lectures analogiques des capteurs. En calculant la moyenne des valeurs des capteurs, on peut déterminer la position de la ligne par rapport au robot et ajuster la direction en conséquence.
-
-```cpp
+> **Note** : Dans cet exemple, les seuils de détection (300) sont des valeurs arbitraires. Vous devrez ajuster ces valeurs en fonction de l'environnement et de la luminosité ambiante.
 
 ---
 
-# Utiliser l'écran SSD1306 avec le robot
-Pour faciliter le débogage, vous pouvez également afficher les valeurs des capteurs sur l'écran OLED SSD1306, tout comme dans la leçon précédente.
+# Calibration des données
+Dans l'exemple précédent, les valeurs de seuil sont des valeurs arbitraires. Si l'on change d'environnement, il y a de forte chance que les valeurs de seuil ne soient plus adaptées. On ne veut pas avoir à changer les valeurs de seuil à chaque fois que l'on change d'environnement. Pour cela, on peut effectuer une calibration des données.
+
+La calibration consiste à mesurer les valeurs minimales et maximales des capteurs lorsqu'ils sont sur une ligne noire et sur un fond blanc. Ensuite, on utilise ces valeurs pour déterminer les seuils de détection.
+
+Ainsi, il s'agit d'un algorithme de base pour trouver les valeurs minimales et maximales des capteurs. Voici un rappel du pseudo-code :
+
+```text
+valMin = 1023; // Valeur maximale des capteurs
+valMax = 0;    // Valeur minimale des capteurs
+
+fonction calibrer :
+    pour chaque capteur i de 0 à 4 :
+        val = lireValeurCapteur(i)
+        si val < valMin :
+            valMin = val
+        si val > valMax :
+            valMax = val
+    fin pour
+```
+
+Ensuite, on peut utiliser ces valeurs pour déterminer les seuils de détection :
 
 ```cpp
-#include <Adafruit_SSD1306.h>
+// La valeur du seuil peut être ajustée en fonction de l'environnement
+// Dans le cas le plus simple, on peut utiliser la moyenne des valeurs min et max
+seuil = (valMin + valMax) / 2
+```
 
-Adafruit_SSD1306 display(128, 64, &Wire);
+---
 
-void setup() {
-    // Initialisation de l'écran
-    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-        Serial.println("SSD1306 allocation failed");
-        for (;;);
-    }
-    display.display();
+## Calibration automatique
+Au lieu de déplacer le robot manuellement pour calibrer les valeurs, on peut également déplacer le robot automatiquement pendant quelques secondes pour calibrer les valeurs.
+
+On pourrait placer le robot sur la ligne, puis lui faire faire un tour complet pour mesurer les valeurs minimales et maximales des capteurs. Voici le pseudo-code pour une calibration automatique :
+
+```text
+valMin = 1023; // Valeur maximale des capteurs
+valMax = 0;    // Valeur minimale des capteurs
+
+fonction calibrer :
+    // Voir l'exemple précédent
+
+fonction faireTourComplet --> booléen :
+    Faire tourner le robot
+
+fonction calibrationAutomatique :
+    Tant que faireTourComplet() n'a pas réussi :
+        calibrer()
+    
+```
+
+---
+
+# Contrôleur PID
+On vous rappelle que le contrôleur PID est un mécanisme de contrôle qui permet de maintenir un système à une valeur de consigne.
+
+> **Note :** Si vous avez besoin de revoir les notes de cours sur le PID, elles sont disponibles [dans le cours 09](../1SX_cours_09_PID/readme.md).
+
+Pour le suivi de ligne, le contrôleur PID peut être utilisé pour ajuster la trajectoire du robot en fonction de la position de la ligne par rapport aux capteurs. Le PID peut être utilisé pour ajuster la vitesse des moteurs ou la direction du robot en fonction de l'erreur de position.
+
+Dans la méthode qui sera montré, on normalisera les valeurs des capteurs pour que l'on puisse connaître la position de la ligne par rapport au capteur.
+
+On assignera une valeur de 0 au capteur de gauche et jusqu'à 4000 au capteur de droite. Ainsi, la valeur du milieu sera de 2000. On pourra ainsi déterminer la position de la ligne par rapport au robot.
+
+## Étape 1 : Normalisation des valeurs des capteurs
+Avant d'utiliser le PID, il est important de normaliser les valeurs des capteurs pour que chaque capteur ait une valeur entre 0 et 1000. Cela permettra ensuite de pondérer les valeurs des capteurs pour déterminer la position de la ligne sur l'ensemble des capteurs.
+
+L'algorithme de normalisation est le suivant :
+
+```text
+fonction capteurLectureNormalisee(index) :
+    // On multiplie par 1.0 pour forcer la division en double
+    retourner ((valCapteur[index] - valMin) * 1.0) / (valMax - valMin) * 1000.0
+
+fonction normaliserValeurs :
+    pour chaque capteur i de 0 à 4 :
+        capteurNormalise[i] = capteurLectureNormalisee(i)
+    fin pour
+```
+
+Ainsi chaque capteur aura toujours une valeur entre 0 et 1000, peu importe les valeurs minimales et maximales des capteurs.
+
+---
+
+## Étape 2 : Calcul de la position de la ligne
+Une fois les valeurs normalisées, on peut calculer la position de la ligne par rapport aux capteurs. On peut utiliser une moyenne pondérée des valeurs des capteurs pour déterminer la position de la ligne.
+
+La moyenne pondérée est une moyenne où chaque valeur est multipliée par un poids avant d'être sommée. Dans notre cas, les poids sont les positions des capteurs par rapport au robot.
+
+La formule est la suivante :
+
+$$position = \frac{\sum_{i=0}^{4} capteur_{i} * 1000i}{\sum_{i=0}^{4} capteur_{i}}$$
+
+L'algorithme représenté par la formule est le suivant :
+
+```text
+numerateur = 0
+denominateur = 0
+
+Pour chaque capteur i de 0 à 4 :
+    poids = 1000 * i
+    numerateur += capteurNormalise[i] * poids
+    denominateur += capteurNormalise[i]
+
+position = numerateur / denominateur
+```
+
+> **Attention!** Les valeurs peuvent devenir très grandes, il est important d'utiliser les bons types de données pour éviter le dépassement de capacité.
+> 
+> Par exemple si la ligne est sous le capteur 4, le numérateur pourra avoir une valeur dépassant les 4 000 000. Il est donc important de s'assurer que les variables utilisées peuvent contenir de telles valeurs.
+>
+> Utiliser le type `unsigned long` pour les variables `numerateur` et `denominateur` peut être une bonne idée.
+
+
+Testez cet algorithme pour voir comment il fonctionne avec les valeurs des capteurs.
+
+---
+
+## Étape 3 : Utilisation du PID
+
+Une fois que l'on connait la position de la ligne par rapport aux capteurs, on peut utiliser le PID pour ajuster la trajectoire du robot en fonction de cette position.
+
+Voici un exemple de code utilisant le PID pour calculer l'ajustement à apporter à la trajectoire du robot :
+
+```cpp
+float computePID(float position) {
+    // Ajuster les coefficients selon vos besoins
+    static float kp = 0.1; // Coefficient proportionnel
+    static float ki = 0.01; // Coefficient intégral
+    static float kd = 0.01; // Coefficient dérivé
+
+    static float integral = 0;
+    static float derivative = 0;
+    static float lastError = 0;
+
+    float error = position - 2000; // 2000 est la position du milieu
+
+    integral += error;
+    derivative = error - lastError;
+    lastError = error;
+    
+    float output = kp * error + ki * integral + kd * derivative;
+    
+    return output;
 }
 
 void loop() {
-    display.clearDisplay();
-    for (int i = 0; i < 5; i++) {
-        display.setCursor(0, i * 10);
-        display.print("Capteur ");
-        display.print(i);
-        display.print(": ");
-        display.println(sensorValues[i]);
-    }
-    display.display();
+    // Normaliser les valeurs des capteurs
+    normaliserValeurs();
+
+    // Calculer la position de la ligne
+    float position = calculerPositionLigne();
+
+    // Calculer l'ajustement à apporter à la trajectoire
+    float adjustment = computePID(position);
+
+    // Ajuster la trajectoire du robot en fonction de l'ajustement
+    // Par exemple, ajuster la vitesse des moteurs
+    suivreLigne(adjustment);
 }
 ```
 
@@ -190,10 +327,9 @@ void loop() {
 
 # Exercices
 1. Testez le code pour suivre une ligne noire sur fond blanc.
-2. Ajustez le code pour que le robot suive une ligne plus précisément en utilisant la méthode d'ajustement dynamique.
-3. Ajoutez de l'information de débogage, comme l'affichage des valeurs des capteurs sur l'écran SSD1306.
-4. Implémentez un algorithme PID simplifié pour améliorer la précision du suivi de ligne.
-
+2. Effectuez une calibration des données pour déterminer les seuils de détection.
+3. Implémentez une calibration automatique pour déterminer les valeurs minimales et maximales des capteurs.
+4. Testez le suivi de ligne avec les valeurs calibrées.
 ---
 
 [Retour au sommaire](../README.md)
