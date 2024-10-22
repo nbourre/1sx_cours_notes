@@ -18,22 +18,22 @@ Le capteur de ligne est un capteur binaire qui permet de détecter la présence 
 <table>
     <tr>
         <td width="50%">
-        <image src="../img/makeblock-me-ir-line-finder_1.jpg" />
+        <image src="assets/makeblock-me-ir-line-finder_1.jpg" />
         </td>
         <td width="50%">
-        <image src="../img/makeblock-me-ir-line-finder-1.jpg" />
+        <image src="assets/makeblock-me-ir-line-finder-1.jpg" />
         </td>
     </tr>
 </table>
 
 Lorsque le capteur est placé sur une ligne noire, la lumière IR est absorbée par la ligne noire et le phototransistor est désactivé. Lorsque le capteur est placé sur un fond blanc, la lumière IR est réfléchie par le fond blanc et le phototransistor est activé.
 
-![](../img/line_follower_logic.jpg)
+![](assets/line_follower_logic.jpg)
 
 Une DEL bleue indicatrice s'allume lorsque le capteur voit un fond pâle.
 
 Voici les situations possibles :
-![](../img/line_follower_case.png)
+![](assets/line_follower_case.png)
 
 ## Configuration sur le robot
 
