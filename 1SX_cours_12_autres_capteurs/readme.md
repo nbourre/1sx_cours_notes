@@ -24,7 +24,7 @@
 
 # Rappel du diagramme
 
-![Alt text](../img/auriga_pinout.png)
+![Alt text](assets/auriga_pinout.png)
 
 ---
 

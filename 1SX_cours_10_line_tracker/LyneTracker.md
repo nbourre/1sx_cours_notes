@@ -9,7 +9,6 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 - [Suivre une ligne](#suivre-une-ligne)
   - [Méthode 1 : Suivre une ligne en fonction de la valeur des capteurs](#méthode-1--suivre-une-ligne-en-fonction-de-la-valeur-des-capteurs)
   - [Méthode 2 : Ajustement dynamique en fonction des lectures analogiques](#méthode-2--ajustement-dynamique-en-fonction-des-lectures-analogiques)
-- [Utiliser l'écran SSD1306 avec le robot](#utiliser-lécran-ssd1306-avec-le-robot)
 - [Exercices](#exercices)
 
 
@@ -87,6 +86,8 @@ Cette méthode consiste à lire les valeurs des capteurs et à ajuster le robot 
 
 ```cpp
 void loop() {
+    // Adapter les valeurs des capteurs selon l'environnement
+
     // Lire les capteurs
     for (int i = 0; i < 5; i++) {
         sensorValues[i] = ss.analogRead(i);
@@ -110,32 +111,9 @@ void loop() {
 ```
 
 ## Méthode 2 : Ajustement dynamique en fonction des lectures analogiques
-Cette méthode utilise une approche plus sophistiquée, en ajustant dynamiquement la vitesse du robot en fonction des valeurs analogiques pour une précision accrue.
+Cette méthode consiste à ajuster la direction du robot en fonction des lectures analogiques des capteurs. En calculant la moyenne des valeurs des capteurs, on peut déterminer la position de la ligne par rapport au robot et ajuster la direction en conséquence.
 
 ```cpp
-void loop() {
-    int error = 0;
-    
-    // Lire les capteurs
-    for (int i = 0; i < 5; i++) {
-        sensorValues[i] = ss.analogRead(i);
-    }
-
-    // Calcul de l'erreur (pondération des capteurs)
-    error = (sensorValues[0] * -2) + (sensorValues[1] * -1) + (sensorValues[3] * 1) + (sensorValues[4] * 2);
-
-    // Ajuster la vitesse en fonction de l'erreur
-    speedAdjust(moveSpeed, error);
-}
-
-void speedAdjust(int speed, int error) {
-    int adjust = error / 10;  // Ajustement basé sur l'erreur
-    encoderLeft.setMotorPwm(speed + adjust);  
-    encoderRight.setMotorPwm(-speed - adjust);   
-}
-```
-
-Dans cette méthode, les capteurs extérieurs ont un poids plus élevé, et l'ajustement de la trajectoire est basé sur l'erreur calculée.
 
 ---
 
@@ -180,6 +158,8 @@ void loop() {
 ---
 
 [Retour au sommaire](../README.md)
+
+<img src="assets/aia.jpeg" alt="drawing" width="100"/>
 
 ---
 

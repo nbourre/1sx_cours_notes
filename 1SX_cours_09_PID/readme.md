@@ -56,19 +56,18 @@ Il y a une méthode simple qui permet à un mécanisme d'atteindre sa cible rapi
   - En ce qui nous concerne, nous allons nous attarder sur un système PD, i.e. qu'on laisse de côté l'intégrale.
 
 La fonction complète pour calculer est la suivante:
-<details><summary><b>Attention!! Équation mathématique épeurante! Cliquez pour la voir...</b></summary>
 
 $$ u(t) = k_\text{p} e(t) + k_\text{i} \int_0^t e(\tau) \mathrm{d}\tau + k_\text{d} \frac{\mathrm{d}e(t)}{\mathrm{d}t},$$
 
 - $k_x$ sont des coefficients arbitraire que l'on obtient en faisant des tests.
 - $e$ est l'erreur
 - Le $t$ est le temps
-- L'intégrale est la somme des erreurs.
-- La différentielle est le taux de variation (pente) depuis la dernière erreur.
+- **L'intégrale est la somme des erreurs.**
+- **La différentielle est le taux de variation (pente) depuis la dernière erreur.**
 
 L'effet de la modification des coefficients peut donner le résultat suivant:
 ![](../img/PID_Compensation_Animated.gif)
-</details>
+
 
 <br/>
 Pour ceux qui ont vue la fonction n'inquiétez-vous pas. Les fonctions sont déjà implémentées.
