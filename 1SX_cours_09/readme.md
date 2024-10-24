@@ -8,6 +8,7 @@
   - [Mais ça ne marche pas!!!](#mais-ça-ne-marche-pas)
 - [Pivoter le robot à un angle précis](#pivoter-le-robot-à-un-angle-précis)
 - [Exercices](#exercices)
+- [Références](#références)
 
 # Les principales méthodes de la classe
 
@@ -231,3 +232,8 @@ Donc les calculs seront les suivants :
 # Exercices
 1. Faire avancer le robot à 1 mètre ±5%.
 2. Faire avancer le robot à 1 mètre ±5% et revenir à son point de départ.
+
+---
+
+# Références
+- [Éléments de robotique avec Arduino - PID](https://users.polytech.unice.fr/~pmasson/Enseignement/Elements%20de%20robotique%20avec%20arduino%20-%20PID%20-%20Projection%20-%20MASSON.pdf)
