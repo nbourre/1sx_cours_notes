@@ -1,328 +1,346 @@
-# Le capteur de ligne <!-- omit in toc -->
-Cours sur l'utilisation du capteur de ligne du robot Ranger.
+# Le capteur LyneTracker <!-- omit in toc -->
+Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
+
+![alt text](assets/DALL·E%202024-10-22%2013.57.23%20robot.webp)
 
 ## Sommaire <!-- omit in toc -->
-- [Introduction](#introduction)
-  - [Configuration sur le robot](#configuration-sur-le-robot)
+- [Introduction au suivi de ligne](#introduction-au-suivi-de-ligne)
+  - [Définition](#définition)
+  - [Applications](#applications)
+  - [Démonstration](#démonstration)
+- [Les capteurs infra-rouges](#les-capteurs-infra-rouges)
+- [Le capteur LyneTracker](#le-capteur-lynetracker)
+  - [Caractéristiques techniques](#caractéristiques-techniques)
 - [Utilisation dans le code](#utilisation-dans-le-code)
+  - [Visualisation des valeurs des capteurs](#visualisation-des-valeurs-des-capteurs)
+  - [Exercices](#exercices)
 - [Suivre une ligne](#suivre-une-ligne)
-  - [Méthode 1 : Suivre une ligne avec un seul capteur](#méthode-1--suivre-une-ligne-avec-un-seul-capteur)
-  - [Méthode 2 : Suivre une ligne avec une variable d'ajustement](#méthode-2--suivre-une-ligne-avec-une-variable-dajustement)
-- [Utiliser l'écran SSD1306 avec le robot](#utiliser-lécran-ssd1306-avec-le-robot)
-- [Exercices](#exercices)
+  - [Méthode : Suivre une ligne en fonction de la valeur des capteurs](#méthode--suivre-une-ligne-en-fonction-de-la-valeur-des-capteurs)
+- [Calibration des données](#calibration-des-données)
+  - [Calibration automatique](#calibration-automatique)
+- [Contrôleur PID](#contrôleur-pid)
+  - [Étape 1 : Normalisation des valeurs des capteurs](#étape-1--normalisation-des-valeurs-des-capteurs)
+  - [Étape 2 : Calcul de la position de la ligne](#étape-2--calcul-de-la-position-de-la-ligne)
+  - [Étape 3 : Utilisation du PID](#étape-3--utilisation-du-pid)
+- [Exercices](#exercices-1)
 
-# Introduction
-Le capteur de ligne est un capteur binaire qui permet de détecter la présence d'une ligne noire sur un fond blanc. Il y a deux capteurs. Chaque capteur est composé d'un phototransistor et d'une DEL infrarouge. Le phototransistor est sensible à la lumière IR et permet de détecter la présence d'une ligne noire sur un fond pâle. Le phototransistor a un filtre IR qui laisse passer la lumière infrarouge et filtre les autres longueurs d'onde.
 
+# Introduction au suivi de ligne
 
-<table>
-    <tr>
-        <td width="50%">
-        <image src="assets/makeblock-me-ir-line-finder_1.jpg" />
-        </td>
-        <td width="50%">
-        <image src="assets/makeblock-me-ir-line-finder-1.jpg" />
-        </td>
-    </tr>
-</table>
+## Définition
+Le suivi de ligne consiste à guider un appareil en occurence un robot pour notre cas, le long d'une trajectoire définie par une ligne. Souvent la ligne est noire sur un fond pâle. Le robot utilise des capteurs de ligne pour détecter la position de la ligne et ajuster sa trajectoire en conséquence. Le suivi de ligne est une tâche courante dans les compétitions de robotique et les projets de robotique éducative.
 
-Lorsque le capteur est placé sur une ligne noire, la lumière IR est absorbée par la ligne noire et le phototransistor est désactivé. Lorsque le capteur est placé sur un fond blanc, la lumière IR est réfléchie par le fond blanc et le phototransistor est activé.
+## Applications
+On retrouve le suivi de ligne dans de nombreuses applications, notamment :
+- Robots de livraison autonomes
+- Robots mobiles en production industrielle
+- Véhicules autonomes
+- Etc.
+
+## Démonstration 
+
+Voici une vidéo montrant un robot suivant une ligne noire sur un fond pâle à l'aide de capteurs de ligne :
+
+[![Suivi de ligne](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FRQCW7ib3Avs)](https://youtu.be/RQCW7ib3Avs)
+
+> **Note** : Le robot n'est pas équipé du LyneTracker, mais d'un capteur de ligne de base. Le LyneTracker permettra une détection plus précise de la ligne grâce à ses valeurs analogiques.
+
+# Les capteurs infra-rouges
+On dit capteur de ligne, mais en réalité, il s'agit de capteurs infra-rouges. Les capteurs infra-rouges sont des capteurs qui utilisent la lumière infrarouge pour détecter le taux de réflexion de la lumière sur une surface. 
+
+Si le capteur est sur une surface blanche, la lumière est réfléchie et le capteur renvoie une valeur élevée. Si le capteur est sur une surface noire, la lumière est absorbée et le capteur renvoie une valeur basse. En utilisant ces valeurs, on peut déterminer si le capteur est sur une ligne noire ou non.
 
 ![](assets/line_follower_logic.jpg)
 
-Une DEL bleue indicatrice s'allume lorsque le capteur voit un fond pâle.
+Voici un gif montrant des possibilités de position de la ligne par rapport aux capteurs :
 
-Voici les situations possibles :
-![](assets/line_follower_case.png)
+![alt text](assets/LyneTracker_possible_line.gif)
 
-## Configuration sur le robot
+Question : Quelles seraient les valeurs des capteurs dans chaque cas?
 
-Dans la configuration actuelle, le capteur de ligne est branché sur le port 9 du robot.
+# Le capteur LyneTracker
+Le LyneTracker est un capteur de ligne spécialement conçu au département pour les projets du cours de robotique. Il est compatible avec le robot Makeblock Ranger. Contrairement au capteur qui provient dans le kit original qui utilise des valeurs binaires (0 ou 1) pour détecter la ligne, le LyneTracker est équipé de **cinq capteurs infrarouges** qui retournent des **valeurs analogiques**, ce qui permet une détection plus précise de la position de la ligne.
+
+Le LyneTracker fonctionne en utilisant la puce [**Adafruit Attiny1616 Seesaw**](https://www.adafruit.com/product/5690), qui nécessite l'utilisation de la librairie Seesaw fournie par Adafruit. Grâce à ses valeurs analogiques, il est possible d'obtenir une granularité plus fine et d'ajuster plus précisément la trajectoire du robot.
+
+> **Note** : Étant en nombre relativement limité, on vous demande de ne pas retirer le module ATtiny1616 du LyneTracker, car cela pourrait l'endommager à la longue.
+
+## Caractéristiques techniques
+- **Nombre de capteurs** : 5 capteurs infrarouges.
+- **Type de signal** : Analogique (lecture via `analogRead()`).
+- **Compatibilité** : Nécessite la librairie [Seesaw d'Adafruit](https://github.com/adafruit/Adafruit_Seesaw).
+- **Port de connexion** : Le LyneTracker se branche sur un port I2C du robot.
+
+Voici à quoi ressemble le LyneTracker :
+
+![](assets/LyneTracker_top_view.jpg)
+
+![](assets/LyneTracker_bottom_view.jpg)
 
 ---
 
-# Utilisation dans le code
-Pour utiliser le capteur de ligne, il suffit d'utiliser la classe `MeLineFollower`. Il faut ensuite utiliser la méthode `readSensors()` pour lire les valeurs des deux capteurs. Cette méthode retourne un entier qui contient les valeurs des deux capteurs. La valeur est codée sur 2 bits. Le bit de poids faible correspond au capteur de gauche et le bit de poids fort correspond au capteur de droite. Si le bit est à 0, le capteur voit une ligne noire. Si le bit est à 1, le capteur ne voit pas de ligne noire.
 
-Voici un exemple de code de base.
+# Utilisation dans le code
+Pour utiliser le LyneTracker dans sa forme la plus simple, il faut d'abord inclure la librairie Seesaw d'Adafruit dans votre projet Arduino. Ensuite, vous pouvez lire les valeurs analogiques de chaque capteur via la fonction `analogRead()`.
+
+Exemple de code de base pour lire les valeurs des capteurs :
 
 ```cpp
-#include <MeAuriga.h>
+#include <Adafruit_seesaw.h>
 
-MeLineFollower lineFollower(PORT_9);
+#define NB_IR 5
+
+Adafruit_seesaw ss;
+int sensorValues[NB_IR];  // Tableau pour stocker les valeurs des capteurs
 
 void setup() {
     Serial.begin(115200);
+
+    if (!ss.begin()) {
+        Serial.println("Erreur de connexion au LyneTracker");
+        while (1);
+    }
+    Serial.println("Connexion réussie au LyneTracker!");
 }
 
 void loop() {
-    int sensors = lineFollower.readSensors();
-    Serial.print("Valeur:");
-    Serial.print(sensors);
-    Serial.print("\tDesc : ");
-    
-    switch (sensors) {
-      case 0:
-        Serial.println("Les deux capteurs voit la ligne noire.");
-        break;      
-      case 1:
-        Serial.println("S1 voit la ligne et S2 ne voit pas la ligne");
-        break;      
-      case 2:
-        Serial.println("S1 ne voit pas la ligne et S2 voit la ligne");
-        break;      
-      case 3:
-        Serial.println("Les deux capteurs ne voit pas la ligne");
-        break;
+    for (int i = 0; i < NB_IR; i++) {
+        sensorValues[i] = ss.analogRead(i);
+        Serial.print("IR"); Serial.print(i); Serial.print(":");
+        Serial.print(sensorValues[i]);
+        Serial.print("\t");
     }
-    
+    Serial.println();
     delay(100);
 }
 ```
 
-Connaître les valeurs par coeur n'est pas très pratique. Il est préférable d'utiliser des constantes pour décrire les valeurs. La classe `MeLineFollower` fournit des constantes pour faciliter la lecture.
+Dans cet exemple, les valeurs analogiques des cinq capteurs sont lues et affichées dans la console série. Ces valeurs varient en fonction de l'intensité de la réflexion de la lumière infrarouge (plus la valeur est basse, plus il est probable que le capteur détecte une ligne noire).
 
-| Constante | Valeur | Description |
-| --------- | ------ | ----------- |
-| `S1_IN_S2_IN` | `0x00` | Les deux capteurs voit la ligne noire |
-| `S1_IN_S2_OUT` | `0x01` | S1 voit la ligne et S2 ne voit pas la ligne |
-| `S1_OUT_S2_IN` | `0x02` | S1 ne voit pas la ligne et S2 voit la ligne |
-| `S1_OUT_S2_OUT` | `0x03` | Les deux capteurs ne voit pas la ligne |
+## Visualisation des valeurs des capteurs
 
-Dans notre situation, `S1` et `S2` correspondent aux capteurs de gauche et de droite.
+Voici une vidéo montrant comment les valeurs des capteurs changent en fonction de la position du LyneTracker par rapport à une ligne noire :
 
-Voici la portion de code qui utilise les constantes.
+[![LyneTracker Data example](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2Fp_WWJNkt0SE)](https://youtu.be/p_WWJNkt0SE)
 
-```cpp
-switch (sensors) {
-  case S1_IN_S2_IN:
-    Serial.println("GAUCHE: 1 \t DROITE: 1");
-    break;      
-  case S1_IN_S2_OUT:
-    Serial.println("GAUCHE: 1 \t DROITE: 0");
-    break;      
-  case S1_OUT_S2_IN:
-    Serial.println(F("GAUCHE: 0 \t DROITE: 1"));
-    break;      
-  case S1_OUT_S2_OUT:
-    Serial.println("GAUCHE: 0 \t DROITE: 0");
-    break;
-}
-```
-Beaucoup plus lisible! N'oubliez pas que la lisibilité du code est très importante.
+## Exercices
+- Testez le code pour lire les valeurs des capteurs du LyneTracker.
 
 ---
 
 # Suivre une ligne
-Plusieurs méthodes sont possibles pour suivre une ligne. Nous allons voir deux méthodes.
+Il existe plusieurs méthodes pour suivre une ligne avec capteur de ligne. Je présente ici une méthode simple pour suivre une ligne noire sur un fond blanc.
 
-## Méthode 1 : Suivre une ligne avec un seul capteur
-Cette méthode est très simple. Il suffit de lire la valeur des capteurs et de tourner le robot en fonction de la valeur lue.
+## Méthode : Suivre une ligne en fonction de la valeur des capteurs
+Cette méthode consiste à lire les valeurs des capteurs et à ajuster le robot en fonction des seuils de détection. Si un capteur détecte une ligne noire (valeur basse), le robot tourne ou ajuste sa direction.
 
 ```cpp
-#include <MeAuriga.h>
-
-MeLineFollower lineFollower(PORT_9);
-MeEncoderOnBoard encoderRight(SLOT1);
-MeEncoderOnBoard encoderLeft(SLOT2);
-
-int moveSpeed = 100;
-
-unsigned long currentTime = 0;
-
-void setup() {
-  Serial.begin(115200);
-  
-  encoderSetup();
-}
+int seuil = 600; // Seuil de détection de la ligne
+const int nbCapteurs = 5;
 
 void loop() {
-  currentTime = millis();
-  
-  byte lines = lineFollower.readSensors();
+    // Adapter les valeurs des capteurs selon l'environnement
 
-  switch (lines) {
-    case S1_IN_S2_IN:
-      Forward();
-      msg = "GAUCHE et DROITE voit la ligne";
-      break;
-    case S1_IN_S2_OUT:
-      msg = "GAUCHE voit la ligne et DROITE ne voit pas la ligne";
-      TurnLeft();
-      break;
-    case S1_OUT_S2_IN:
-      msg = "GAUCHE ne voit pas la ligne et DROITE voit la ligne";
-      TurnRight();
-      break;
-    case S1_OUT_S2_OUT:
-      Spin();
-      msg = "Les deux capteurs ne voit pas la ligne";
-      break;
-  }
-
-  encodersTask();
-}
-
-
-void Forward() {
-  encoderLeft.setTarPWM(moveSpeed);  
-  encoderRight.setTarPWM(-moveSpeed);  
-}
-
-void TurnLeft() {
-  encoderLeft.setMotorPwm(moveSpeed / 2);  
-  encoderRight.setMotorPwm(-moveSpeed);
-}
-
-void TurnRight() {
-  encoderLeft.setMotorPwm(moveSpeed);  
-  encoderRight.setMotorPwm(-moveSpeed / 2);  
-}
-
-void Backward() {
-  encoderLeft.setMotorPwm(-moveSpeed / 2);  
-  encoderRight.setMotorPwm(moveSpeed);  
-}
-
-void Spin() {
-  encoderLeft.setMotorPwm(moveSpeed);  
-  encoderRight.setMotorPwm(moveSpeed);  
-}
-
-//#region <Interruption>
-
-// Fonction d'interruption pour le moteur droit
-void encoderRight_interrupt(void)
-{
-  if(digitalRead(encoderRight.getPortB()) == 0)
-  {
-    encoderRight.pulsePosMinus();
-  }
-  else
-  {
-    encoderRight.pulsePosPlus();;
-  }
-}
-
-// Fonction d'interruption pour le moteur gauche
-void encoderLeft_interrupt(void)
-{
-  if(digitalRead(encoderLeft.getPortB()) == 0)
-  {
-    encoderLeft.pulsePosMinus();
-  }
-  else
-  {
-    encoderLeft.pulsePosPlus();
-  }
-}
-
-//#endregion
-
-// Configuration des encodeurs
-void encoderSetup() {
-  attachInterrupt(encoderRight.getIntNum(), encoderRight_interrupt, RISING);
-  attachInterrupt(encoderLeft.getIntNum(), encoderLeft_interrupt, RISING);
-  
-  //Set PWM 8KHz
-  TCCR1A = _BV(WGM10);
-  TCCR1B = _BV(CS11) | _BV(WGM12);
-
-  TCCR2A = _BV(WGM21) | _BV(WGM20);
-  TCCR2B = _BV(CS21);
-  
-  encoderRight.setPosPid(1.8,0,1.2);
-  encoderLeft.setPosPid(1.8,0,1.2);
-  encoderRight.setSpeedPid(0.18,0,0);
-  encoderLeft.setSpeedPid(0.18,0,0);
-  encoderRight.setMotionMode(DIRECT_MODE);
-  encoderLeft.setMotionMode(DIRECT_MODE);
-}
-
-void encodersTask() {
-  encoderLeft.loop();
-  encoderRight.loop();
-}
-
-```
-
-Cette méthode simpliste fonctionne un peu, mais le robot a tendance à dévier de sa trajectoire. Il faut donc trouver une autre méthode.
-
-## Méthode 2 : Suivre une ligne avec une variable d'ajustement
-Cette méthode est un peu plus complexe. Elle permet de suivre une ligne avec une variable d'ajustement. La variable d'ajustement permet de corriger la trajectoire du robot.
-
-Voici un résumé du code à modifier.
-
-```cpp
-// Variable inialisée au début du code
-int error = 0;
-
-//..
-switch (lines) {
-  case S1_IN_S2_IN:
-    error = 0;
-    Forward();
-    msg = "GAUCHE et DROITE voit la ligne";
-    break;
-  case S1_IN_S2_OUT:
-    error--;
-    speedAdjust(moveSpeed, error);
-    msg = "GAUCHE voit la ligne et DROITE ne voit pas la ligne";
-    break;
-  case S1_OUT_S2_IN:
-    error++;
-    speedAdjust(moveSpeed, error);
-    msg = "GAUCHE ne voit pas la ligne et DROITE voit la ligne";
-    break;
-  case S1_OUT_S2_OUT:
-    if (error < 0) {
-      SpinRight();
-    } else if (error > 0) {
-      SpinLeft();
-    } else {
-      Backward();
+    // Lire les capteurs
+    for (int i = 0; i < nbCapteurs; i++) {
+        sensorValues[i] = ss.analogRead(i);
     }
-    msg = "Les deux capteurs ne voit pas la ligne";
-    break;
-}
 
-void speedAdjust(int speed, int error) {
-  encoderLeft.setMotorPwm(speed + error);  
-  encoderRight.setMotorPwm(-speed + error);   
+    // Ajuster la direction en fonction des valeurs
+    if (sensorValues[2] < seuil) {
+        // Le capteur du milieu voit la ligne, avancer
+        Forward();
+    } else if (sensorValues[0] < seuil || sensorValues[1] < seuil) {
+        // Les capteurs de gauche voient la ligne, tourner à gauche
+        TurnLeft();
+    } else if (sensorValues[3] < seuil || sensorValues[4] < seuil) {
+        // Les capteurs de droite voient la ligne, tourner à droite
+        TurnRight();
+    } else {
+        // Aucun capteur ne voit la ligne, arrêter ou chercher la ligne
+        Stop();
+    }
 }
-//..
 ```
 
-La variable permet d'indiquer à quel point le robot est à droite ou à gauche de la ligne. Lorsque les deux capteurs perdent la ligne, le robot tourne en fonction de la valeur de la variable.
-
-Ainsi, si la variable est égale à 10, le robot a simplement dépasser la ligne et recule. Si la variable est inférieure à 10, le robot est à droite de la ligne. Si la variable est supérieure à 10, le robot est à gauche de la ligne.
+> **Note** : Dans cet exemple, le seuil de détection est arbitraire. Vous devrez ajuster ces valeurs en fonction de l'environnement et de la luminosité ambiante.
 
 ---
 
-# Utiliser l'écran SSD1306 avec le robot
-Dans votre kit, nous avons un circuit imprimé (PCB) qui permet d'étendre les ports du robot.
-![Alt text](assets/nick1.1_top_view.jpg)
-Ce circuit imprimé permet entre autres de sortir les broches pour la communication I2C. Nous allons utiliser ce modole pour communiquer avec l'[écran SSD1306](/1SX_cours_05/readme.md#lécran-oled-ssd-1306) et nous permettre de nous **déboguer plus facilement**. En effet, nous allons pouvoir écrire des messages directement sur l'écran.
+# Calibration des données
+Dans l'exemple précédent, les valeurs de seuil sont des valeurs arbitraires. Si l'on change d'environnement, il y a de forte chance que les valeurs de seuil ne soient plus adaptées. On ne veut pas avoir à changer les valeurs de seuil à chaque fois que l'on change d'environnement. Pour cela, on peut effectuer une calibration des données.
 
-<video src="https://github.com/nbourre/1sx_cours_notes/assets/2332679/a430667b-88e5-41e9-83e4-7794a7be14a4" controls autoplay title="Nick1.1"></video>
+La calibration consiste à mesurer les valeurs minimales et maximales des capteurs lorsqu'ils sont sur une ligne noire et sur un fond blanc. Ensuite, on utilise ces valeurs pour déterminer les seuils de détection.
+
+Ainsi, il s'agit d'un algorithme de base pour trouver les valeurs minimales et maximales des capteurs. Voici un rappel du pseudo-code :
+
+```text
+valMin = 1023; // Valeur maximale des capteurs
+valMax = 0;    // Valeur minimale des capteurs
+
+fonction calibrer :
+    pour chaque capteur i de 0 à 4 :
+        val = lireValeurCapteur(i)
+        si val < valMin :
+            valMin = val
+        si val > valMax :
+            valMax = val
+    fin pour
+```
+
+Ensuite, on peut utiliser ces valeurs pour déterminer les seuils de détection :
+
+```cpp
+// La valeur du seuil peut être ajustée en fonction de l'environnement
+// Dans le cas le plus simple, on peut utiliser la moyenne des valeurs min et max
+seuil = (valMin + valMax) / 2
+```
+
+---
+
+## Calibration automatique
+Au lieu de déplacer le robot manuellement pour calibrer les valeurs, on peut également déplacer le robot automatiquement pendant quelques secondes pour calibrer les valeurs.
+
+On pourrait placer le robot sur la ligne, puis lui faire faire un tour complet pour mesurer les valeurs minimales et maximales des capteurs. Voici le pseudo-code pour une calibration automatique :
+
+```text
+valMin = 1023; // Valeur maximale des capteurs
+valMax = 0;    // Valeur minimale des capteurs
+
+fonction calibrer :
+    // Voir l'exemple précédent
+
+fonction faireTourComplet --> booléen :
+    Faire tourner le robot
+
+fonction calibrationAutomatique :
+    Tant que faireTourComplet() n'a pas réussi :
+        calibrer()
+    
+```
+
+---
+
+# Contrôleur PID
+On vous rappelle que le contrôleur PID est un mécanisme de contrôle qui permet de maintenir un système à une valeur de consigne.
+
+> **Note :** Si vous avez besoin de revoir les notes de cours sur le PID, elles sont disponibles [dans le cours 09](../1SX_cours_09_PID/readme.md).
+
+Pour le suivi de ligne, le contrôleur PID peut être utilisé pour ajuster la trajectoire du robot en fonction de la position de la ligne par rapport aux capteurs. Le PID peut être utilisé pour ajuster la vitesse des moteurs ou la direction du robot en fonction de l'erreur de position.
+
+Dans la méthode qui sera montré, on normalisera les valeurs des capteurs pour que l'on puisse connaître la position de la ligne par rapport au capteur.
+
+On assignera une valeur de 0 au capteur de gauche et jusqu'à 4000 au capteur de droite. Ainsi, la valeur du milieu sera de 2000. On pourra ainsi déterminer la position de la ligne par rapport au robot.
+
+## Étape 1 : Normalisation des valeurs des capteurs
+Avant d'utiliser le PID, il est important de normaliser les valeurs des capteurs pour que chaque capteur ait une valeur entre 0 et 1000. Cela permettra ensuite de pondérer les valeurs des capteurs pour déterminer la position de la ligne sur l'ensemble des capteurs.
+
+L'algorithme de normalisation est le suivant :
+
+```text
+fonction capteurLectureNormalisee(index) :
+    // On multiplie par 1.0 pour forcer la division en double
+    retourner ((valCapteur[index] - valMin) * 1.0) / (valMax - valMin) * 1000.0
+
+fonction normaliserValeurs :
+    pour chaque capteur i de 0 à 4 :
+        capteurNormalise[i] = capteurLectureNormalisee(i)
+    fin pour
+```
+
+Ainsi chaque capteur aura toujours une valeur entre 0 et 1000, peu importe les valeurs minimales et maximales des capteurs.
+
+---
+
+## Étape 2 : Calcul de la position de la ligne
+Une fois les valeurs normalisées, on peut calculer la position de la ligne par rapport aux capteurs. On peut utiliser une moyenne pondérée des valeurs des capteurs pour déterminer la position de la ligne.
+
+La moyenne pondérée est une moyenne où chaque valeur est multipliée par un poids avant d'être sommée. Dans notre cas, les poids sont les positions des capteurs par rapport au robot.
+
+La formule est la suivante :
+
+$$position = \frac{\sum_{i=0}^{4} capteur_{i} * 1000i}{\sum_{i=0}^{4} capteur_{i}}$$
+
+L'algorithme représenté par la formule est le suivant :
+
+```text
+numerateur = 0
+denominateur = 0
+
+Pour chaque capteur i de 0 à 4 :
+    poids = 1000 * i
+    numerateur += capteurNormalise[i] * poids
+    denominateur += capteurNormalise[i]
+
+position = numerateur / denominateur
+```
+
+> **Attention!** Les valeurs peuvent devenir très grandes, il est important d'utiliser les bons types de données pour éviter le dépassement de capacité.
+> 
+> Par exemple si la ligne est sous le capteur 4, le numérateur pourra avoir une valeur dépassant les 4 000 000. Il est donc important de s'assurer que les variables utilisées peuvent contenir de telles valeurs.
+>
+> Utiliser le type `unsigned long` pour les variables `numerateur` et `denominateur` peut être une bonne idée.
 
 
-Votre kit aura maintenant les éléments suivant supplémentaires :
-- Module Nick1.1
-- Écran SSD1306
-- Câble RJ-25
-- Support pour l'ensemble
+Testez cet algorithme pour voir comment il fonctionne avec les valeurs des capteurs.
 
-J'ai réalisé un petit projet nommé `ssd1306_test_debug` dans le dossier `autres` des projets du cours. Vous pourrez l'adapter à vos besoins.
+---
+
+## Étape 3 : Utilisation du PID
+
+Une fois que l'on connait la position de la ligne par rapport aux capteurs, on peut utiliser le PID pour ajuster la trajectoire du robot en fonction de cette position.
+
+Voici un exemple de code utilisant le PID pour calculer l'ajustement à apporter à la trajectoire du robot :
+
+```cpp
+float computePID(float position) {
+    // Ajuster les coefficients selon vos besoins
+    static float kp = 0.1; // Coefficient proportionnel
+    static float ki = 0.01; // Coefficient intégral
+    static float kd = 0.01; // Coefficient dérivé
+
+    static float integral = 0;
+    static float derivative = 0;
+    static float lastError = 0;
+
+    float error = position - 2000; // 2000 est la position du milieu
+
+    integral += error;
+    derivative = error - lastError;
+    lastError = error;
+    
+    float output = kp * error + ki * integral + kd * derivative;
+    
+    return output;
+}
+
+void loop() {
+    // Normaliser les valeurs des capteurs
+    normaliserValeurs();
+
+    // Calculer la position de la ligne
+    float position = calculerPositionLigne();
+
+    // Calculer l'ajustement à apporter à la trajectoire
+    float adjustment = computePID(position);
+
+    // Ajuster la trajectoire du robot en fonction de l'ajustement
+    // Par exemple, ajuster la vitesse des moteurs
+    suivreLigne(adjustment);
+}
+```
+
+---
 
 # Exercices
-1. Testez le code pour suivre un tracer noir sur fond blanc.
-2. Ajustez le code pour que le robot suive une ligne plus précisément.
-3. Ajoutez de l'information de débogage tel que l'affichage de l'état des capteurs sur l'écran SSD1306.
-4. Améliorez le code en essayant d'implémenter un PID (sans la partie intégrale) pour suivre la ligne.
-
+1. Testez le code pour suivre une ligne noire sur fond blanc.
+2. Effectuez une calibration des données pour déterminer les seuils de détection.
+3. Implémentez une calibration automatique pour déterminer les valeurs minimales et maximales des capteurs.
+4. Testez le suivi de ligne avec les valeurs calibrées.
 ---
 
 [Retour au sommaire](../README.md)
 
+<img src="assets/aia.jpeg" alt="drawing" width="100"/>
 
+---
