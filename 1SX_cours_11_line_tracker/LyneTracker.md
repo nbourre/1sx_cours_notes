@@ -13,6 +13,7 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
   - [Caractéristiques techniques](#caractéristiques-techniques)
 - [Utilisation dans le code](#utilisation-dans-le-code)
   - [Visualisation des valeurs des capteurs](#visualisation-des-valeurs-des-capteurs)
+  - [Exercices](#exercices)
 - [Suivre une ligne](#suivre-une-ligne)
   - [Méthode : Suivre une ligne en fonction de la valeur des capteurs](#méthode--suivre-une-ligne-en-fonction-de-la-valeur-des-capteurs)
 - [Calibration des données](#calibration-des-données)
@@ -21,7 +22,7 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
   - [Étape 1 : Normalisation des valeurs des capteurs](#étape-1--normalisation-des-valeurs-des-capteurs)
   - [Étape 2 : Calcul de la position de la ligne](#étape-2--calcul-de-la-position-de-la-ligne)
   - [Étape 3 : Utilisation du PID](#étape-3--utilisation-du-pid)
-- [Exercices](#exercices)
+- [Exercices](#exercices-1)
 
 
 # Introduction au suivi de ligne
@@ -122,31 +123,37 @@ Voici une vidéo montrant comment les valeurs des capteurs changent en fonction 
 
 [![LyneTracker Data example](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2Fp_WWJNkt0SE)](https://youtu.be/p_WWJNkt0SE)
 
+## Exercices
+- Testez le code pour lire les valeurs des capteurs du LyneTracker.
+
 ---
 
 # Suivre une ligne
-Il existe plusieurs méthodes pour suivre une ligne avec capteur de ligne. Je présente ici deux méthodes courantes pour suivre une ligne noire sur un fond blanc.
+Il existe plusieurs méthodes pour suivre une ligne avec capteur de ligne. Je présente ici une méthode simple pour suivre une ligne noire sur un fond blanc.
 
 ## Méthode : Suivre une ligne en fonction de la valeur des capteurs
 Cette méthode consiste à lire les valeurs des capteurs et à ajuster le robot en fonction des seuils de détection. Si un capteur détecte une ligne noire (valeur basse), le robot tourne ou ajuste sa direction.
 
 ```cpp
+int seuil = 600; // Seuil de détection de la ligne
+const int nbCapteurs = 5;
+
 void loop() {
     // Adapter les valeurs des capteurs selon l'environnement
 
     // Lire les capteurs
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < nbCapteurs; i++) {
         sensorValues[i] = ss.analogRead(i);
     }
 
     // Ajuster la direction en fonction des valeurs
-    if (sensorValues[2] < 300) {
+    if (sensorValues[2] < seuil) {
         // Le capteur du milieu voit la ligne, avancer
         Forward();
-    } else if (sensorValues[0] < 300 || sensorValues[1] < 300) {
+    } else if (sensorValues[0] < seuil || sensorValues[1] < seuil) {
         // Les capteurs de gauche voient la ligne, tourner à gauche
         TurnLeft();
-    } else if (sensorValues[3] < 300 || sensorValues[4] < 300) {
+    } else if (sensorValues[3] < seuil || sensorValues[4] < seuil) {
         // Les capteurs de droite voient la ligne, tourner à droite
         TurnRight();
     } else {
@@ -337,5 +344,3 @@ void loop() {
 <img src="assets/aia.jpeg" alt="drawing" width="100"/>
 
 ---
-
-Est-ce que cela correspond à tes attentes, ou souhaites-tu des ajustements ?
