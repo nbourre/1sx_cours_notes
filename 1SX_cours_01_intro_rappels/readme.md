@@ -53,7 +53,7 @@ Lecture du plan de cours.
 # Kit Arduino Mega
 - Comme mentionné plus tôt, la première partie sera consacrée à la programmation avec un Arduino Mega
   - J’ai choisi le Arduino Mega, car il s’agit du même microcontrôleur que l’on retrouve dans le robot Ranger ainsi la transition se plus aisée
-- Chacun aura accès à un kit comprenant plus composant
+- Chacun aura accès à un kit comprenant plus des composants
 - Nous allons faire le tour des composants pendant les prochains cours et labos
 
 # Exercice - 20 minutes
@@ -88,7 +88,7 @@ void loop() {
 - Expérimentez avec d’autres valeurs de *timing*
 
 # Références
-- Site officiel : https://www.arduino.cc/reference/fr/
+- Site officiel : https://docs.arduino.cc/language-reference/
 
 **[Retour au sommaire](../README.md)**
 
