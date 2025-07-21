@@ -593,6 +593,6 @@ Ces lignes sont importantes si l'on désire avoir des résultats précis avec le
 - [LOCODuino - les interruptions](https://www.locoduino.org/spip.php?article64)
 - [Incremental Encoder - How it works](https://www.youtube.com/watch?v=zzHcsJDV3_o)
 - [How Rotary Encoder Works and Interface It with Arduino](https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/)
-- [`attachInterrupt`](https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/)
+- [`attachInterrupt`](https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/)
 - [Démontage du motoréducteur MakeBlock](https://www.youtube.com/watch?v=oy374XhbXVg)
 - [DC motor position control using PID](https://www.youtube.com/watch?v=jTIRUXJKMX4)

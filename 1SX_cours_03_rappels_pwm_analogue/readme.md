@@ -71,7 +71,7 @@ void loop() {
 ---
 
 - **Attention!** Le PWM ne fonctionne pas nécessairement sur toutes les broches
-- Prenons 2 minutes pour lire la [documentation officielle](https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/) sur la fonction `analogWrite()`
+- Prenons 2 minutes pour lire la [documentation officielle](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/) sur la fonction `analogWrite()`
 - On constate que :
   - les broches dépendent du microcontrôleur utilisé
   - Il y a des fréquences différentes
@@ -316,7 +316,7 @@ void loop() {
 ---
 
 # Références
-- [analogWrite](https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/)
+- [analogWrite](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/)
 - [Les bases du PWM](https://docs.arduino.cc/learn/microcontrollers/analog-output)
 - [Sparkfun Servos](https://www.sparkfun.com/servos)
 - [Variable resistors](https://makeabilitylab.github.io/physcomp/electronics/variable-resistors.html)

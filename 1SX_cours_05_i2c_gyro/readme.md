@@ -818,5 +818,4 @@ Pour utiliser l'écran, il faut inclure les librairies suivantes: `Wire.h`, `Ada
 ---
 
 # Références
-- [A Guide to Arduino & the I2C Protocol](https://docs.arduino.cc/learn/communication/wire) - [Traduction Google](https://docs-arduino-cc.translate.goog/learn/communication/wire?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en-US&_x_tr_pto=wapp)
-- 
+- [A Guide to Arduino & the I2C Protocol](https://docs.arduino.cc/learn/communication/wire/) - [Traduction Google](https://docs-arduino-cc.translate.goog/learn/communication/wire?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en-US&_x_tr_pto=wapp)

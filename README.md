@@ -19,15 +19,15 @@
   - Les encodeurs et l'anneau de DELS
 - [Cours 09 - Utiliser la classe `MeEncoderOnBoard`](1SX_cours_09_PID/readme.md)
   - PID et pivoter à un angle précis
-- [Cours 10 - Le capteur de ligne](1SX_cours_10_line_tracker/readme.md)
+- [Cours 11 - Le capteur de ligne](1SX_cours_11_line_tracker/readme.md)
   - Suivi de lignes
-- [Cours 11 - La machine à état fini](1SX_cours_11_FSM/machineEtatFini.md)
+- [Cours 11 - La machine à état fini](1SX_cours_12_FSM/readme.md)
   - Machine à état fini
-- [Cours 12 - Le capteur de distance](1SX_cours_12_autres_capteurs/capteurs.md)
+- [Cours 12 - Le capteur de distance](1SX_cours_10_autres_capteurs/readme.md)
   - Capteur de distance et autres
 
 # Extra
-- [Anneau de DELS](extra/anneau_dels.md)
+- [Anneau de DELS](1sx_cours_07_dels_moteurs/readme.md#lumière-avant-tout)
 - [Prototypes de fonctions](extra/prototype_fonction/readme.md)
 
 # Évaluations

@@ -157,7 +157,7 @@ float calculate_temp(int16_t In_temp)
 ---
 
 # Capteur gyroscopique
-Voir le [Cours 06](../1SX_cours_06/readme.md) pour plus de détail sur le gyroscope.
+Voir le [Cours 06](../1SX_cours_05_i2c_gyro/readme.md) pour plus de détail sur le gyroscope.
 
 - Modèle MPU-6050
 - Configuré sur l'adresse 0x69 pour le `MeAuriga`
