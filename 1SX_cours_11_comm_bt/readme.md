@@ -52,7 +52,7 @@ alt="IMAGE ALT TEXT HERE" width="320" height="240" border="10" /></a>
 ## Les scripts Python
 J'ai réalisé quelques scripts utilitaire pour vous permettre de communiquer avec le module Bluetooth du robot MakeBlock Ranger ainsi que de trouver l'adresse MAC du module.
 
-Ils sont disponibles sur mon compte GitHub à l'adresse suivante : [https://github.com/nbourre/auriga_bluetooth_python_comm]()
+Ils sont disponibles sur mon compte GitHub à l'adresse suivante : [https://github.com/nbourre/auriga_bluetooth_python_comm](https://github.com/nbourre/auriga_bluetooth_python_comm)
 
 Les scripts actifs sont les suivants :
 - `scan_robots.py` : Permet de scanner les appareils Bluetooth à proximité et d'afficher les noms et adresses MAC des appareils MakeBlock Ranger.
