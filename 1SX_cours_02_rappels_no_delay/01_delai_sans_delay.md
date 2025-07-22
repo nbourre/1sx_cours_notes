@@ -98,7 +98,7 @@ unsigned long currentTime;
 
 void setup() {
   // Configuration de la pin
-  pinMode(LED_BUILTIN, INPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
