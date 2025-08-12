@@ -14,7 +14,7 @@
 
 > **Attention!** Ce montage spécifique n'utilise pas de résistance explicite. Il faut utiliser la résistance interne de l'Arduino avec le mode `INPUT_PULLUP`.
 > 
-> Généralement, on utilise une résistance de 10kΩ pour ce genre de montage.
+> Si on n'utilise pas de `pullup` interne, généralement, on utilise une résistance de 10kΩ pour ce genre de montage.
 
 <table>
 <tr>

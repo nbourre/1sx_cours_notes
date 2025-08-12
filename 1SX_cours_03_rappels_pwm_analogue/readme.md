@@ -28,7 +28,7 @@
 
 ---
 
-- Disons que l’on utilise un délai de 50 ms, on aura un clignotement assez rapide
+- Disons que l’on utilise un délai de 50 ms pour faire clignoter un LED, on aura un clignotement assez rapide
 - Si l’on réduit passablement la durée du délai, que ce passera-t-il?
 
 ```cpp
@@ -41,7 +41,7 @@ void loop() {
 ```
 
 - Il se passera principalement 2 choses :
-  - L’œil humain voit généralement un scintillement maximal de 50 à 90 hz
+  - L’œil humain voit généralement un scintillement maximal de 50 à 90 hz, donc on ne verra pas le clignotement
   - Étant donné que la lumière est éteinte à 50% du temps, elle sera à 50% de sa luminosité maximale
 
 ---
@@ -58,7 +58,9 @@ void loop() {
 - La fonction `analogWrite()` permet de gérer le PWM
 - Elle nécessite 2 paramètres soit la broche et la valeur
 - La valeur doit être entre 0 et 255
+- Le résultat sera un prorata sur 255
 - L’avantage, c’est que l’on n’a pas à gérer les délais
+
 
 ```cpp
 void loop() {
@@ -71,6 +73,7 @@ void loop() {
 ---
 
 - **Attention!** Le PWM ne fonctionne pas nécessairement sur toutes les broches
+  - Sur le Mega, les broches 2 à 13 et 44 à 46 sont compatibles
 - Prenons 2 minutes pour lire la [documentation officielle](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/) sur la fonction `analogWrite()`
 - On constate que :
   - les broches dépendent du microcontrôleur utilisé
@@ -207,12 +210,12 @@ void loop() {
 - Il est judicieux d’utiliser une variable minimum et maximum pour les angles limites du servo
 
 # Lecture analogue
-- La fonction analogRead permet de lire le voltage sur les broches qui acceptent la lecture analogue
-- Les broches qui peuvent lire les valeurs analogues sont marquées « Ax » où A tien pour analogue et x le numéro de la broche
+- La fonction `analogRead` permet de lire le voltage sur les broches qui acceptent la lecture analogue
+- Les broches qui peuvent lire les valeurs analogues sont marquées « Ax » où `A` tient pour analogue et x le numéro de la broche
   - Sur le Mega A0-A15, sur le Uno A0-A5
 - Pour lire des valeurs analogues, il faut ce que l’on appelle un ADC soit un **C**onvertisseur **A**nalogue à **D**igitale.
   - Le ADC permet de lire des valeurs de 0v à 5v
-  - Il a une résolution de 10 bit. Ainsi $2^{10} - 1 = 1023$
+  - Il a une résolution de 10 bit. Ainsi  $$2^{10} - 1 = 1023$$
 - Les valeurs retournées sont entre 0 (0v) et 1023 (5v)
 
 ---
@@ -226,7 +229,7 @@ void loop() {
 
 > **Attention!**
 > 
-> La fonction analogRead et analogWrite n’ont aucun lien
+> Les fonctions `analogRead` et `analogWrite` n’ont aucun lien entre elles.
 
 # Lecture d’un potentiomètre
 - Un potentiomètre est un dispositif mécanique simple qui se présente sous de nombreuses formes différentes
