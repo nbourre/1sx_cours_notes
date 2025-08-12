@@ -20,7 +20,9 @@
 
 **Question** : Après combien de jours, le compteur va recommencer?
 <details><summary>Réponse</summary>Environ 50 jours
-4294967295 / (1000 * 60 * 60 * 24) --> 49.7 jours
+
+$\frac{4294967295}{(1000 * 60 * 60 * 24)} = 49.7 jours$
+
 </details>
 
 ## Exemple pour afficher le temps depuis le démarrage
