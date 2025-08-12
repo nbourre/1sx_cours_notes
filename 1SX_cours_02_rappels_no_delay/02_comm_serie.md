@@ -151,7 +151,7 @@ Solution : On peut envoyer des données à l'Arduino avec le moniteur série et 
   - [`Serial.parseFloat()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/parseFloat/) : Lit un nombre décimal du buffer de réception.	
   - `Serial.readBytes(tampon, longueur)` : Lit un tableau d'octets de longueur déterminé.
   - [`Serial.readBytesUntil(caractère, tampon, longueur)`](https://docs.arduino.cc/language-reference/en/functions/communication/stream/streamReadBytesUntil/) : Lit un tableau d'octets jusqu'à un caractère déterminé et l'enregistre dans le tampon.
-  - `Serial.readStringUntil(caractère)` : Lit une chaîne de caractères jusqu'à un caractère déterminé.
+  - [`Serial.readStringUntil(caractère)`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/readStringUntil/) : Lit une chaîne de caractères jusqu'à un caractère déterminé.
 
 La liste des fonctions est disponible sur la page [Arduino - Communication série](https://docs.arduino.cc/language-reference/en/functions/communication/serial/).
 
