@@ -8,8 +8,7 @@
   - [Envoyer des données à l'Arduino](#envoyer-des-données-à-larduino)
     - [Exemple de lecture d'un nombre entier unique](#exemple-de-lecture-dun-nombre-entier-unique)
     - [Exemple - Lecture d'un nombre entier avec `parseInt()` et `read()`](#exemple---lecture-dun-nombre-entier-avec-parseint-et-read)
-  - [Autres fonctions d'intérêt](#autres-fonctions-dintérêt)
-  - [Résumé](#résumé)
+- [Résumé](#résumé)
 - [Références](#références)
 
 ---
@@ -150,6 +149,11 @@ Solution : On peut envoyer des données à l'Arduino avec le moniteur série et 
   - [`Serial.read()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/read) : Lit un octet du buffer de réception.
   - [`Serial.parseInt()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/parseInt/) : Lit un nombre entier du buffer de réception.
   - [`Serial.parseFloat()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/parseFloat/) : Lit un nombre décimal du buffer de réception.	
+  - `Serial.readBytes(tampon, longueur)` : Lit un tableau d'octets de longueur déterminé.
+  - [`Serial.readBytesUntil(caractère, tampon, longueur)`](https://docs.arduino.cc/language-reference/en/functions/communication/stream/streamReadBytesUntil/) : Lit un tableau d'octets jusqu'à un caractère déterminé et l'enregistre dans le tampon.
+  - `Serial.readStringUntil(caractère)` : Lit une chaîne de caractères jusqu'à un caractère déterminé.
+
+La liste des fonctions est disponible sur la page [Arduino - Communication série](https://docs.arduino.cc/language-reference/en/functions/communication/serial/).
 
 ### Exemple de lecture d'un nombre entier unique
 
@@ -267,16 +271,9 @@ void loop() {
 
 > **Note :** Pour cet exemple, il faudra configurer le moniteur série pour terminer la ligne avec un retour à la ligne. (Newline)
 
-## Autres fonctions d'intérêt
+---
 
-  - `Serial.readBytes(tampon, longueur)` : Lit un tableau d'octets de longueur déterminé.
-  - [`Serial.readBytesUntil(caractère, tampon, longueur)`](https://docs.arduino.cc/language-reference/en/functions/communication/stream/streamReadBytesUntil/) : Lit un tableau d'octets jusqu'à un caractère déterminé et l'enregistre dans le tampon.
-  - `Serial.readStringUntil(caractère)` : Lit une chaîne de caractères jusqu'à un caractère déterminé.
-
-La liste des fonctions est disponible sur la page [Arduino - Communication série](https://docs.arduino.cc/language-reference/en/functions/communication/serial/).
-
-
-## Résumé
+# Résumé
 La communication série est très utile pour :
 - Envoyer des données à l'ordinateur pour les afficher.
 - Envoyer des données à l'Arduino pour contrôler le programme.
@@ -284,6 +281,8 @@ La communication série est très utile pour :
 - Etc.
 
 On doit mettre un délai lorsque l'on envoie des données à l'ordinateur pour ne pas ralentir le microcontrôleur.
+
+---
 
 # Références
 - [Arduino - Communication série](https://docs.arduino.cc/language-reference/en/functions/communication/serial/)
