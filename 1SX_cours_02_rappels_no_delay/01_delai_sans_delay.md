@@ -46,6 +46,7 @@ void loop() {
   // Attendre une seconde pour limiter le
   // transfert de données
   delay(1000);
+
 }
 ```
 </td>
@@ -78,11 +79,14 @@ void loop() {
   delay(1000);                      
   digitalWrite(LED_BUILTIN, LOW);    
   delay(1000);
+
+  // Fonction hypothétique pour lire un bouton
+  lireBouton();
+
 }
+
 ```
 
-- Il y a quelques méthodes pour simuler un délai sans faire de pause
-- Celle que je vous présente est simple à comprendre
 - En gros, je compare le temps actuel avec la dernière fois qu’il a été comparé
 - Il faut 3 variables par actions (fonctions) que l'on désire effectuer
   - `currentTime` <-- Temps actuel
@@ -142,7 +146,7 @@ void blinkLED() {
 
 ## Résumé
 
-**Important :** Comprendre ce mécanisme est primordial pour pouvoir développer des applications qui nécessitent de réaliser des tâches *simultanées*.
+**Important :** Comprendre ce mécanisme est primordial pour pouvoir développer des applications qui nécessitent de réaliser des *tâches simultanées*.
 
 - On peut utiliser cette méthode pour ensuite faire d’autres actions sans bloquer le programme
 - Par exemple
@@ -150,6 +154,12 @@ void blinkLED() {
   - Lire l’état des roues d'un robot
   - Lire la distance d’un capteur
   - Etc.
+
+> **Note**
+> 
+> La simultanéité est une illusion. Le programme exécute les actions l’une après l’autre, mais il le fait si rapidement que l’on a l’impression que tout est fait en même temps.
+>
+> Pour en savoir plus sur le concept du *Round-Robin*, vous pouvez lire [cet article Wikipédia](https://fr.wikipedia.org/wiki/Round-robin_(informatique)).
 
 ---
 
