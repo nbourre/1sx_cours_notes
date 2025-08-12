@@ -37,13 +37,30 @@
 | Serial3   | 15           | 14          |
 
 ## Comment utiliser la communication série
-- Pour utiliser la communication série, il faut initialiser le port avec la vitesse de transfert dans la fonction `setup()
+- Pour utiliser la communication série, il faut initialiser le port avec la vitesse de transfert dans la fonction `setup()`
 - La fonction `Serial.begin(baudrate)` sert à initialiser le port série.
   - La vitesse de transfert est en bauds. (bits par seconde)
   - Les vitesses de transfert les plus courantes sont 9600, 19200, 38400, 57600, 115200.
   - **La vitesse de transfert doit être la même pour l'ordinateur et le microcontrôleur.**
 - Pour envoyer des données, on utilise la fonction `Serial.print()` ou `Serial.println()`
   - On peut envoyer des nombres, des caractères, des chaînes de caractères, etc.
+
+**Section science**
+- Par défaut, chaque octet envoyé prend 10 bits pour être envoyé.
+  - 1 bit de start, 8 bits de données, 1 bit de stop.
+
+| Vitesse (bauds) | Temps pour 1 caractère* | Temps pour 100 caractères* |
+|----------------:|------------------------:|---------------------------:|
+| 9600            | 1,04 ms                 | 104 ms                    |
+| 14400           | 0,694 ms                | 69,4 ms                   |
+| 19200           | 0,521 ms                | 52,1 ms                   |
+| 38400           | 0,260 ms                | 26,0 ms                   |
+| 57600           | 0,174 ms                | 17,4 ms                   |
+| 115200          | 0,087 ms                | 8,7 ms                    |
+
+\*Calcul basé sur 10 bits transmis par caractère (1 bit start + 8 bits data + 1 bit stop).
+
+Ainsi, il est important de choisir une vitesse de transfert qui convient à l'application. Par exemple, pour envoyer des données en temps réel, il est préférable d'utiliser une vitesse élevée comme 115200 bauds. Aussi, pour ne pas ralentir le microcontrôleur, il est important de bien programmer le code pour ne pas envoyer trop de données en même temps.
 
 ### Exemple pour envoyer des données à l'ordinateur
 
