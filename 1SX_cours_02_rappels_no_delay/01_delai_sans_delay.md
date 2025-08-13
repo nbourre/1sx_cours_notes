@@ -90,7 +90,7 @@ void loop() {
 - En gros, je compare le temps actuel avec la dernière fois qu’il a été comparé
 - Il faut 3 variables par actions (fonctions) que l'on désire effectuer
   - `currentTime` <-- Temps actuel
-  - `lastTime` <-- Variable statique pour sauvegarder le temps de la exécution de l'action.
+  - `lastTime` <-- Variable statique pour sauvegarder le temps de la dernière exécution de l'action.
   - `rate` <-- Variable ou constante pour déterminer le délai entre les actions.
 
 ## Exemple pour clignoter un DEL sans `delay()`
