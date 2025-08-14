@@ -32,7 +32,7 @@ Article qui indique comment exploiter la communication i2c avec divers appareils
 # Introduction
 À date, nous avons vu l'échange de données à partir du port série. Nous avons vu que le port série est un protocole de communication asynchrone. C'est-à-dire que les données sont envoyées les unes après les autres, sans synchronisation entre l'émetteur et le récepteur.
 
-Il existe un autre protocole de communication qui est très utilisé dans les systèmes embarqués: le protocole **i2c**. Ce protocole est un protocole de communication synchrone. C'est-à-dire que les données sont envoyées en même temps par l'émetteur et reçues en même temps par le récepteur.
+Il existe un autre protocole de communication qui est très utilisé dans les systèmes embarqués: le protocole **i2c**. Ce protocole est un protocole de communication synchrone. C'est-à-dire que les données sont transmises en utilisant une horloge commune (SCL) qui synchronise la communication entre l'émetteur et le récepteur.
 
 On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la réception de données sont plus complexes. Par exemple :
 - Horloge en temps réel
@@ -48,12 +48,14 @@ On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la 
 ---
 
 # Branchement
-- Le i2c utilise 2 fils pour échanger de l’information
-    - SDA (Serial Data)
-    - SCL (Serial Clock)
+- Le i2c utilise 2 fils pour échanger de l'information
+    - SDA (Serial Data) : ligne de données
+    - SCL (Serial Clock) : ligne d'horloge
 - Jetez un coup d'oeil à votre Arduino, vous devriez voir les pins SDA et SCL
+    - Sur Arduino Mega : SDA = pin 20, SCL = pin 21
+    - Sur Arduino Uno : SDA = pin A4, SCL = pin A5
 - Le i2c fonctionne avec le principe de maître et d'esclave
-    - Le maître est celui qui contrôle le bus i2c
+    - Le maître est celui qui contrôle le bus i2c (génère l'horloge)
     - L'esclave est celui qui reçoit les commandes du maître
 
 ![Alt text](img/liaison.png)
@@ -262,7 +264,7 @@ void loop() {
 
 ```cpp
 // Exemple de configuration
-mpu.setAccelerometerRange(MPU6050_RANGE_8_G)
+mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
 mpu.setGyroRange(MPU6050_RANGE_500_DEG);
 mpu.setFilterBandwidth(MPU6050_BAND_21_HZ); 
 
@@ -280,23 +282,30 @@ mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 ---
 
 - Pour utiliser les valeurs, celles-ci possèdent des propriétés qui leur sont propres
-- Exemple accélération:
-  - `a.acceleration.x|y|z`
-- Exemple gyroscope:
-  - `g.gyro.x|y|z`
-- Exemple température
+- Exemple accélération (en m/s²):
+  - `a.acceleration.x`, `a.acceleration.y`, `a.acceleration.z`
+- Exemple gyroscope (en rad/s):
+  - `g.gyro.x`, `g.gyro.y`, `g.gyro.z`
+  - Pour convertir en degrés/s : `valeur_rad_s * 180 / PI`
+- Exemple température (en °C):
   - `temp.temperature`
 
 ---
 
 # Gyroscope
 - Si vous avez bien observé le code, il y a la mention d'un gyroscope
-- Comme indiqué plus tôt, certain IMU possède un gyroscope intégré
-- Le gyroscope permet de mesurer la vitesse de rotation
-- Il est possible de mesurer la vitesse de rotation sur 3 axes
+- Comme indiqué plus tôt, certains IMU possèdent un gyroscope intégré
+- Le gyroscope permet de mesurer la vitesse de rotation angulaire
+- Il est possible de mesurer la vitesse de rotation sur 3 axes (X, Y, Z)
 - La vitesse est donnée en $rad/s$ (radian par seconde)
-- Ainsi si le gyroscrope ne détecte pas de mouvement, les valeurs sont basses
-- Si on pivote le gyroscope, on aura des valeur le temps des accélérations
+- Ainsi si le gyroscope ne détecte pas de mouvement, les valeurs sont proches de zéro
+- Si on fait pivoter le gyroscope, on aura des valeurs non-nulles pendant la rotation
+
+**Applications pratiques :**
+- Détection d'orientation et de mouvement
+- Stabilisation d'image
+- Contrôle de jeux vidéo (manettes)
+- Navigation (drones, robots)
 
 > **Note :** Les robots sur deux roues ou encore les overboard utilisent entres autres un gyroscope pour garder l'équilibre.
 
@@ -819,3 +828,6 @@ Pour utiliser l'écran, il faut inclure les librairies suivantes: `Wire.h`, `Ada
 
 # Références
 - [A Guide to Arduino & the I2C Protocol](https://docs.arduino.cc/learn/communication/wire/) - [Traduction Google](https://docs-arduino-cc.translate.goog/learn/communication/wire?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en-US&_x_tr_pto=wapp)
+- [Adafruit MPU6050 Guide](https://learn.adafruit.com/mpu6050-6-dof-accelerometer-and-gyro)
+- [Adafruit SSD1306 OLED Display Guide](https://learn.adafruit.com/monochrome-oled-breakouts)
+- [MPU6050 Datasheet](https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf)
