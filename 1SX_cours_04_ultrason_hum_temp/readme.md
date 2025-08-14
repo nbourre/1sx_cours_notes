@@ -3,7 +3,8 @@
 # Table des matières <!-- omit in toc -->
 - [Capteur de distance](#capteur-de-distance)
     - [Le sonar à ultrason](#le-sonar-à-ultrason)
-    - [Le sonar HC-SR-0](#le-sonar-hc-sr-0)
+    - [Le sonar HC-SR04](#le-sonar-hc-sr04)
+    - [Limites et précautions du HC-SR04](#limites-et-précautions-du-hc-sr04)
     - [Algorithme](#algorithme)
     - [Exemple de code](#exemple-de-code)
 - [Importation de bibliothèque](#importation-de-bibliothèque)
@@ -42,12 +43,37 @@
 
 ---
 
-### Le sonar HC-SR-0
+### Le sonar HC-SR04
 - Le modèle qui est inclus dans le kit est le HC-SR04 qui est relativement populaire
   - C'est le même que l'on retrouve sur le robot
 - Il fonctionne entre 2 et 400 cm
 
 ![Alt text](img/02_sonar.png)
+
+### Limites et précautions du HC-SR04
+
+**Portée effective :**
+- Distance minimale : 2 cm (en dessous, les mesures sont imprécises)
+- Distance maximale : 400 cm (au-delà, le signal devient trop faible)
+- Zone optimale : entre 10 cm et 300 cm pour une précision maximale
+
+**Angle de détection :**
+- Angle de détection d'environ 15° (cône de ~30° total)
+- Les objets en dehors de cet angle ne seront pas détectés
+- Pour une mesure précise, l'objet doit être perpendiculaire au capteur
+
+**Limitations importantes :**
+- Surfaces molles ou inclinées (tissus, mousse) : absorption du signal
+- Surfaces très petites : peuvent ne pas réfléchir suffisamment le signal
+- Températures extrêmes : affectent la vitesse du son et donc la précision
+- Bruit ambiant : les ultrasons peuvent interférer entre eux
+
+**Conseils d'utilisation :**
+- Évitez d'utiliser plusieurs capteurs HC-SR04 simultanément (interférences)
+- Attendez au moins 60ms entre les mesures pour éviter les échos parasites
+- Filtrez les valeurs aberrantes (0 cm ou >400 cm) dans votre code
+
+---
 
 ### Algorithme
 - On active le déclencheur
@@ -87,13 +113,23 @@ void loop() {
 
   // Lire l'écho
   duration = pulseIn(echoPin, HIGH);
+  // Calculer la distance
+  distance = duration * 0.034 / 2; // Vitesse du son / 2
 
-  // Calculer la distance
-  distance = duration * 0.034 / 2; // Vitesse du son / 2
-
-  Serial.print("Distance: ");
-  Serial.print(distance);
-  Serial.println(" cm");
+  // Filtrer les valeurs aberrantes
+  if (distance >= 2 && distance <= 400) {
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+  } else {
+    Serial.println("Hors de portée");
+  }
+  
+  // Attendre 500ms avant la prochaine mesure
+  // Seulement pour la démonstration
+  // Il est préférable de ne pas bloquer le uC
+  delay(500);
+}
 ```
 
 </td>
@@ -200,16 +236,23 @@ void loop() {
     
     float h = dht.readHumidity();
     float t = dht.readTemperature();
+    
+    // Vérifier si les lectures ont échoué
+    if (isnan(h) || isnan(t)) {
+      Serial.println("Erreur de lecture du capteur DHT!");
+      delay(2000); // Attendre 2 secondes avant la prochaine lecture
+    }
+    
     float humidex = dht.computeHeatIndex(t, h, false);
 
     Serial.print("Humidité: ");
     Serial.print(h);
-    Serial.print(("%  Température: "));
+    Serial.print("%  Température: ");
     Serial.print(t);
-    Serial.print(("°C "));
-    Serial.print(("Humidex : "));
+    Serial.print("°C ");
+    Serial.print("Humidex : ");
     Serial.print(humidex);
-    Serial.println(("°C "));
+    Serial.println("°C ");
   }
 }
 
@@ -229,7 +272,7 @@ void loop() {
 # Écran LCD
 - L'écran LCD permet d'afficher du contenu textuel ou graphique sur l'appareil
 - On le retrouve dans plusieurs appareils communs
-  - Imprimnate, router, cafétière, etc.
+  - Imprimante, routeur, cafetière, etc.
 - Il y a plusieurs types d'écran LCD
   - Couleur, LCD 1602, 2004, OLED 128x64, etc.
 
@@ -251,7 +294,7 @@ void loop() {
 
 - Pour brancher le module i2c avec l’écran, il faut les aligner les broches en parallèle
 - Le port SDA doit aller sur le port SDA (#20)
-- Le port SDL doit aller sur le port SDL (#21)
+- Le port SCL doit aller sur le port SCL (#21)
 
 ![Alt text](img/07_lcd_pins_aligned.png)
 
