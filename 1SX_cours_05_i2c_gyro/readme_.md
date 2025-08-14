@@ -15,6 +15,7 @@ Article qui indique comment exploiter la communication i2c avec divers appareils
   - [Analyse du code de configuration](#analyse-du-code-de-configuration)
   - [Analyse du code de la boucle](#analyse-du-code-de-la-boucle)
 - [Gyroscope](#gyroscope)
+- [Dépannage I2C](#dépannage-i2c)
 - [Exercices](#exercices)
 - [Références](#références)
    
@@ -24,7 +25,7 @@ Article qui indique comment exploiter la communication i2c avec divers appareils
   
 À date, nous avons vu l'échange de données à partir du port série. Nous avons vu que le port série est un protocole de communication asynchrone. C'est-à-dire que les données sont envoyées les unes après les autres, sans synchronisation entre l'émetteur et le récepteur.
   
-Il existe un autre protocole de communication qui est très utilisé dans les systèmes embarqués: le protocole **i2c**. Ce protocole est un protocole de communication synchrone. C'est-à-dire que les données sont envoyées en même temps par l'émetteur et reçues en même temps par le récepteur.
+Il existe un autre protocole de communication qui est très utilisé dans les systèmes embarqués: le protocole **i2c**. Ce protocole est un protocole de communication synchrone. C'est-à-dire que les données sont transmises en utilisant une horloge commune (SCL) qui synchronise l'émetteur et le récepteur.
   
 On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la réception de données sont plus complexes. Par exemple :
 - Horloge en temps réel
@@ -41,12 +42,14 @@ On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la 
   
 #  Branchement
   
-- Le i2c utilise 2 fils pour échanger de l’information
-    - SDA (Serial Data)
-    - SCL (Serial Clock)
+- Le i2c utilise 2 fils pour échanger de l'information
+    - SDA (Serial Data) : ligne de données bidirectionnelle
+    - SCL (Serial Clock) : ligne d'horloge générée par le maître
 - Jetez un coup d'oeil à votre Arduino, vous devriez voir les pins SDA et SCL
+    - Sur Arduino Mega : SDA = pin 20, SCL = pin 21
+    - Sur Arduino Uno : SDA = pin A4, SCL = pin A5
 - Le i2c fonctionne avec le principe de maître et d'esclave
-    - Le maître est celui qui contrôle le bus i2c
+    - Le maître est celui qui contrôle le bus i2c (génère l'horloge)
     - L'esclave est celui qui reçoit les commandes du maître
   
 ![Alt text](img/liaison.png )
@@ -256,10 +259,10 @@ void loop() {
   
 ```cpp
 // Exemple de configuration
-mpu.setAccelerometerRange(MPU6050_RANGE_8_G)
+mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
 mpu.setGyroRange(MPU6050_RANGE_500_DEG);
 mpu.setFilterBandwidth(MPU6050_BAND_21_HZ); 
-  
+
 ```
   
 ##  Analyse du code de la boucle
@@ -275,12 +278,16 @@ mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 ---
   
 - Pour utiliser les valeurs, celles-ci possèdent des propriétés qui leur sont propres
-- Exemple accélération:
+- Exemple accélération (en m/s²):
   - `a.acceleration.x|y|z`
-- Exemple gyroscope:
+  - Valeurs typiques : ±2g, ±4g, ±8g ou ±16g selon la configuration
+- Exemple gyroscope (en rad/s):
   - `g.gyro.x|y|z`
-- Exemple température
+  - Pour convertir en degrés/s : `valeur * 180 / PI`
+- Exemple température (en °C):
   - `temp.temperature`
+
+**Note importante :** Les valeurs brutes peuvent nécessiter un filtrage pour éliminer le bruit.
   
 ---
   
@@ -300,6 +307,39 @@ mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
   
 ---
   
+# Dépannage I2C
+
+**Problèmes courants :**
+1. **Capteur non détecté :**
+   - Vérifiez les connexions SDA et SCL
+   - Confirmez l'alimentation (3.3V ou 5V selon le module)
+   - Utilisez un scanner I2C pour détecter l'adresse
+     - Arduino a un exemple de scanner I2C dans la librairie `Wire`
+
+2. **Code scanner I2C simple :**
+```cpp
+#include <Wire.h>
+
+void setup() {
+  Wire.begin();
+  Serial.begin(9600);
+  Serial.println("Scanner I2C...");
+}
+
+void loop() {
+  for(byte address = 1; address < 127; address++) {
+    Wire.beginTransmission(address);
+    if(Wire.endTransmission() == 0) {
+      Serial.print("Appareil trouvé à l'adresse 0x");
+      Serial.println(address, HEX);
+    }
+  }
+  delay(5000);
+}
+```
+
+---
+  
 #  Exercices
   
 - Téléchargez la librairie "AdaFruit MPU6050"
@@ -313,7 +353,8 @@ mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 ---
   
 #  Références
-  
-- [A Guide to Arduino & the I2C Protocol](https://docs.arduino.cc/learn/communication/wire ) - [Traduction Google](https://docs-arduino-cc.translate.goog/learn/communication/wire?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en-US&_x_tr_pto=wapp )
-- 
-  
+
+- [A Guide to Arduino & the I2C Protocol](https://docs.arduino.cc/learn/communication/wire) - [Traduction Google](https://docs-arduino-cc.translate.goog/learn/communication/wire?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en-US&_x_tr_pto=wapp)
+- [MPU6050 Datasheet](https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf)
+- [Adafruit MPU6050 Guide](https://learn.adafruit.com/mpu6050-6-dof-accelerometer-and-gyro)
+- [I2C Protocol Explained](https://www.circuitbasics.com/basics-of-the-i2c-communication-protocol/)
