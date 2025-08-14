@@ -124,6 +124,7 @@ void loop() {
 > **Question :**
 >
 > Pourquoi après une certaine période, le code cesse de fonctionner comme prévu?
+> <!-- Réponse : Parce que le type de fadePrevious n'est pas suffisant pour gérer le temps -->
 
 ---
 
