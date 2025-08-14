@@ -183,7 +183,7 @@ Servo myservo;  // Création d'un objet Servo pour contrôler
 int pos = 0;    // Position du servo
 
 void setup() {
-  myservo.attach(2);  // Servo sur pin 9
+  myservo.attach(9);  // Servo sur pin 9
 }
 
 void loop() {
@@ -192,7 +192,7 @@ void loop() {
     myservo.write(pos); // Indiquer la position
     delay(15);          // Attendre 15ms pour laisser le temps
   }
-  // Aller de 0 à 180
+  // Aller de 180 à 0
   for (pos = 180; pos >= 0; pos -= 1) {
     myservo.write(pos);
     delay(15);
