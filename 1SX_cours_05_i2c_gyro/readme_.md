@@ -104,8 +104,8 @@ On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la 
 ![Alt text](img/left_tap.png )
   
 > **Question :** Quelle sera la valeur de l’accéléromètre en Z si celui-ci est sur Terre et ne bouge pas?
-> <details><summary>Réponse</summary>Sur Terre, on ara une accélération constante entre <img src="https://latex.codecogs.com/gif.latex?9%20et%2010%20m/s^2"/> (théorie : <img src="https://latex.codecogs.com/gif.latex?9.8%20m/s^2"/> )</details>
-  
+> <details><summary>Réponse</summary>Sur Terre, on ara une accélération constante de $$9.8 m/s^2$$</details>
+
 ![Alt text](img/gravity.png )
   
 ##  Utilisation
