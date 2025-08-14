@@ -105,6 +105,8 @@ int fadeDelay = 20;
 int fadePrevious = 0;
 int pwm = 5;
 int dir = 10;
+unsigned long cT; // Variable pour stocker le temps actuel
+
 void loop() {
   cT = millis();
   if (cT - fadePrevious >= fadeDelay) {
@@ -132,11 +134,11 @@ void loop() {
 - Il y a typiquement 3 fils
 - Noir ou brun pour la mise à la terre (GND)
 - Rouge pour le 5v (voltage)
-- Jaune ou orange pour le signal (PWM)
+- Jaune ou orange pour le signal
 
 ![Alt text](img/servoSizes.png)
 
-- Le servo utilisé en électronique est généralement contrôlé par PWM
+- Le servo utilisé en électronique est généralement contrôlé par un signal PWM, mais différent de celui utilisé pour les DELs.
 - Les dimensions sont standardisées
 - Celui qui est inclus dans le kit est un « Micro 9g »
 
@@ -146,7 +148,7 @@ void loop() {
 
 - Un servo consomme passablement de courant
 - Selon cette [datasheet](https://media.digikey.com/pdf/Data%20Sheets/DFRobot%20PDFs/SER0039_Web.pdf), le courant maximal est de 300 mA (milliampère)
-- Le uC ne peut fournir plus de 40 mA. [Documentation](https://www.arduino.cc/en/Tutorial/Foundations/DigitalPins#properties-of-pins-configured-as-output)
+- Le uC ne peut fournir plus de 40 mA par pin, avec une limite totale de ~200 mA pour toutes les pins. [Documentation](https://www.arduino.cc/en/Tutorial/Foundations/DigitalPins#properties-of-pins-configured-as-output)
 - Ainsi, il ne peut fournir assez de courant pour un servo
 - On peut le faire fonctionner, mais sans faire forcer le moteur (allège)
 - Généralement, on utilisera un contrôleur PWM pour servos typique à la photo ci-contre
