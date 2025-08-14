@@ -121,6 +121,12 @@ void loop() {
 
 ```
 
+> **Question :**
+>
+> Pourquoi après une certaine période, le code cesse de fonctionner comme prévu?
+
+---
+
 # Le servomoteur
 - Un servomoteur (servo) est un moteur capable de maintenir sa position
 - La position est vérifiée et corrigée en continu
