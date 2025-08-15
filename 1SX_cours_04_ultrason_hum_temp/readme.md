@@ -28,7 +28,7 @@
 - Voici quelques exemples d'appareils qui utilisent des capteurs de distance
   - Téléphones intelligents : Lecture de proximité pour la caméra ou pour éteindre l'écran
   - Drone : Distance par rapport au sol
-  - Voicture : Distance par rapport à un obstacle
+  - Voiture : Distance par rapport à un obstacle
   - Construction : Mesurer une distance
 
 ### Le sonar à ultrason
