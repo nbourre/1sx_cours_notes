@@ -69,18 +69,18 @@ Ainsi, il est important de choisir une vitesse de transfert qui convient à l'ap
 
 ```cpp
 void setup() {
-  // Initialisation du port
-  // série à 9600 baud
-  Serial.begin(9600);
+  // Initialisation du port
+  // série à 9600 baud
+  Serial.begin(9600);
 }
 
 int counter = 0;
 void loop() {
-  Serial.print("Boucle : ");
-  Serial.println(counter);
-  counter++;
-  // Délai pour ne pas ralentir le µC
-  delay(500);
+  Serial.print("Boucle : ");
+  Serial.println(counter);
+  counter++;
+  // Délai pour ne pas ralentir le µC
+  delay(500);
 }
 ```
 
@@ -105,30 +105,30 @@ On peut formater les données que l'on désire envoyer avec le paramètre `forma
 - `HEX` : Hexadécimal
 
 ```cpp
-char chrValue = 65;  // Lettre A en ascii
-int intValue  = 65;
+char chrValue = 65;  // Lettre A en ascii
+int intValue  = 65;
 float floatValue = 65.0;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(9600);
 }
 
 void loop() {
-  Serial.print("chrValue: ");
-  Serial.print(chrValue); Serial.print("\t");
-  Serial.println(chrValue,DEC);
-  Serial.print("intValue: ");
-  Serial.print(intValue); Serial.print("\t");
-  Serial.print(intValue,DEC); Serial.print("\t");
-  Serial.print(intValue,HEX); Serial.print("\t");
-  Serial.print(intValue,OCT); Serial.print("\t");
-  Serial.println(intValue,BIN);
-  Serial.print("floatValue: ");
-  Serial.println(floatValue);
-  delay(1000);
-  chrValue++;
-  intValue++;
+  Serial.print("chrValue: ");
+  Serial.print(chrValue); Serial.print("\t");
+  Serial.println(chrValue,DEC);
+  Serial.print("intValue: ");
+  Serial.print(intValue); Serial.print("\t");
+  Serial.print(intValue,DEC); Serial.print("\t");
+  Serial.print(intValue,HEX); Serial.print("\t");
+  Serial.print(intValue,OCT); Serial.print("\t");
+  Serial.println(intValue,BIN);
+  Serial.print("floatValue: ");
+  Serial.println(floatValue);
+  delay(1000);
+  chrValue++;
+  intValue++;
 }
 ```
 
@@ -163,35 +163,35 @@ Voici un exemple :
 <td>
   
 ```cpp
-int   blinkRate=0; // taux de rafraichissement sauvegardé
+int   blinkRate=0; // taux de rafraichissement sauvegardé
 
 void setup()
 {
-  Serial.begin(9600);
-  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop()
 {
-  if ( Serial.available()) // Vérifier si l'on a au moins 1 octet de dispo
-  {
-    char ch = Serial.read(); // Lire le prochain octet
-    if(ch >= '0' && ch <= '9') // Est-ce que c'est une valeur entre '0' et '9'
-    {
-       blinkRate = (ch - '0');      // Valeur ASCII converti en numérique
-       blinkRate = blinkRate * 100; // Interval
-    }
-  }
-  blink();
+  if ( Serial.available()) // Vérifier si l'on a au moins 1 octet de dispo
+  {
+    char ch = Serial.read(); // Lire le prochain octet
+    if(ch >= '0' && ch <= '9') // Est-ce que c'est une valeur entre '0' et '9'
+    {
+       blinkRate = (ch - '0');      // Valeur ASCII converti en numérique
+       blinkRate = blinkRate * 100; // Interval
+    }
+  }
+  blink();
 }
 
 // Faire clignoter le LED
 void blink()
 {
-  digitalWrite(LED_BUILTIN,HIGH);
-  delay(blinkRate); // J'utilise delay seulement pour l'exemple!
-  digitalWrite(LED_BUILTIN,LOW);
-  delay(blinkRate);
+  digitalWrite(LED_BUILTIN,HIGH);
+  delay(blinkRate); // J'utilise delay seulement pour l'exemple!
+  digitalWrite(LED_BUILTIN,LOW);
+  delay(blinkRate);
 }
 
 ```

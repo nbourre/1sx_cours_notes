@@ -95,24 +95,24 @@ int trigPin = 3;
 int echoPin = 2;
 
 void setup() {
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  Serial.begin(9600); 
-  Serial.println("Ultrasonic Sensor HC-SR04 Test");
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600); 
+  Serial.println("Ultrasonic Sensor HC-SR04 Test");
 }
 
 void loop() {
-  // Effacer la condition du trigPin
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
+  // Effacer la condition du trigPin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
 
-  // Activer le trigPin 10 microsecondes
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+  // Activer le trigPin 10 microsecondes
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
 
-  // Lire l'écho
-  duration = pulseIn(echoPin, HIGH);
+  // Lire l'écho
+  duration = pulseIn(echoPin, HIGH);
   // Calculer la distance
   distance = duration * 0.034 / 2; // Vitesse du son / 2
 
@@ -210,7 +210,7 @@ Voici une façon simple d'effectuer le branchement et un exemple de code
 #define DHTPIN 2
 
 // Type de capteur pour la librairie
-#define DHTTYPE DHT11   // DHT 11
+#define DHTTYPE DHT11   // DHT 11
 
 // Déclaration de l'objet
 DHT dht(DHTPIN, DHTTYPE);
@@ -220,40 +220,40 @@ long dhtPrevious = 0;
 long dhtDelay = 1000;
 
 void setup() {
-  Serial.begin(9600);
-  Serial.println(F("DHTxx test!"));
+  Serial.begin(9600);
+  Serial.println(F("DHTxx test!"));
 
-  dht.begin(); // Initialisation
+  dht.begin(); // Initialisation
 
-  currentTime = millis();
+  currentTime = millis();
 }
 
 void loop() {
-  currentTime = millis();
+  currentTime = millis();
 
-  if (currentTime - dhtPrevious >= dhtDelay) {
-    dhtPrevious = currentTime;
-    
-    float h = dht.readHumidity();
-    float t = dht.readTemperature();
-    
-    // Vérifier si les lectures ont échoué
-    if (isnan(h) || isnan(t)) {
+  if (currentTime - dhtPrevious >= dhtDelay) {
+    dhtPrevious = currentTime;
+    
+    float h = dht.readHumidity();
+    float t = dht.readTemperature();
+    
+    // Vérifier si les lectures ont échoué
+    if (isnan(h) || isnan(t)) {
       Serial.println("Erreur de lecture du capteur DHT!");
       delay(2000); // Attendre 2 secondes avant la prochaine lecture
     }
     
-    float humidex = dht.computeHeatIndex(t, h, false);
+    float humidex = dht.computeHeatIndex(t, h, false);
 
-    Serial.print("Humidité: ");
-    Serial.print(h);
-    Serial.print("%  Température: ");
-    Serial.print(t);
-    Serial.print("°C ");
-    Serial.print("Humidex : ");
-    Serial.print(humidex);
-    Serial.println("°C ");
-  }
+    Serial.print("Humidité: ");
+    Serial.print(h);
+    Serial.print("%  Température: ");
+    Serial.print(t);
+    Serial.print("°C ");
+    Serial.print("Humidex : ");
+    Serial.print(humidex);
+    Serial.println("°C ");
+  }
 }
 
 ```
@@ -306,20 +306,20 @@ Nous allons utiliser la librairie « LiquidCrystal i2c » de **Frank de Braban
 
 // Adresse i2c : 0x27
 // 16 caractères et 2 lignes
-LiquidCrystal_I2C lcd(0x27,16,2);  
+LiquidCrystal_I2C lcd(0x27,16,2);  
 
 void setup()
 {
-  
-  lcd.init(); // initialize the lcd              
-  // Afficher un message
-  lcd.backlight();
-  // Positionner le curseur
-  lcd.setCursor(0,0);
-  // Écriture
-  lcd.print("Hello, world!");
-  lcd.setCursor(0,1);
-  lcd.print("NickB Arduino!");
+  
+  lcd.init(); // initialize the lcd              
+  // Afficher un message
+  lcd.backlight();
+  // Positionner le curseur
+  lcd.setCursor(0,0);
+  // Écriture
+  lcd.print("Hello, world!");
+  lcd.setCursor(0,1);
+  lcd.print("NickB Arduino!");
 }
 
 ```
@@ -336,7 +336,7 @@ void setup()
 ## Sonar avec librairie
 - Installer la librairie « HCSR04 ultrasonic sensor » de gamegine
   - Rechercher « hcsr04 »
-- Récupérer l’exemple «  HCSR04 »
+- Récupérer l’exemple «  HCSR04 »
 - Modifier le code selon le branchement actuel
 - Tester le code
 
@@ -350,14 +350,14 @@ float dist = 0.0;
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(9600);
 }
 
 void loop()
 {
-    dist = hc.dist();
-    Serial.println(dist);
-    delay(60);
+    dist = hc.dist();
+    Serial.println(dist);
+    delay(60);
 }
 
 ```

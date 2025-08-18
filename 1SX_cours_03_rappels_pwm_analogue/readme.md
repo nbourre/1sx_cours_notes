@@ -33,10 +33,10 @@
 
 ```cpp
 void loop() {
-  digitalWrite(ledPin, 1);
-  delay(5);
-  digitalWrite(ledPin, 0);
-  delay(5);
+  digitalWrite(ledPin, 1);
+  delay(5);
+  digitalWrite(ledPin, 0);
+  delay(5);
 }
 ```
 
@@ -64,7 +64,7 @@ void loop() {
 
 ```cpp
 void loop() {
-  analogWrite(ledPin, 127);
+  analogWrite(ledPin, 127);
 }
 ```
 
@@ -87,7 +87,7 @@ void loop() {
 
 ```cpp
 void loop() {
-  analogWrite(ledPin, 127);
+  analogWrite(ledPin, 127);
 }
 ```
 
@@ -108,15 +108,15 @@ int dir = 10;
 unsigned long cT; // Variable pour stocker le temps actuel
 
 void loop() {
-  cT = millis();
-  if (cT - fadePrevious >= fadeDelay) {
-    fadePrevious = cT;
-    analogWrite(ledPin, pwm); 
-    if (pwm <= 0 || pwm >= 255) {
-      dir = -dir;
-    }
-    pwm += dir;
-  }  
+  cT = millis();
+  if (cT - fadePrevious >= fadeDelay) {
+    fadePrevious = cT;
+    analogWrite(ledPin, pwm); 
+    if (pwm <= 0 || pwm >= 255) {
+      dir = -dir;
+    }
+    pwm += dir;
+  }  
 }
 
 ```
@@ -179,24 +179,24 @@ void loop() {
 ```cpp
 #include <Servo.h> // Inclusion de la librairie
 
-Servo myservo;  // Création d'un objet Servo pour contrôler
-int pos = 0;    // Position du servo
+Servo myservo;  // Création d'un objet Servo pour contrôler
+int pos = 0;    // Position du servo
 
 void setup() {
-  myservo.attach(9);  // Servo sur pin 9
+  myservo.attach(9);  // Servo sur pin 9
 }
 
 void loop() {
-  // Aller de 0 à 180
-  for (pos = 0; pos <= 180; pos += 1) { 
-    myservo.write(pos); // Indiquer la position
-    delay(15);          // Attendre 15ms pour laisser le temps
-  }
-  // Aller de 180 à 0
-  for (pos = 180; pos >= 0; pos -= 1) {
-    myservo.write(pos);
-    delay(15);
-  }
+  // Aller de 0 à 180
+  for (pos = 0; pos <= 180; pos += 1) { 
+    myservo.write(pos); // Indiquer la position
+    delay(15);          // Attendre 15ms pour laisser le temps
+  }
+  // Aller de 180 à 0
+  for (pos = 180; pos >= 0; pos -= 1) {
+    myservo.write(pos);
+    delay(15);
+  }
 }
 
 ```
@@ -261,16 +261,16 @@ Voici un exemple de code simple
 
 ```cpp
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600);
 }
 
 void loop() {
-  // Lire la valeur sur A0
-  int sensorValue = analogRead(A0);
+  // Lire la valeur sur A0
+  int sensorValue = analogRead(A0);
 
-  // Afficher sur le moniteur
-  Serial.println(sensorValue);
-  delay(10);
+  // Afficher sur le moniteur
+  Serial.println(sensorValue);
+  delay(10);
 }
 
 ```
@@ -304,9 +304,9 @@ void loop() {
 void setup() {}
 
 void loop() {
-  int val = analogRead(A0);
-  val = map(val, 0, 1023, 0, 255);
-  analogWrite(9, val);
+  int val = analogRead(A0);
+  val = map(val, 0, 1023, 0, 255);
+  analogWrite(9, val);
 }
 ```
 
