@@ -34,18 +34,18 @@ $\frac{4294967295}{(1000 * 60 * 60 * 24)} = 49.7 jours$
 ```cpp
 unsigned long currentTime;
 void setup() {
-  // Initialisation des ports de communication Série
-  // avec une vitesse de 9600 baud
-  Serial.begin(9600);
+  // Initialisation des ports de communication Série
+  // avec une vitesse de 9600 baud
+  Serial.begin(9600);
 }
 void loop() {
-  Serial.print("Temps: ");
-  currentTime = millis();
-  // Afficher le temps depuis le démarrage
-  Serial.println(currentTime);
-  // Attendre une seconde pour limiter le
-  // transfert de données
-  delay(1000);
+  Serial.print("Temps: ");
+  currentTime = millis();
+  // Afficher le temps depuis le démarrage
+  Serial.println(currentTime);
+  // Attendre une seconde pour limiter le
+  // transfert de données
+  delay(1000);
 
 }
 ```
@@ -68,7 +68,7 @@ void loop() {
 
 ```cpp
 // La fonction setup s’exécute une seule fois lorsque 
-// l’on appuie sur « reset » ou que l’on met le courant
+// l’on appuie sur « reset » ou que l’on met le courant
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
 }
@@ -103,28 +103,28 @@ void loop() {
 unsigned long currentTime;
 
 void setup() {
-  // Configuration de la pin
-  pinMode(LED_BUILTIN, OUTPUT);
+  // Configuration de la pin
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
-  // Sauvegarde du temps actuel
-  currentTime = millis();
+  // Sauvegarde du temps actuel
+  currentTime = millis();
 
-  // Appel de la fonction pour clignoter le DEL
-  blinkLED();
+  // Appel de la fonction pour clignoter le DEL
+  blinkLED();
 }
 
 void blinkLED() {
-    // Variables statiques pour sauvegarder le temps
-    static unsigned long lastTime = 0;
-    static bool ledState = LOW;
+    // Variables statiques pour sauvegarder le temps
+    static unsigned long lastTime = 0;
+    static bool ledState = LOW;
 
-    // Délai entre les clignotements
-    const unsigned long rate = 1000;
+    // Délai entre les clignotements
+    const unsigned long rate = 1000;
 
-    // Comparaison du temps actuel avec le dernier temps
-    if (currentTime - lastTime >= rate) {
+    // Comparaison du temps actuel avec le dernier temps
+    if (currentTime - lastTime >= rate) {
       // Inversion de l'état du DEL
       ledState = !ledState;
       digitalWrite(LED_BUILTIN, ledState);
