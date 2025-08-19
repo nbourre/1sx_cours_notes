@@ -239,20 +239,20 @@ void loop() {
     
     // Vérifier si les lectures ont échoué
     if (isnan(h) || isnan(t)) {
-      Serial.println("Erreur de lecture du capteur DHT!");
+      Serial.println("Erreur de lecture du capteur DHT! On attend 2 secondes.");
       delay(2000); // Attendre 2 secondes avant la prochaine lecture
-    }
-    
-    float humidex = dht.computeHeatIndex(t, h, false);
+    } else {
+      float humidex = dht.computeHeatIndex(t, h, false);
 
-    Serial.print("Humidité: ");
-    Serial.print(h);
-    Serial.print("%  Température: ");
-    Serial.print(t);
-    Serial.print("°C ");
-    Serial.print("Humidex : ");
-    Serial.print(humidex);
-    Serial.println("°C ");
+      Serial.print("Humidité: ");
+      Serial.print(h);
+      Serial.print("%  Température: ");
+      Serial.print(t);
+      Serial.print("°C ");
+      Serial.print("Humidex : ");
+      Serial.print(humidex);
+      Serial.println("°C ");
+    }
   }
 }
 
