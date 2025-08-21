@@ -218,6 +218,8 @@ void loop() {
 - Ainsi, il est très probable qu’il ne soit pas capable de se rendre à 0° et 180°
 - Il est judicieux d’utiliser une variable minimum et maximum pour les angles limites du servo
 
+---
+
 # Lecture analogue
 - La fonction `analogRead` permet de lire le voltage sur les broches qui acceptent la lecture analogue
 - Les broches qui peuvent lire les valeurs analogues sont marquées « Ax » où `A` tient pour analogue et x le numéro de la broche
