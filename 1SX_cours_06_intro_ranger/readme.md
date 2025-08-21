@@ -94,8 +94,8 @@
 ![](assets/auriga_pinout.png)
 - Observer les différentes étiquettes, elles font références aux différentes broches du Arduino
 
-## Points saillants 
-- Les broches `SDA` et `SDL` sont dans la majorité des ports de connexion
+## Points saillants
+- Les broches `SDA` et `SCL` sont dans la majorité des ports de connexion
 - Une anneau de DEL RGB
 - Un MPU-6050
 - Un module Bluetooth
