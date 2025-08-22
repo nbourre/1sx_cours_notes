@@ -88,20 +88,39 @@
 <table><tr><td>
 
 ```cpp
-long duration;
-int distance;
-
+// Lien : https://wokwi.com/projects/439992144615069697
 int trigPin = 3;
 int echoPin = 2;
 
 void setup() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  Serial.begin(9600); 
+  Serial.begin(115200); 
   Serial.println("Ultrasonic Sensor HC-SR04 Test");
 }
 
 void loop() {
+  unsigned long currentTime = millis();
+  
+  int distance = distanceTask(currentTime);
+
+  printDistanceTask(currentTime, distance);
+}
+
+int distanceTask(unsigned long ct) {
+  static unsigned long lastTime = 0;
+  static int lastDistance = 0.0;
+  const unsigned int rate = 50;
+  int duration;
+  int distance;
+
+
+  if (ct - lastTime <= rate) {
+    return lastDistance;
+  }
+
+  lastTime = ct;
+
   // Effacer la condition du trigPin
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -116,19 +135,27 @@ void loop() {
   // Calculer la distance
   distance = duration * 0.034 / 2; // Vitesse du son / 2
 
-  // Filtrer les valeurs aberrantes
+  // Filtrer les valeurs abberantes
   if (distance >= 2 && distance <= 400) {
-    Serial.print("Distance: ");
-    Serial.print(distance);
-    Serial.println(" cm");
-  } else {
-    Serial.println("Hors de portée");
+    lastDistance = distance;
   }
-  
-  // Attendre 500ms avant la prochaine mesure
-  // Seulement pour la démonstration
-  // Il est préférable de ne pas bloquer le uC
-  delay(500);
+
+  return lastDistance;  
+}
+
+void printDistanceTask(unsigned long ct, int distance) {
+  static unsigned long lastTime = 0;
+  const unsigned int rate = 500;  
+
+  if (ct - lastTime <= rate) {
+    return;
+  }
+
+  lastTime = ct;
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
 }
 ```
 
