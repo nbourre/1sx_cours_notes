@@ -153,7 +153,7 @@ void printDistanceTask(unsigned long ct, int distance) {
 
   lastTime = ct;
 
-  // Filtrer les valeurs aberrantes
+  // Filtrer les valeurs abberantes
   if (distance >= 2 && distance <= 400) {
     Serial.print("Distance: ");
     Serial.print(distance);
