@@ -88,35 +88,75 @@
 <table><tr><td>
 
 ```cpp
-long duration;
-int distance;
 
-int trigPin = 3;
-int echoPin = 2;
+// Src : https://wokwi.com/projects/439992144615069697
+
+#define TRIG_PIN 3
+#define ECHO_PIN 2
+
+unsigned long currentTime;
 
 void setup() {
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  Serial.begin(9600); 
-  Serial.println("Ultrasonic Sensor HC-SR04 Test");
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  Serial.begin(115200);
+  Serial.println("Capteur ultrasonique HC-SR04 Test");
 }
 
 void loop() {
-  // Effacer la condition du trigPin
-  digitalWrite(trigPin, LOW);
+  currentTime = millis();
+
+  int distance = distanceTask(currentTime);
+  printDistanceTask(currentTime, distance);
+}
+
+int distanceTask(unsigned long ct) {
+  static unsigned long lastTime = 0;
+  unsigned long rate = 50;
+  static int lastResult = -1;
+  int result = -1;
+
+  long duration;
+  int distance;
+
+  if (ct - lastTime < rate) {
+    return lastResult;
+  }
+
+  lastTime = ct;
+
+  digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
 
   // Activer le trigPin 10 microsecondes
-  digitalWrite(trigPin, HIGH);
+  digitalWrite(TRIG_PIN, HIGH);
   delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+  digitalWrite(TRIG_PIN, LOW);
 
   // Lire l'écho
-  duration = pulseIn(echoPin, HIGH);
+  duration = pulseIn(ECHO_PIN, HIGH);
   // Calculer la distance
-  distance = duration * 0.034 / 2; // Vitesse du son / 2
+  distance = duration * 0.034 / 2;  // Vitesse du son / 2
 
-  // Filtrer les valeurs aberrantes
+  if (distance >= 2 && distance <= 400) {
+    result = distance;
+    lastResult = result;
+  }
+
+  return lastResult;
+}
+
+void printDistanceTask(unsigned long ct, int distance) {
+  static unsigned long lastTime = 0;
+  unsigned long rate = 500;
+
+  if (ct - lastTime < rate) {
+    return;
+  }
+
+  lastTime = ct;
+
+  // Filtrer les valeurs abberantes
   if (distance >= 2 && distance <= 400) {
     Serial.print("Distance: ");
     Serial.print(distance);
@@ -124,12 +164,8 @@ void loop() {
   } else {
     Serial.println("Hors de portée");
   }
-  
-  // Attendre 500ms avant la prochaine mesure
-  // Seulement pour la démonstration
-  // Il est préférable de ne pas bloquer le uC
-  delay(500);
 }
+
 ```
 
 </td>
@@ -141,7 +177,7 @@ void loop() {
 </tr>
 </table>
 
-- On remarque que j'utilise pour la démonstration la fonction `delayMicroseconds()`. Celle-ci a le même effet que `delay()`, i.e. qu'elle bloque le uC et il est préférable de la remplacer par une formule qui ne bloque pas.
+- On remarque que j'utilise pour la démonstration la fonction `delayMicroseconds()`. Celle-ci a le même effet que `delay()`, i.e. qu'elle bloque le µC. Cependant, nous sommes dans l'ordre du microseconde, ainsi ce n'est pas très problématique. Néanmoins, pour des projets plus complexes, il est préférable d'utiliser des techniques non bloquantes.
 - Pour améliorer le code, nous allons utiliser une bibliothèque que nous allons voir dans la prochaine section.
 
 ---
