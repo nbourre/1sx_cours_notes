@@ -401,15 +401,16 @@ void loop()
   - Affichez dans le moniteur série les données. 
 - Le capteur de puissance
   - Affichez dans le moniteur série la puissance de la batterie restante.
+
 - Modifiez le code des exercices précédents pour permettre l'envoie de données au port série pour contrôler les données en sortie. Utilisez 'g' pour le gyroscope, 's' pour le capteur de son et 'p' pour la puissance de la batterie et la température.
   - Voici un tableau avec les sorties
   
-  | Commande | Sortie attendue               | Description                        |
-  |----------|-------------------------------|------------------------------------|
-  | g        | x:angleX,y:angleY,z:angleZ    | Affiche les angles du gyroscope (20 ms)   |
-  | s        | son:niveau                    | Affiche le niveau sonore (20 ms)           |
-  | p        | batt:valeur,temp:valeurTemp   | Affiche la puissance de la batterie et la température (500 ms)|
-  - Affichez les données dans le traceur série
+    | Commande | Sortie attendue               | Description                        |
+    |----------|-------------------------------|------------------------------------|
+    | g        | x:angleX,y:angleY,z:angleZ    | Affiche les angles du gyroscope (20 ms)   |
+    | s        | son:niveau                    | Affiche le niveau sonore (20 ms)           |
+    | p        | batt:valeur,temp:valeurTemp   | Affiche la puissance de la batterie et la température (500 ms)|
+    - Affichez les données dans le traceur série
 
 # Références
 - <a href="https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino" target="_blank">Programming mBot Ranger in Arduino</a>
