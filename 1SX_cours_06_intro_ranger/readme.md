@@ -74,7 +74,7 @@
 
 ---
 ![alt text](<assets/PXL_20250903_121923421 (Custom).jpg>)
-- Capteur de lignes
+- Capteur de lignes maison
 - Bloc de batterie rechargeable
 - Roulette <!-- omit in toc -->
 
