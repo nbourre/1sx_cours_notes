@@ -368,7 +368,7 @@ void loop()
 À l'aide des exemples, testez les composants suivants:
 - Le capteur de son
   - Affichez le niveau de son dans le port série
-  - L'exemple de base ne fonctionne pas avec l'Auriga, lisez bien la feuille du pinout et parcourez le fichier [`MeAuriga.h`](https://github.com/Makeblock-official/Makeblock-Libraries/blob/master/src/MeAuriga.h). Quel était le problème?
+  - L'exemple de base qui vient avec MakeBlock Libraries ne fonctionne pas avec l'Auriga, lisez bien la feuille du pinout et parcourez le fichier [`MeAuriga.h`](https://github.com/Makeblock-official/Makeblock-Libraries/blob/master/src/MeAuriga.h). Quel était le problème?
 - Le gyroscope
   - Affichez dans le moniteur série les données. 
 - Le capteur de puissance
