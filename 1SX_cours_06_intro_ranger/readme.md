@@ -132,84 +132,64 @@
  * @date    2020/04/01
  * @brief   Description: this file is sample code for RGB LED, gyro, temperature.
  *
+ * @par Update Log
+ * - 2025/09/03: Added task for measuring the battery level
  */
-
 
 #include <MeAuriga.h>
 #include <Wire.h>
 
-#define ALLLEDS        0
-
-#ifdef MeAuriga_H
-
-// Auriga on-board light ring has 12 LEDs
-#define LEDNUM  12
+#define ALL_LEDS 0
+#define LEDNUM  12 // Auriga on-board light ring has 12 LEDs
+#define LED_PIN 44
 
 // on-board LED ring, at PORT0 (onboard)
 MeRGBLed led( 0, LEDNUM );
 
-#else
+MeSoundSensor mySound(PORT_6);
 
-#define LEDNUM  14
-
-// external device
-MeRGBLed led( PORT_3 );
-
-#endif
-
-MeSoundSensor mySound(PORT_14);
+// Auriga onboard gyro is 0x69
 MeGyro gyro(0, 0x69);
 
-const int tempPin = A0;
-int tempSensorValue = 0;
-float tempOutput = 0;
+const int TEMP_PIN = A0;
 
-float j, f, k;
-int serial_refresh_rate = 200;
-int serial_acc = 0;
-int dt = 0;
-int ct = millis();
-int pt = 0;
+float tempOutput = 0;
+float batt;
+
+int ct = millis(); // currentTime
 
 void setup()
 {
-#ifdef MeAuriga_H
-    // LED Ring controller is on Auriga D44/PWM
-    led.setpin( 44 );
-#endif
-  Serial.begin(115200);
-  
+  // LED Ring controller is on Auriga D44/PWM
+  led.setpin( LED_PIN );
+  Serial.begin(115200); 
   gyro.begin();
-
-  ct = millis();
-  pt = 0;
 }
 
 void loop()
 {
   // Board timing
   ct = millis();
-  dt = ct - pt;
-  pt = ct;
-  
-  led_loop_task();
-  //measure_sound();
-  
-  gyro_task();
-  temp_task();  
-  show_text();
+
+  ledLoopTask();
+  measureSound();
+  gyroTask(ct);
+  tempOutput = tempTask(ct);
+  batt = readBatteryTask(ct);
+
+  serialPrintTask(ct);
 }
 
-int sound_cnt = 0;
-float sound_avg = 0;
-short sound_rst = 1;
+int sound_cnt = 0;   // sampling count
+float sound_avg = 0; // sound average
+short sound_reset_flag = 1;
 
-void measure_sound() {
-  if (sound_rst != 0) {
+void measureSound() {
+  if (sound_reset_flag != 0) {
     sound_cnt = 0;
     sound_avg = 0.0;
 
-    sound_rst = 0;
+    sound_reset_flag = 0;
   }
   
   sound_cnt++;
@@ -217,53 +197,87 @@ void measure_sound() {
   sound_avg += mySound.strength();
 }
 
-int gyro_acc = 0;
-int gyro_int = 10;
 
-void gyro_task() {
-  gyro_acc += dt;
-
-  if (gyro_acc < gyro_int) return;
-
-  gyro_acc = 0;
+void gyroTask(unsigned long currentTime) {
+  static unsigned long lastTime = 0;
+  const int rate = 20;
   
+  static unsigned long lastPrint = 0;
+  const int printRate = 200;
+  
+  if (currentTime - lastTime < rate) return;
+  lastTime = currentTime;
+ 
   gyro.update();
-  Serial.print("X:");
-  Serial.print(gyro.getAngleX() );
-  Serial.print(" Y:");
-  Serial.print(gyro.getAngleY() );
-  Serial.print(" Z:");
-  Serial.println(gyro.getAngleZ() );
+
+  if (currentTime - lastPrint > printRate) {
+    
+    lastPrint = currentTime;
+
+    Serial.print("X:");
+    Serial.print(gyro.getAngleX() );
+    Serial.print(" Y:");
+    Serial.print(gyro.getAngleY() );
+    Serial.print(" Z:");
+    Serial.println(gyro.getAngleZ() );
+  }
 }
 
+// Tâche de lecture de la tension batterie
+float readBatteryTask(unsigned long currentTime) {
+  static unsigned long lastTime = 0;
+  const unsigned long interval = 500; // 500 ms
+  static float voltage = 0.0;
 
-void show_text() {
-  serial_acc += dt;
+  if (currentTime - lastTime >= interval) {
+    lastTime = currentTime;
+
+    int raw = analogRead(A4);
+
+    const float VREF = 5.0; // Référence ADC (par défaut VCC)
+    const float R1 = 100000.0;
+    const float R2 = 51000.0;
+
+    voltage = raw * (VREF / 1023.0) * ((R1 + R2) / R2);
+
+  }
+
+  return voltage;
+}
+
+void serialPrintTask(unsigned long currentTime) {
+  static unsigned long lastTime = 0;
+  const int rate = 200;
   
-  if (serial_acc < serial_refresh_rate) return;
-
-  serial_acc = serial_acc % serial_refresh_rate;
+  if (currentTime - lastTime < rate) return;
+  
+  lastTime = currentTime;
 
   // Resetting sound values
-  sound_avg /= sound_cnt;
-  sound_rst = 1;
-
+  if (sound_cnt > 0) {
+    sound_avg /= sound_cnt;
+    sound_reset_flag = 1;
+    Serial.print("Sound = ");
+    Serial.print(sound_avg);    
+  }
   
-  Serial.print("Sound = ");
-  Serial.print(sound_avg);
 
   Serial.print("\tTemperature = ");
   Serial.print(tempOutput);
 
   Serial.print("\tPower = ");
-  Serial.print(analogRead(A4));
+  Serial.print(batt);
+  Serial.print(" V");
 
   Serial.println();
-  delay(10);
 }
 
-void led_loop_task()
+void ledLoopTask()
 {
+  static float j;
+  static float f;
+  static float k;
+  
   for (uint8_t t = 0; t < LEDNUM; t++ )
   {
     uint8_t red	= 8 * (1 + sin(t / 2.0 + j / 4.0) );
@@ -282,14 +296,13 @@ void led_loop_task()
 Temperature values
 Src : https://github.com/search?q=TERMISTORNOMINAL+auriga&type=code
 */
-
-const int16_t TEMPERATURENOMINAL     = 25;    //Nominl temperature depicted on the datasheet
-const int16_t SERIESRESISTOR         = 10000; // Value of the series resistor
-const int16_t BCOEFFICIENT           = 3380;  // Beta value for our thermistor(3350-3399)
-const int16_t TERMISTORNOMINAL       = 10000; // Nominal temperature value for the thermistor
-
-float calculate_temp(int16_t In_temp)
+float calculateTemp(int16_t In_temp)
 {
+  const int16_t TEMPERATURENOMINAL     = 25;    //Nominal temperature depicted on the datasheet
+  const int16_t SERIESRESISTOR         = 10000; // Value of the series resistor
+  const int16_t BCOEFFICIENT           = 3380;  // Beta value for our thermistor(3350-3399)
+  const int16_t TERMISTORNOMINAL       = 10000; // Nominal temperature value for the thermistor
+  
   float media;
   float temperatura;
   media = (float)In_temp;
@@ -307,9 +320,23 @@ float calculate_temp(int16_t In_temp)
   return temperatura;
 }
 
-float temp_task() {
-    tempSensorValue = analogRead(tempPin);
-    tempOutput = calculate_temp(tempSensorValue);
+float tempTask(unsigned long currentTime) {
+  static unsigned long lastTime = 0;
+  const int rate = 200;
+  static float temperature = 0.0;
+  static int tempSensorValue = 0;
+  
+  if (currentTime - lastTime < rate)
+  {
+    return temperature;
+  }
+  
+  lastTime = currentTime;
+  
+  tempSensorValue = analogRead(TEMP_PIN);
+  temperature = calculateTemp(tempSensorValue);
+
+  return temperature;
 }
 ```
 
@@ -374,8 +401,15 @@ void loop()
   - Affichez dans le moniteur série les données. 
 - Le capteur de puissance
   - Affichez dans le moniteur série la puissance de la batterie restante.
-
----
+- Modifiez le code des exercices précédents pour permettre l'envoie de données au port série pour contrôler les données en sortie. Utilisez 'g' pour le gyroscope, 's' pour le capteur de son et 'p' pour la puissance de la batterie et la température.
+  - Voici un tableau avec les sorties
+  
+  | Commande | Sortie attendue               | Description                        |
+  |----------|-------------------------------|------------------------------------|
+  | g        | x:angleX,y:angleY,z:angleZ    | Affiche les angles du gyroscope (20 ms)   |
+  | s        | son:niveau                    | Affiche le niveau sonore (20 ms)           |
+  | p        | batt:valeur,temp:valeurTemp   | Affiche la puissance de la batterie et la température (500 ms)|
+  - Affichez les données dans le traceur série
 
 # Références
 - <a href="https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino" target="_blank">Programming mBot Ranger in Arduino</a>
