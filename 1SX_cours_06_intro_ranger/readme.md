@@ -402,7 +402,7 @@ void loop()
 - Le capteur de puissance
   - Affichez dans le moniteur série la puissance de la batterie restante.
 
-- Modifiez le code des exercices précédents pour permettre l'envoie de données au port série pour contrôler les données en sortie. Utilisez 'g' pour le gyroscope, 's' pour le capteur de son et 'p' pour la puissance de la batterie et la température.
+- Modifiez le code des exercices précédents pour permettre l'envoie de données au port série pour contrôler les données en sortie. Utilisez `'g'` pour le gyroscope, `'s'` pour le capteur de son et `'p'` pour la puissance de la batterie et la température.
   - Voici un tableau avec les sorties
   
     | Commande | Sortie attendue               | Description                        |
