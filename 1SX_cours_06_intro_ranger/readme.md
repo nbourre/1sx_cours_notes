@@ -73,7 +73,7 @@
 - Compatible avec Lego <!-- omit in toc -->
 
 ---
-![](assets/PXL_20220926_173230212.jpg)
+![alt text](<assets/PXL_20250903_121923421 (Custom).jpg>)
 - Capteur de lignes
 - Bloc de batterie rechargeable
 - Roulette <!-- omit in toc -->
@@ -366,6 +366,7 @@ void loop()
 
 # Exercices
 À l'aide des exemples, testez les composants suivants:
+- Convertissez les fonctions des exemples pour utiliser des tâches.
 - Le capteur de son
   - Affichez le niveau de son dans le port série
   - L'exemple de base ne fonctionne pas avec l'Auriga, lisez bien la feuille du pinout et parcourez le fichier [`MeAuriga.h`](https://github.com/Makeblock-official/Makeblock-Libraries/blob/master/src/MeAuriga.h). Quel était le problème?
