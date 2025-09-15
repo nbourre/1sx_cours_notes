@@ -1,0 +1,52 @@
+name: Convert Markdown to PDF
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install pandoc and TeX engine
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex
+
+      - name: Create output directory
+        run: mkdir -p pdf
+
+      - name: Convert Markdown files to PDF with naming rules
+        run: |
+          find . -type d -name "1SX_cours_*" | while read dir; do
+            count=$(find "$dir" -maxdepth 1 -iname "*.md" | wc -l)
+            dirname=$(basename "$dir")
+
+            find "$dir" -maxdepth 1 -iname "*.md" | while read file; do
+              filename=$(basename "$file")
+              basename_no_ext="${filename%.md}"
+
+              if [ "$count" -eq 1 ]; then
+                output="pdf/${dirname}.pdf"
+              elif [ "$basename_no_ext" = "readme" ] || [ "$basename_no_ext" = "README" ]; then
+                output="pdf/${dirname}__readme.pdf"
+              else
+                # nettoyage : remplace les espaces par des underscores
+                suffix=$(echo "$basename_no_ext" | tr ' ' '_')
+                output="pdf/${dirname}_${suffix}.pdf"
+              fi
+
+              echo "Conversion de $file → $output"
+              pandoc "$file" -o "$output" --from=gfm --pdf-engine=xelatex
+            done
+          done
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: notes-pdf
+          path: pdf/
