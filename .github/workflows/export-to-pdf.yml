@@ -47,7 +47,7 @@ jobs:
                 --lua-filter=.github/filters/ignore.lua \
                 --toc --toc-depth=2 -V listings \
                 --resource-path=".:$resource_dir" \
-                -V mainfont="DejaVu Sans"
+                -V mainfont="Noto Color Emoji"
 
 
             done
