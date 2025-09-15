@@ -38,7 +38,16 @@ jobs:
               fi
 
               echo "Converting $file → $output"
-              pandoc "$file" -o "$output" --from=gfm --pdf-engine=xelatex --lua-filter=.github/filters/ignore.lua --toc --toc-depth=2 -V listings
+
+              resource_dir=$(dirname "$file")
+
+              pandoc "$file" -o "$output" \
+                --from=gfm \
+                --pdf-engine=xelatex \
+                --lua-filter=.github/filters/ignore.lua \
+                --toc --toc-depth=2 -V listings \
+                --resource-path=".:$resource_dir"
+
             done
           done
 
@@ -47,3 +56,19 @@ jobs:
         with:
           name: notes-pdf
           path: pdf/
+
+      - name: Create zip of all PDFs
+        run: |
+          zip -j pdf/toutes_les_notes.zip pdf/*.pdf
+
+      - name: Upload to GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Notes de cours PDF"
+          tag_name: "latest"
+          files: |
+            pdf/*.pdf
+            pdf/toutes_les_notes.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
