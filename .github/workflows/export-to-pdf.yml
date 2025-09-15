@@ -51,16 +51,16 @@ jobs:
             done
           done
 
-      - name: Upload PDFs
+      - name: Upload PDFs (GitHub artifact)
         uses: actions/upload-artifact@v4
         with:
           name: notes-pdf
-          path: pdf/
-          
+          path: pdf/**/*.pdf
+
       - name: Create zip of all PDFs
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -j pdf/toutes_les_notes.zip pdf/*.pdf
+        run: |
+          cd pdf
+          zip -r ../toutes_les_notes.zip .
 
       - name: Upload to GitHub release
         uses: softprops/action-gh-release@v1
