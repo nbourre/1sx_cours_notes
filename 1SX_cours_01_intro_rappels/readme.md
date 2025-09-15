@@ -1,5 +1,7 @@
 # Introduction au cours de robotique <!-- omit in toc -->
 
+<!-- PANDOC-IGNORE-START -->
+
 # Plan de leçon <!-- omit in toc -->
 - [Présentation](#présentation)
 - [Plan de cours](#plan-de-cours)
@@ -11,6 +13,7 @@
 - [Exercice - 20 minutes](#exercice---20-minutes)
 - [Références](#références)
 
+<!-- PANDOC-IGNORE-END -->
 
 # Présentation
 Présentation du professeur.

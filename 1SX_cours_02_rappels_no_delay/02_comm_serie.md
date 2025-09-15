@@ -1,5 +1,7 @@
 # Cours 02 - Rappel Arduino <!-- omit in toc -->
 
+<!-- PANDOC-IGNORE-START -->
+
 # Table des matières <!-- omit in toc -->
 - [Communication série](#communication-série)
   - [Comment utiliser la communication série](#comment-utiliser-la-communication-série)
@@ -10,6 +12,8 @@
     - [Exemple - Lecture d'un nombre entier avec `parseInt()` et `read()`](#exemple---lecture-dun-nombre-entier-avec-parseint-et-read)
 - [Résumé](#résumé)
 - [Références](#références)
+
+<!-- PANDOC-IGNORE-END -->
 
 ---
 

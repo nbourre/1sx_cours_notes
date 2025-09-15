@@ -1,11 +1,14 @@
 # Cours 02 - Rappel Arduino <!-- omit in toc -->
 
+<!-- PANDOC-IGNORE-START -->
 - [Plan de leçon](#plan-de-leçon)
 - [La fonction `millis()`](#la-fonction-millis)
   - [Exemple pour afficher le temps depuis le démarrage](#exemple-pour-afficher-le-temps-depuis-le-démarrage)
 - [Délai sans `delay()`](#délai-sans-delay)
   - [Exemple pour clignoter un DEL sans `delay()`](#exemple-pour-clignoter-un-del-sans-delay)
   - [Résumé](#résumé)
+
+<!-- PANDOC-IGNORE-END -->
 
 # Plan de leçon
 - La fonction `millis()`

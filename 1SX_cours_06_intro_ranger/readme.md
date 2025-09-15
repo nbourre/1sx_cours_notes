@@ -1,5 +1,7 @@
 # Robot Ranger <!-- omit in toc -->
 
+<!-- PANDOC-IGNORE-START -->
+
 # Table des matières <!-- omit in toc -->
 - [Plan de leçon](#plan-de-leçon)
 - [Distribution du matériel](#distribution-du-matériel)
@@ -16,6 +18,8 @@
 - [Gyroscope](#gyroscope)
 - [Exercices](#exercices)
 - [Références](#références)
+
+<!-- PANDOC-IGNORE-END -->
 
 ---
 

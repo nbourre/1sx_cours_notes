@@ -1,6 +1,8 @@
 # Communication i2c <!-- omit in toc -->
 Article qui indique comment exploiter la communication i2c avec divers appareils électroniques. On n'explore pas la science derrière ce protocole, mais plutôt sont utilisation.
 
+<!-- PANDOC-IGNORE-START -->
+
 # Table des matières <!-- omit in toc -->
 - [Introduction](#introduction)
 - [Branchement](#branchement)
@@ -28,6 +30,9 @@ Article qui indique comment exploiter la communication i2c avec divers appareils
 - [Exercices](#exercices-1)
 - [Références](#références)
 
+<!-- PANDOC-IGNORE-END -->
+
+---
 
 # Introduction
 À date, nous avons vu l'échange de données à partir du port série. Nous avons vu que le port série est un protocole de communication asynchrone. C'est-à-dire que les données sont envoyées les unes après les autres, sans synchronisation entre l'émetteur et le récepteur.
@@ -106,8 +111,8 @@ On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la 
 
 ![Alt text](img/left_tap.png)
 
-> **Question :** Quelle sera la valeur de l’accéléromètre en Z si celui-ci est sur Terre et ne bouge pas?
-> <details><summary>Réponse</summary>Sur Terre, on a une accélération constante de $9.8 m/s^2$ )</details>
+**Question :** Quelle sera la valeur de l’accéléromètre en Z si celui-ci est sur Terre et ne bouge pas?
+<details><summary>Réponse</summary>Sur Terre, on a une accélération constante de $9.8 m/s^2$ )</details>
 
 ![Alt text](img/gravity.png)
 
@@ -345,7 +350,7 @@ Si tout est bien configuré, vous devriez avoir un dossier `Adafruit_SSD1306` da
 
 S'assurer que les branchements sont corrects. Vous devriez voir du contenu qui s'affiche sur l'écran.
 
-<details><summary>Code</summary>
+<details><summary>Code complet de l'exemple</summary>
 
 ```cpp
 
@@ -750,8 +755,8 @@ void testanimate(const uint8_t *bitmap, uint8_t w, uint8_t h) {
 
 ```
 
-
 </details>
+
 
 ### Analyse du code
 Malgré la longueur du code, il y a beaucoup de lignes très similaire.

@@ -38,7 +38,7 @@ jobs:
               fi
 
               echo "Converting $file → $output"
-              pandoc "$file" -o "$output" --from=gfm --pdf-engine=xelatex -V maxdepth=3
+              pandoc "$file" -o "$output" --from=gfm --pdf-engine=xelatex --lua-filter=.github/filters/ignore.lua --toc --toc-depth=2 -V listings
             done
           done
 

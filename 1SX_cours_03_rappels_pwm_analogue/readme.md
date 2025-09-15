@@ -1,5 +1,7 @@
 # PWM et lecture analogique <!-- omit in toc -->
 
+<!-- PANDOC-IGNORE-START -->
+
 # Table des matières <!-- omit in toc -->
 - [Modulation de largeur d’impulsion (PWM)](#modulation-de-largeur-dimpulsion-pwm)
   - [Exercice](#exercice)
@@ -18,6 +20,8 @@
 - [Exercices](#exercices)
   - [Exercice de rappel](#exercice-de-rappel)
 - [Références](#références)
+
+<!-- PANDOC-IGNORE-END -->
 
 
 # Modulation de largeur d’impulsion (PWM)

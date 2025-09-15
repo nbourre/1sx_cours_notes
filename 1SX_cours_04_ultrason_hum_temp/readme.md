@@ -1,5 +1,7 @@
 # Les capteurs <!-- omit in toc -->
 
+<!-- PANDOC-IGNORE-START -->
+
 # Table des matières <!-- omit in toc -->
 - [Capteur de distance](#capteur-de-distance)
     - [Le sonar à ultrason](#le-sonar-à-ultrason)
@@ -20,6 +22,8 @@
   - [Sonar avec librairie](#sonar-avec-librairie)
   - [Sonar, DHT11 et LCD](#sonar-dht11-et-lcd)
 - [Références](#références)
+
+<!-- PANDOC-IGNORE-END -->
 
 ---
 
