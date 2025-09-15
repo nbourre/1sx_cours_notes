@@ -57,12 +57,10 @@ jobs:
           name: notes-pdf
           path: pdf/
           
-      - name: Install zip
-        run: apt-get update && apt-get install -y zip
-
       - name: Create zip of all PDFs
-        run: |
-          zip -j pdf/toutes_les_notes.zip pdf/*.pdf
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -j pdf/toutes_les_notes.zip pdf/*.pdf
 
       - name: Upload to GitHub release
         uses: softprops/action-gh-release@v1
