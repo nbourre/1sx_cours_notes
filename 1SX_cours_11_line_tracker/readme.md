@@ -1,7 +1,7 @@
 # Le capteur LyneTracker <!-- omit in toc -->
 Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 
-![alt text](assets/DALL·E%202024-10-22%2013.57.23%20robot.webp)
+![Robot regardant une ligne](assets/robot.jpg)
 
 ## Sommaire <!-- omit in toc -->
 - [Introduction au suivi de ligne](#introduction-au-suivi-de-ligne)

@@ -1,6 +1,8 @@
 # Lumière sur le déplacement précis <!-- omit in toc -->
 
-## Plan de leçon <!-- omit in toc -->
+<!-- PANDOC-IGNORE-START -->
+
+# Plan de leçon <!-- omit in toc -->
 - [Problématique des déplacements](#problématique-des-déplacements)
 - [Le gyroscope](#le-gyroscope)
   - [Exemple](#exemple)
@@ -26,6 +28,8 @@
 - [Références](#références)
   - [Anneau de DEL](#anneau-de-del)
   - [Encodeurs](#encodeurs)
+
+<!-- PANDOC-IGNORE-END -->
 
 ---
 
