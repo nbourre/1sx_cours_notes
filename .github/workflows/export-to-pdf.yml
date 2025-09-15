@@ -47,6 +47,8 @@ jobs:
                 --pdf-engine=xelatex \
                 --lua-filter=.github/filters/ignore.lua \
                 --toc --toc-depth=2 -V listings \
+                -V geometry:margin=1.5cm \
+                -V geometry:letterpaper \
                 --resource-path=".:$resource_dir"
 
             done
