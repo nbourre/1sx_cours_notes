@@ -1,4 +1,4 @@
-name: Convert Markdown to PDF
+name: Build PDFs (Docker)
 
 on:
   push:
@@ -8,19 +8,17 @@ jobs:
   build-pdf:
     runs-on: ubuntu-latest
 
+    container:
+      image: pandoc/latex:latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install pandoc and TeX engine
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex
-
-      - name: Create output directory
+      - name: Create pdf directory
         run: mkdir -p pdf
 
-      - name: Convert Markdown files to PDF with naming rules
+      - name: Convert Markdown files to PDF (Docker version)
         run: |
           find . -type d -name "1SX_cours_*" | while read dir; do
             count=$(find "$dir" -maxdepth 1 -iname "*.md" | wc -l)
@@ -35,13 +33,12 @@ jobs:
               elif [ "$basename_no_ext" = "readme" ] || [ "$basename_no_ext" = "README" ]; then
                 output="pdf/${dirname}__readme.pdf"
               else
-                # nettoyage : remplace les espaces par des underscores
                 suffix=$(echo "$basename_no_ext" | tr ' ' '_')
                 output="pdf/${dirname}_${suffix}.pdf"
               fi
 
-              echo "Conversion de $file → $output"
-              pandoc "$file" -o "$output" --from=gfm --pdf-engine=xelatex
+              echo "Converting $file → $output"
+              pandoc "$file" -o "$output" --from=gfm --pdf-engine=xelatex -V maxdepth=3
             done
           done
 
