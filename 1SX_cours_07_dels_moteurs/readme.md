@@ -1,4 +1,4 @@
-# L'éclaraige et le déplacement de base <!-- omit in toc -->
+# L'éclairage et le déplacement de base <!-- omit in toc -->
 
 ## Plan de leçon <!-- omit in toc -->
 - [Lumière avant tout!](#lumière-avant-tout)
@@ -79,13 +79,13 @@ void ledTask(unsigned long cT) {
 
 Pour les besoins, le constructeur prend 2 paramètres soit le port sur le robot ainsi que le nombre de DEL.
 
-**setpin**
+**`setpin`**
 
 Cette méthode **obligatoire** permet d'indiquer la broche sur laquelle le code doit travailler.
 
 On la met dans la configuration.
 
-**setColor**
+**`setColor`**
 
 - `setColor()` permet d'indiquer la couleur que l'on désire en format `RGB`.
 - `setColor(uint8_t r, uint8_t g, uint8_t b)` affecte la couleur à l'anneau au complet.
@@ -97,7 +97,7 @@ On la met dans la configuration.
 > - La valeur assignée est **persistante**. C'est-à-dire que si on ne change pas la couleur, elle restera tant et aussi longtemps que l'on ne change pas la couleur d'où la ligne `led.setColor (0, 0, 0);` qui permet de remettre toutes les DEL à 0.
 > - La nouvelle couleur ne s'affiche pas tant et aussi longtemps que l'on appelle pas la méthode `show()`
 
-**show**
+**`show()`**
 
 Permet d'envoyer et d'activer les couleurs configurées pour l'anneau.
 
@@ -106,16 +106,15 @@ Lorsqu'il y a changement de couleur pour affecter l'anneau, il faut faire appell
 ## Les principales méthodes
 Voici les principales méthodes pour manipuler l'anneau.
 
-`setColor (int r, int g, int b)` : Configure la couleur pour l'ensemble de l'anneau en utilisant les couleurs RGB.
+- `setColorAt (int index, int r, int g, int b)` : Configure la couleur d'une DEL spécifique en utilisant les couleurs RGB.
+- `setColor (int r, int g, int b)` : Configure la couleur pour l'ensemble de l'anneau en utilisant les couleurs RGB.
+- `setColor (int index, long value)` : Configure la couleur d'une DEL spécifique en utilisant les couleurs RGB en format hexadécimal. Exemple `0xf03c15` pour un rouge.
+- `show()` : Active la configuration des couleurs. La couleur restera tant et aussi longtemps que l'on ne la change pas.
 
-`setColorAt (int index, int r, int g, int b)` : Configure la couleur d'une DEL spécifique en utilisant les couleurs RGB.
-
-`setColor (int index, long value)` : Configure la couleur d'une DEL spécifique en utilisant les couleurs RGB en format hexadécimal. Exemple `0xf03c15` pour un rouge.
-- **Attention 1!** L'index 0 représente l'anneau au complet. Autrement, l'index débute à 1 au lieu de 0.
-- **Attention 2!** Utilisez la version de la librairie qui est sur mon [GitHub](https://github.com/nbourre/Makeblock-Libraries), car il y a un bogue sur la version officielle.
-
-`show()` : Active la configuration des couleurs. La couleur restera tant et aussi longtemps que l'on ne la change pas.
-
+> Note
+> 
+> - **Attention 1!** Pour `setColor` uniquement, l'index 0 représente l'**anneau au complet**. Autrement, l'index débute à 1 au lieu de 0.
+> - **Attention 2!** Utilisez la version de la librairie qui est sur mon [GitHub](https://github.com/nbourre/Makeblock-Libraries), car il y a un bogue sur la version officielle.
 
 ---
 
@@ -162,6 +161,8 @@ Le magnétisme est au cœur du fonctionnement des moteurs électriques. L'intera
 - L'inertie de la bobine fait en sorte que celle-ci continue sont chemin et reprend contact avec le courant.
   
 ![](../img/moteur_dc.jpg)
+
+![alt text](img/howdcmotorworks_1269637940.gif)
 
 - Remarquez dans l'image la petite encoche dans le cylindre jaune sur l'essieu. C'est à cet endroit où les bobines perdent le courant.
 - **Sens de rotation** : Le sens de rotation dépend de la direction du courant à travers les bobines.
@@ -217,8 +218,8 @@ void FullSpeedMode() {
 /**
  * @file         ranger_moteur_sans_librairie
  * @author       Nicolas Bourré
- * @version      V1.0
- * @date         2022/10/03
+ * @version      V1.0.1
+ * @date         2025/09/10
  * @description  this file is sample code for the mBot Ranger kit
  */
 
@@ -269,6 +270,7 @@ void loop() {
     statePrevious = currentTime;    
     currentState = (currentState + 1) % MAX_STATE;
     Serial.print ("Entering state : ");
+    printState();
   }
 }
 
@@ -321,7 +323,6 @@ void ReduceSpeed() {
 void Stop() {
   analogWrite(m1_pwm, 0);
   analogWrite(m2_pwm, 0);
-  Serial.println("Stop");
 }
 
 void TurnRight() {
@@ -331,8 +332,9 @@ void TurnRight() {
   
   digitalWrite(m2_in2, LOW);
   digitalWrite(m2_in1, HIGH);
-  analogWrite(m2_pwm, turnPwm);         //Set speed via PWM
+  analogWrite(m2_pwm, turnPwm);  //Set speed via PWM
 }
+
 
 ```
 
@@ -361,4 +363,5 @@ Exemple : `void Forward(int speed)`
 ---
 # Références
 - [DC Motor & Small Gear Motors – Basics ](https://islproducts.com/design-note/dc-motor-dc-gear-motor-basics/)
+- [Secrets of Arduino PWM](https://docs.arduino.cc/tutorials/generic/secrets-of-arduino-pwm/)
   
