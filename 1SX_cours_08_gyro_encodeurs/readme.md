@@ -9,7 +9,7 @@
   - [Utilisation](#utilisation)
 - [L'encodeur incrémental](#lencodeur-incrémental)
 - [La direction de la rotation](#la-direction-de-la-rotation)
-- [L'Encodeur en Programmation](#lencodeur-en-programmation)
+- [L'encodeur en programmation](#lencodeur-en-programmation)
 - [Utilisation de la Fonction `attachInterrupt`](#utilisation-de-la-fonction-attachinterrupt)
   - [Exemple](#exemple-1)
     - [Explications de l'exemple](#explications-de-lexemple)
@@ -39,7 +39,7 @@
 - Cela répondait à un certain besoin soit de déplacer le robot.
 - Certains d'entre-vous aviez demandé comment effectuer des déplacements précis tel que pivoter à X degré ou encore avancer de Y cm.
 - D'autres ont remarqué que le robot n'avançait pas droit
-- Ma réponse était soit vous devez utiliser du *timing* direct ou encore vous allez voir cela dans un futur cour.
+- Ma réponse était soit vous devez utiliser du *timing* direct ou encore vous allez voir cela dans un futur cours.
 - Ce cours c'est aujourd'hui!
 
 ---
@@ -139,7 +139,7 @@ L'illustration suivante montre la version avec une piste et deux signaux décal�
 
 ---
 
-# L'Encodeur en Programmation
+# L'encodeur en programmation
 
 - Jusqu'à présent, nous avons étudié la programmation séquentielle, où nous créons une séquence d'instructions à exécuter dans un ordre précis.
 - Lorsque nous utilisons un encodeur, nous devons utiliser une technique appelée **interruption**.
