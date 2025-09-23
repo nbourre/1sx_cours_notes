@@ -2,7 +2,7 @@ name: Build PDFs (Docker)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ pdf ]
   workflow_dispatch:
 
 jobs:
