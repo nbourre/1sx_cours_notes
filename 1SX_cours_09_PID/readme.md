@@ -220,6 +220,27 @@ Donc les calculs seront les suivants :
   - $nbPulsations = nbTours * 9 * 39.267$
 - Faire avancer/reculer le moteur de `nbPulsations`
 
+---
+
+# Faire tourner le robot
+
+TODO : Ajouter image
+
+Pour faire tourner le robot, il faudra faire un peu de géometrie et algèbre.
+
+1. Trouver l'arc de cercle à parcourir en prenant le centre du robot. (`float arc`)
+   - $arc = \frac{degre}{360}* 2\pi R$
+2. Trouver les arcs des cercles externes et internes
+   - $arcExt = \frac{degre}{360}*  2\pi (R + \frac{w2w}{2})$
+   - $arcInt = \frac{degre}{360}*  2\pi (R - \frac{w2w}{2})$
+
+Où :
+- $w2w$ = distance entre les 2 roues
+- $R$ = rayon de courbure à partir du centre du robot
+- $degre$ = Nombre de degrés à pivoter
+
+3. Trouver la distance pour les roues gauches et droites selon les arcs intérieurs et extérieurs.
+
 
 > **IMPORTANT!!!**
 > 
