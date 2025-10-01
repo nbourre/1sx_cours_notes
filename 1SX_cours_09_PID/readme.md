@@ -67,7 +67,7 @@ Avant de plonger dans les boucles d'asservissement et les régulateurs PID, il e
 L'**erreur** est la différence entre ce que nous voulons obtenir (la **consigne** ou **valeur cible**) et ce que nous obtenons réellement (la **valeur mesurée**).
 
 **Formule de base :**
-$$ erreur = consigne - valeur\_mesurée $$
+$$erreur = consigne - valeur\_mesurée$$
 
 ### Exemples concrets d'erreur :
 
