@@ -28,7 +28,7 @@ Le module Bluetooth est connecté sur le port série 0 du robot. Ainsi, il s'agi
 ---
 
 # Bluetooth Low Energy (BLE)
-Le module Bluetooth du robot MakeBlock Ranger est un module Bluetooth Low Energy (BLE). Cette technologie permet de réduire la consommation d'énergie des appareils connectés. Elle est particulièrement adaptée pour les appareils qui ont une faible consommation d'énergie, comme les capteurs ou les objets connectés.
+Le module Bluetooth du robot est un module Bluetooth Low Energy (BLE). Cette technologie permet de réduire la consommation d'énergie des appareils connectés. Elle est particulièrement adaptée pour les appareils qui ont une faible consommation d'énergie, comme les capteurs ou les objets connectés.
 
 La plupart des nouveaux appareils électroniques Bluetooth sont équipés de la technologie BLE. Elle est devenue la norme pour les appareils connectés, car elle permet de prolonger la durée de vie de la batterie des appareils. Par exemple, les tags de localisation Bluetooth peuvent avoir une autonomie de plusieurs mois, voire de plusieurs années sur une pile de montre grâce à la technologie BLE.
 
