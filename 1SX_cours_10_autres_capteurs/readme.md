@@ -273,41 +273,50 @@ void loop()
 # Avertisseur sonore
 L'Auriga est équipé d'un buzzer. Il est branché sur la broche D45.
 
+Il existe la classe MeBuzzer.h pour interagir avec le buzzer. Toutefois, elle n'est pas optimale puisqu'elle utilise des appels à *delay*, ce qui fait en sorte que le code devient bloquant.
+
+Pour contourner ce problème, nous pouvons procéder en manipulant directement le buzzer. 
+
+Voici un exemple :
+
 ## Exemple de code simple
 
 ```cpp
-#include "MeAuriga.h"
+#define BUZZER_PIN 45
 
-MeBuzzer buzzer;
+unsigned long tempsActuel = 0;
 
-void setup() 
-{
-  buzzer.setpin(45);
+void setup() {
+  pinMode(BUZZER_PIN, OUTPUT);
 }
 
-void loop()
-{
-  buzzerOn();
-  delay(1000);
-  buzzerOff();
-  delay(1000);
+void loop() {
+  tempsActuel = millis();
+  buzzer();
+}
+
+void buzzer(){
+  static bool on = true;
+  static long int dernierBip = 0;
+  const int delai = 1000;
+
+  if (tempsActuel - dernierBip >= delai)
+  {
+    dernierBip = tempsActuel;
+    on = !on;
+  }
+
+  if (on)
+  {
+    analogWrite(BUZZER_PIN, 127);
+  }
+  else
+  {
+    analogWrite(BUZZER_PIN, 0);
+  }
 }
 ```
 
-## Jouer une mélodie
-
-Il est possible de jouer des notes avec la fonction `tone()`.
-La méthode `noTone()` permet d'arrêter la note.
-
-La syntaxe est la suivante:
-
-```cpp
-tone(frequence, duration);
-```
-
-Où:
-- `frequence` est la fréquence de la note à jouer
-- `duration` est la durée de la note en millisecondes
 
 
 ---
