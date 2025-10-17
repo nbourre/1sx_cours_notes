@@ -3,6 +3,9 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 
 ![Robot regardant une ligne](assets/robot.jpg)
 
+[<p>Vidéo de démontration</p><img src="https://img.youtube.com/vi/leQzOFaGmLs/hqdefault.jpg" width="600" height="300"
+/>](https://www.youtube.com/embed/leQzOFaGmLs?start=125)
+
 ## Sommaire <!-- omit in toc -->
 - [Introduction au suivi de ligne](#introduction-au-suivi-de-ligne)
   - [Définition](#définition)
@@ -22,7 +25,9 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
   - [Étape 1 : Normalisation des valeurs des capteurs](#étape-1--normalisation-des-valeurs-des-capteurs)
   - [Étape 2 : Calcul de la position de la ligne](#étape-2--calcul-de-la-position-de-la-ligne)
   - [Étape 3 : Utilisation du PID](#étape-3--utilisation-du-pid)
+- [Mon robot s'emballe! Le PID fait n'importe quoi!](#mon-robot-semballe-le-pid-fait-nimporte-quoi)
 - [Exercices](#exercices-1)
+- [Références](#références)
 
 
 # Introduction au suivi de ligne
@@ -45,8 +50,10 @@ Voici une vidéo montrant un robot suivant une ligne noire sur un fond pâle à 
 
 > **Note** : Le robot n'est pas équipé du LyneTracker, mais d'un capteur de ligne de base. Le LyneTracker permettra une détection plus précise de la ligne grâce à ses valeurs analogiques.
 
+---
+
 # Les capteurs infra-rouges
-On dit capteur de ligne, mais en réalité, il s'agit de capteurs infra-rouges. Les capteurs infra-rouges sont des capteurs qui utilisent la lumière infrarouge pour détecter le taux de réflexion de la lumière sur une surface. 
+On dit capteur de ligne, mais en réalité, il s'agit de capteurs infra-rouges. Les capteurs infra-rouges sont des capteurs qui utilisent la lumière infrarouge pour détecter le taux de réflexion de la lumière sur une surface. **C'est l'interprétation de ce taux de réflexion** qui permet de déterminer si le capteur est sur une ligne noire ou non.
 
 Si le capteur est sur une surface blanche, la lumière est réfléchie et le capteur renvoie une valeur élevée. Si le capteur est sur une surface noire, la lumière est absorbée et le capteur renvoie une valeur basse. En utilisant ces valeurs, on peut déterminer si le capteur est sur une ligne noire ou non.
 
@@ -56,7 +63,7 @@ Voici un gif montrant des possibilités de position de la ligne par rapport aux 
 
 ![alt text](assets/LyneTracker_possible_line.gif)
 
-Question : Quelles seraient les valeurs des capteurs dans chaque cas?
+Question : Considérant que les capteurs sont branchés sur les ports analogiques, quelles seraient les valeurs des capteurs dans chaque cas?
 
 # Le capteur LyneTracker
 Le LyneTracker est un capteur de ligne spécialement conçu au département pour les projets du cours de robotique. Il est compatible avec le robot Makeblock Ranger. Contrairement au capteur qui provient dans le kit original qui utilise des valeurs binaires (0 ou 1) pour détecter la ligne, le LyneTracker est équipé de **cinq capteurs infrarouges** qui retournent des **valeurs analogiques**, ce qui permet une détection plus précise de la position de la ligne.
@@ -135,14 +142,31 @@ Il existe plusieurs méthodes pour suivre une ligne avec capteur de ligne. Je pr
 Cette méthode consiste à lire les valeurs des capteurs et à ajuster le robot en fonction des seuils de détection. Si un capteur détecte une ligne noire (valeur basse), le robot tourne ou ajuste sa direction.
 
 ```cpp
+#include <Adafruit_seesaw.h>
+
+#define NB_IR 5
+
 int seuil = 600; // Seuil de détection de la ligne
-const int nbCapteurs = 5;
+
+Adafruit_seesaw ss;
+
+int sensorValues[NB_IR];  // Tableau pour stocker les valeurs des capteurs
+
+void setup() {
+    Serial.begin(115200);
+
+    if (!ss.begin()) {
+        Serial.println("Erreur de connexion au LyneTracker");
+        while (1);
+    }
+    Serial.println("Connexion réussie au LyneTracker!");
+}
 
 void loop() {
     // Adapter les valeurs des capteurs selon l'environnement
 
     // Lire les capteurs
-    for (int i = 0; i < nbCapteurs; i++) {
+    for (int i = 0; i < NB_IR; i++) {
         sensorValues[i] = ss.analogRead(i);
     }
 
@@ -175,8 +199,8 @@ La calibration consiste à mesurer les valeurs minimales et maximales des capteu
 Ainsi, il s'agit d'un algorithme de base pour trouver les valeurs minimales et maximales des capteurs. Voici un rappel du pseudo-code :
 
 ```text
-valMin = 1023; // Valeur maximale des capteurs
-valMax = 0;    // Valeur minimale des capteurs
+valMin = 1023; // Initiatilisé à la valeur maximale des capteurs
+valMax = 0;    // Initiatilisé à la valeur minimale des capteurs
 
 fonction calibrer :
     pour chaque capteur i de 0 à 4 :
@@ -188,13 +212,15 @@ fonction calibrer :
     fin pour
 ```
 
-Ensuite, on peut utiliser ces valeurs pour déterminer les seuils de détection :
+Ensuite, on peut utiliser ces valeurs pour déterminer les seuils de détection :
 
 ```cpp
 // La valeur du seuil peut être ajustée en fonction de l'environnement
 // Dans le cas le plus simple, on peut utiliser la moyenne des valeurs min et max
 seuil = (valMin + valMax) / 2
 ```
+
+> **Note importante** : Il faut effectuer la **calibration pour chaque capteur** individuellement, car chaque capteur peut avoir des caractéristiques différentes. Il est donc important de stocker les valeurs minimales et maximales pour chaque capteur.
 
 ---
 
@@ -228,7 +254,7 @@ On vous rappelle que le contrôleur PID est un mécanisme de contrôle qui perme
 
 Pour le suivi de ligne, le contrôleur PID peut être utilisé pour ajuster la trajectoire du robot en fonction de la position de la ligne par rapport aux capteurs. Le PID peut être utilisé pour ajuster la vitesse des moteurs ou la direction du robot en fonction de l'erreur de position.
 
-Dans la méthode qui sera montré, on normalisera les valeurs des capteurs pour que l'on puisse connaître la position de la ligne par rapport au capteur.
+Dans la méthode qui sera montrée, on normalisera les valeurs des capteurs pour que l'on puisse connaître la position de la ligne par rapport au capteur.
 
 On assignera une valeur de 0 au capteur de gauche et jusqu'à 4000 au capteur de droite. Ainsi, la valeur du milieu sera de 2000. On pourra ainsi déterminer la position de la ligne par rapport au robot.
 
@@ -238,17 +264,27 @@ Avant d'utiliser le PID, il est important de normaliser les valeurs des capteurs
 L'algorithme de normalisation est le suivant :
 
 ```text
+structure Capteur :
+    entier valeurMin = 1023
+    entier valeurMax = 0
+    entier valeurLue
+    entier valeurNormalisee
+
+tableau Capteur capteurs[5]
+
 fonction capteurLectureNormalisee(index) :
     // On multiplie par 1.0 pour forcer la division en double
-    retourner ((valCapteur[index] - valMin) * 1.0) / (valMax - valMin) * 1000.0
+    retourner ((capteurs[index].valeurLue - capteurs[index].valeurMin) * 1.0) / (capteurs[index].valeurMax - capteurs[index].valeurMin) * 1000.0
 
 fonction normaliserValeurs :
     pour chaque capteur i de 0 à 4 :
-        capteurNormalise[i] = capteurLectureNormalisee(i)
+        capteurs[i].valeurNormalisee = capteurLectureNormalisee(i)
     fin pour
 ```
 
 Ainsi chaque capteur aura toujours une valeur entre 0 et 1000, peu importe les valeurs minimales et maximales des capteurs.
+
+> **Perle de culture** : La fonction `map()` d'Arduino est une forme de normalisation, mais elle ne gère pas les nombres à virgule flottante. C'est pourquoi on utilise une approche manuelle pour la normalisation dans ce cas.
 
 ---
 
@@ -259,7 +295,7 @@ La moyenne pondérée est une moyenne où chaque valeur est multipliée par un p
 
 La formule est la suivante :
 
-$$position = \frac{\sum_{i=0}^{4} capteur_{i} * 1000i}{\sum_{i=0}^{4} capteur_{i}}$$
+$$position = \frac{\sum_{i=0}^{4} valNorm_{i} * 1000i}{\sum_{i=0}^{4} valNorm_{i}}$$
 
 L'algorithme représenté par la formule est le suivant :
 
@@ -268,19 +304,13 @@ numerateur = 0
 denominateur = 0
 
 Pour chaque capteur i de 0 à 4 :
-    poids = 1000 * i
-    numerateur += capteurNormalise[i] * poids
-    denominateur += capteurNormalise[i]
+    numerateur += capteurs[i].valeurNormalisee * i
+    denominateur += capteurs[i].valeurNormalisee
 
-position = numerateur / denominateur
+position = numerateur / denominateur * 1000
 ```
 
-> **Attention!** Les valeurs peuvent devenir très grandes, il est important d'utiliser les bons types de données pour éviter le dépassement de capacité.
-> 
-> Par exemple si la ligne est sous le capteur 4, le numérateur pourra avoir une valeur dépassant les 4 000 000. Il est donc important de s'assurer que les variables utilisées peuvent contenir de telles valeurs.
->
-> Utiliser le type `unsigned long` pour les variables `numerateur` et `denominateur` peut être une bonne idée.
-
+> **Attention!** Les valeurs peuvent devenir trop grande pour un entier, il est important d'**utiliser les bons types de données** pour éviter le dépassement de capacité.
 
 Testez cet algorithme pour voir comment il fonctionne avec les valeurs des capteurs.
 
@@ -293,7 +323,7 @@ Une fois que l'on connait la position de la ligne par rapport aux capteurs, on p
 Voici un exemple de code utilisant le PID pour calculer l'ajustement à apporter à la trajectoire du robot :
 
 ```cpp
-float computePID(float position) {
+float computePID(float position, float consigne = 2000) {
     // Ajuster les coefficients selon vos besoins
     static float kp = 0.1; // Coefficient proportionnel
     static float ki = 0.01; // Coefficient intégral
@@ -303,7 +333,7 @@ float computePID(float position) {
     static float derivative = 0;
     static float lastError = 0;
 
-    float error = position - 2000; // 2000 est la position du milieu
+    float error = position - consigne;
 
     integral += error;
     derivative = error - lastError;
@@ -315,6 +345,7 @@ float computePID(float position) {
 }
 
 void loop() {
+    float consigne = 2000; // Position centrale
     // Normaliser les valeurs des capteurs
     normaliserValeurs();
 
@@ -322,11 +353,46 @@ void loop() {
     float position = calculerPositionLigne();
 
     // Calculer l'ajustement à apporter à la trajectoire
-    float adjustment = computePID(position);
+    float adjustment = computePID(position, consigne);
 
     // Ajuster la trajectoire du robot en fonction de l'ajustement
     // Par exemple, ajuster la vitesse des moteurs
     suivreLigne(adjustment);
+}
+```
+
+---
+
+# Mon robot s'emballe! Le PID fait n'importe quoi!
+Le PID peut parfois causer un phénomène appelé "emballement intégral" (*windup*) où les ajustements deviennent trop grands et le système oscille de manière incontrôlée. Cela est souvent dû à une accumulation excessive de l'erreur intégrale. Pour éviter cela, on vous présente une solution simple : limiter la valeur de l'intégrale.
+
+```cpp
+float computePID(float position, float consigne = 2000) {
+    // Ajuster les coefficients selon vos besoins
+    static float kp = 0.1; // Coefficient proportionnel
+    static float ki = 0.01; // Coefficient intégral
+    static float kd = 0.01; // Coefficient dérivé
+
+    static float integral = 0;
+    static float derivative = 0;
+    static float lastError = 0;
+
+    float error = position - consigne;
+
+    integral += error;
+
+    // Adapter cette valeur selon les besoins de votre application
+    const float integralLimit = 1000;
+    
+    // Limiter l'intégrale pour éviter l'emballement intégral
+    integral = constrain(integral, -integralLimit, integralLimit);
+
+    derivative = error - lastError;
+    lastError = error;
+    
+    float output = kp * error + ki * integral + kd * derivative;
+    
+    return output;
 }
 ```
 
@@ -337,7 +403,11 @@ void loop() {
 2. Effectuez une calibration des données pour déterminer les seuils de détection.
 3. Implémentez une calibration automatique pour déterminer les valeurs minimales et maximales des capteurs.
 4. Testez le suivi de ligne avec les valeurs calibrées.
+
 ---
+
+# Références
+- [Wikipedia : Integral windup](https://en.wikipedia.org/wiki/Integral_windup)
 
 [Retour au sommaire](../README.md)
 
