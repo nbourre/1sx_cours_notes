@@ -3,8 +3,8 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 
 ![Robot regardant une ligne](assets/robot.jpg)
 
-[<p>Vidéo de démontration</p>](https://www.youtube.com/embed/leQzOFaGmLs?start=125)
 <a href="https://www.youtube.com/watch?v=leQzOFaGmLs&t=125s" target="_blank">
+<p>Vidéo de démontration</p>
 <img src="https://img.youtube.com/vi/leQzOFaGmLs/hqdefault.jpg" width="600" height="300"
 /></a>
 
