@@ -10,13 +10,8 @@
   - [Cas d'utilisation](#cas-dutilisation-1)
 - [Capteur de température](#capteur-de-température)
   - [Exemple de code](#exemple-de-code-2)
-- [Capteur gyroscopique](#capteur-gyroscopique)
-  - [Exemple de code - Afficher le gyro](#exemple-de-code---afficher-le-gyro)
-  - [Exemple de code - Collision](#exemple-de-code---collision)
-  - [Cas d'utilisation](#cas-dutilisation-2)
 - [Avertisseur sonore](#avertisseur-sonore)
   - [Exemple de code simple](#exemple-de-code-simple)
-  - [Jouer une mélodie](#jouer-une-mélodie)
 - [Exercices](#exercices)
 - [Références](#références)
 
@@ -156,158 +151,53 @@ float calculate_temp(int16_t In_temp)
 
 ---
 
-# Capteur gyroscopique
-Voir le [Cours 06](../1SX_cours_05_i2c_gyro/readme.md) pour plus de détail sur le gyroscope.
-
-- Modèle MPU-6050
-- Configuré sur l'adresse 0x69 pour le `MeAuriga`
-- Utiliser la classe `MeGyro`
-
-## Exemple de code - Afficher le gyro
-
-```cpp
-#include <MeAuriga.h>
-#include <Wire.h>
-
-MeGyro gyro(0, 0x69); // Constructeur
-void setup()
-{
-  Serial.begin(115200);
-  gyro.begin();
-}
-
-void loop()
-{
-  gyro.update();
-  Serial.read();
-  Serial.print("X:");
-  Serial.print(gyro.getAngleX() );
-  Serial.print(" Y:");
-  Serial.print(gyro.getAngleY() );
-  Serial.print(" Z:");
-  Serial.println(gyro.getAngleZ() );
-  delay(10);
-}
-```
-
-## Exemple de code - Collision
-
-```cpp
-#include <MeAuriga.h>
-#include <Wire.h>
-
-unsigned long cT = 0;
-
-MeGyro gyro(0, 0x69); // Constructeur
-
-unsigned long serialPrevious = 0;
-int serialInterval = 250;
-
-unsigned long bumpPrevious = 0;
-int bumpInterval = 10;
-float bumpDetectLimit = 1;
-char bumpDetected = 0;
-
-float dx = 0.0;
-float axp = 0;
-float ax = 0;
-
-void gyroTask() {
-  gyro.update();
-
-  ax = gyro.getAngleX();
-
-  if (cT - bumpPrevious >= bumpInterval){
-    bumpPrevious = cT;
-
-    // Facteur de multiplication
-    // car abs(...) retourne un entier
-    dx = abs((ax - axp) * 10);
-    axp = ax;
-
-    if (dx >= bumpDetectLimit) {
-      bumpDetected = 1;
-    }
-  }
-}
-
-void serialOutputTask() {
-  // On bypass le délai s'il y a eu une collision
-  if (bumpDetected) {
-    bumpDetected = 0;
-    Serial.print("Collision detected!! --");
-    Serial.print("dx:");
-    Serial.println(dx);
-  }
-
-  if (cT - serialPrevious < serialInterval ) return;
-
-  serialPrevious = cT;
-
-  // Tache d'impression ici
-}
-
-void setup()
-{
-  Serial.begin(115200);
-  gyro.begin();
-}
-
-void loop()
-{
-  cT = millis();
-
-  gyroTask();
-  serialOutputTask();
-}
-```
-
-## Cas d'utilisation
-- Détection de chute, mouvement, collision, etc.
-- Ajustement de la position
-- Drone
-- Équilibrage de robot (Voir firmware_for_Auriga)
-
----
-
 # Avertisseur sonore
 L'Auriga est équipé d'un buzzer. Il est branché sur la broche D45.
+
+Il existe la classe MeBuzzer.h pour interagir avec le buzzer. Toutefois, elle n'est pas optimale puisqu'elle utilise des appels à *delay*, ce qui fait en sorte que le code devient bloquant.
+
+Pour contourner ce problème, nous pouvons procéder en manipulant directement le buzzer. 
+
+Voici un exemple :
 
 ## Exemple de code simple
 
 ```cpp
-#include "MeAuriga.h"
+#define BUZZER_PIN 45
 
-MeBuzzer buzzer;
+unsigned long tempsActuel = 0;
 
-void setup() 
-{
-  buzzer.setpin(45);
+void setup() {
+  pinMode(BUZZER_PIN, OUTPUT);
 }
 
-void loop()
-{
-  buzzerOn();
-  delay(1000);
-  buzzerOff();
-  delay(1000);
+void loop() {
+  tempsActuel = millis();
+  buzzer();
+}
+
+void buzzer(){
+  static bool on = true;
+  static long int dernierBip = 0;
+  const int delai = 1000;
+
+  if (tempsActuel - dernierBip >= delai)
+  {
+    dernierBip = tempsActuel;
+    on = !on;
+  }
+
+  if (on)
+  {
+    analogWrite(BUZZER_PIN, 127);
+  }
+  else
+  {
+    analogWrite(BUZZER_PIN, 0);
+  }
 }
 ```
 
-## Jouer une mélodie
-
-Il est possible de jouer des notes avec la fonction `tone()`.
-La méthode `noTone()` permet d'arrêter la note.
-
-La syntaxe est la suivante:
-
-```cpp
-tone(frequence, duration);
-```
-
-Où:
-- `frequence` est la fréquence de la note à jouer
-- `duration` est la durée de la note en millisecondes
 
 
 ---
