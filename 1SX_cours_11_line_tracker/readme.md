@@ -297,7 +297,7 @@ La moyenne pondérée est une moyenne où chaque valeur est multipliée par un p
 
 La formule est la suivante :
 
-$$position = \frac{\sum_{i=0}^{4} valNorm_{i} * 1000(i-2)}{\sum_{i=0}^{4} valNorm_{i}}$$
+$$position = \frac{\sum_{i=0}^{4} valNorm_{i} * 1000 * (i-2)}{\sum_{i=0}^{4} valNorm_{i}}$$
 
 L'algorithme représenté par la formule est le suivant :
 
