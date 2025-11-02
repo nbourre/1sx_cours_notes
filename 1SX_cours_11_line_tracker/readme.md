@@ -258,7 +258,7 @@ Pour le suivi de ligne, le contrôleur PID peut être utilisé pour ajuster la t
 
 Dans la méthode qui sera montrée, on normalisera les valeurs des capteurs pour que l'on puisse connaître la position de la ligne par rapport au capteur.
 
-On assignera une valeur de 0 au capteur de gauche et jusqu'à 4000 au capteur de droite. Ainsi, la valeur du milieu sera de 2000. On pourra ainsi déterminer la position de la ligne par rapport au robot.
+On assignera une valeur de -2000 au capteur de gauche et jusqu'à 2000 au capteur de droite. Ainsi, la valeur du milieu sera de 0. On pourra ainsi déterminer la position de la ligne par rapport au robot.
 
 ## Étape 1 : Normalisation des valeurs des capteurs
 Avant d'utiliser le PID, il est important de normaliser les valeurs des capteurs pour que chaque capteur ait une valeur entre 0 et 1000. Cela permettra ensuite de pondérer les valeurs des capteurs pour déterminer la position de la ligne sur l'ensemble des capteurs.
@@ -297,7 +297,7 @@ La moyenne pondérée est une moyenne où chaque valeur est multipliée par un p
 
 La formule est la suivante :
 
-$$position = \frac{\sum_{i=0}^{4} valNorm_{i} * 1000i}{\sum_{i=0}^{4} valNorm_{i}}$$
+$$position = 1000 * \frac{\sum_{i=0}^{4} valNorm_{i} * (i - 2)}{\sum_{i=0}^{4} valNorm_{i}}$$
 
 L'algorithme représenté par la formule est le suivant :
 
@@ -306,7 +306,7 @@ numerateur = 0
 denominateur = 0
 
 Pour chaque capteur i de 0 à 4 :
-    numerateur += capteurs[i].valeurNormalisee * i
+    numerateur += capteurs[i].valeurNormalisee * (i - 2)
     denominateur += capteurs[i].valeurNormalisee
 
 position = numerateur / denominateur * 1000
@@ -347,7 +347,7 @@ float computePID(float position, float consigne = 2000) {
 }
 
 void loop() {
-    float consigne = 2000; // Position centrale
+    float consigne = 0; // Position centrale
     // Normaliser les valeurs des capteurs
     normaliserValeurs();
 
@@ -369,7 +369,7 @@ void loop() {
 Le PID peut parfois causer un phénomène appelé "emballement intégral" (*windup*) où les ajustements deviennent trop grands et le système oscille de manière incontrôlée. Cela est souvent dû à une accumulation excessive de l'erreur intégrale. Pour éviter cela, on vous présente une solution simple : limiter la valeur de l'intégrale.
 
 ```cpp
-float computePID(float position, float consigne = 2000) {
+float computePID(float position, float consigne = 0) {
     // Ajuster les coefficients selon vos besoins
     static float kp = 0.1; // Coefficient proportionnel
     static float ki = 0.01; // Coefficient intégral
