@@ -125,7 +125,7 @@ void serialPrintTask(unsigned long ct) {
 void serialEvent() {
   if (!Serial.available()) return;
   
-  serialMessage = Serial.readString();
+  serialMessage = Serial.readStringUntil('\n');
   
   if (serialMessage.length() > 2) {
     // Retrait de l'entête 0xFF55

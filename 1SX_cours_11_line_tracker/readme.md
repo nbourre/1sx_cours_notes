@@ -325,7 +325,7 @@ Une fois que l'on connait la position de la ligne par rapport aux capteurs, on p
 Voici un exemple de code utilisant le PID pour calculer l'ajustement à apporter à la trajectoire du robot :
 
 ```cpp
-float computePID(float position, float consigne = 2000) {
+float computePID(float position, float consigne = 0.0f) {
     // Ajuster les coefficients selon vos besoins
     static float kp = 0.1; // Coefficient proportionnel
     static float ki = 0.01; // Coefficient intégral
@@ -347,7 +347,7 @@ float computePID(float position, float consigne = 2000) {
 }
 
 void loop() {
-    float consigne = 0; // Position centrale
+    float consigne = 0.0f; // Position centrale
     // Normaliser les valeurs des capteurs
     normaliserValeurs();
 
@@ -369,7 +369,7 @@ void loop() {
 Le PID peut parfois causer un phénomène appelé "emballement intégral" (*windup*) où les ajustements deviennent trop grands et le système oscille de manière incontrôlée. Cela est souvent dû à une accumulation excessive de l'erreur intégrale. Pour éviter cela, on vous présente une solution simple : limiter la valeur de l'intégrale.
 
 ```cpp
-float computePID(float position, float consigne = 0) {
+float computePID(float position, float consigne = 0.0f) {
     // Ajuster les coefficients selon vos besoins
     static float kp = 0.1; // Coefficient proportionnel
     static float ki = 0.01; // Coefficient intégral
