@@ -10,7 +10,6 @@
 * [ ] Interpréter la commande **S** (stop)
 * [ ] Interpréter la commande **K** (klaxon)
 * [ ] Interpréter les commandes de LED :
-
   * [ ] **l,r,g,b**
   * [ ] **l,i,r,g,b** (LED spécifique)
 * [ ] Interpréter la commande de PWM **p,x**
@@ -40,7 +39,6 @@
 
 * [ ] Démarrage sur commande **GO**
 * [ ] Afficher LEDs :
-
   * [ ] Rouge (3→1)
   * [ ] Jaune (1→0)
   * [ ] Vert (0→GO)
@@ -80,8 +78,9 @@
 
 ## **4. Règles de décision aux embranchements (« Prendre la bonne direction »)**
 
-* [ ] Si numéro étudiant **pair** → regarder **à droite** d’abord
-* [ ] Si numéro étudiant **impair** → regarder **à gauche** d’abord
+* [ ] Regarder du bon côté selon le numéro étudiant
+  * [ ] Si numéro étudiant **pair** → regarder **à droite** d’abord
+  * [ ] Si numéro étudiant **impair** → regarder **à gauche** d’abord
 * [ ] Vérifier si chemin libre
 * [ ] Si bloqué → pivot 180°
 * [ ] Continuer le suivi selon la décision
