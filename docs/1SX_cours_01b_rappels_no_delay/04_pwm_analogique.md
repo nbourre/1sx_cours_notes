@@ -1,31 +1,8 @@
-# PWM et lecture analogique <!-- omit in toc -->
-
-<!-- PANDOC-IGNORE-START -->
-
-# Table des matières <!-- omit in toc -->
-- [Modulation de largeur d’impulsion (PWM)](#modulation-de-largeur-dimpulsion-pwm)
-  - [Exercice](#exercice)
-- [Luminosité d’une DEL](#luminosité-dune-del)
-  - [Exercice](#exercice-1)
-- [Le servomoteur](#le-servomoteur)
-  - [Mise en garde](#mise-en-garde)
-  - [Expérimentation](#expérimentation)
-  - [Complément d’information](#complément-dinformation)
-- [Lecture analogue](#lecture-analogue)
-- [Lecture d’un potentiomètre](#lecture-dun-potentiomètre)
-  - [Exemple](#exemple)
-  - [Dans le kit](#dans-le-kit)
-- [La fonction map()](#la-fonction-map)
-  - [Exemple](#exemple-1)
-- [Exercices](#exercices)
-  - [Exercice de rappel](#exercice-de-rappel)
-- [Références](#références)
-
-<!-- PANDOC-IGNORE-END -->
-
+# PWM et lecture analogique
 
 # Modulation de largeur d’impulsion (PWM)
-- Nous avons vu la fonction digitalWrite qui permet de mettre ou non du voltage à une broche
+
+- Nous avons vu la fonction `digitalWrite` qui permet de mettre ou non du voltage à une broche
 - La tension est appliquée à 100% ou 0% du temps
 
 ![Alt text](img/digitalWrite.png)
@@ -45,8 +22,8 @@ void loop() {
 ```
 
 - Il se passera principalement 2 choses :
-  - L’œil humain voit généralement un scintillement maximal de 50 à 90 hz, donc on ne verra pas le clignotement
-  - Étant donné que la lumière est éteinte à 50% du temps, elle sera à 50% de sa luminosité maximale
+    - L’œil humain voit généralement un scintillement maximal de 50 à 90 hz, donc on ne verra pas le clignotement
+    - Étant donné que la lumière est éteinte à 50% du temps, elle sera à 50% de sa luminosité maximale
 
 ---
 
@@ -77,12 +54,12 @@ void loop() {
 ---
 
 - **Attention!** Le PWM ne fonctionne pas nécessairement sur toutes les broches
-  - Sur le Mega, les broches 2 à 13 et 44 à 46 sont compatibles
-- Prenons 2 minutes pour lire la [documentation officielle](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/) sur la fonction `analogWrite()`
+    - Sur le Mega, les broches 2 à 13 et 44 à 46 sont compatibles
+- Prenons 2 minutes pour lire la [documentation officielle](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/){target="_blank"} sur la fonction `analogWrite()`
 - On constate que :
-  - les broches dépendent du microcontrôleur utilisé
-  - Il y a des fréquences différentes
-  - Il y a beaucoup plus que type d’Arduino que vous vous imaginiez!
+    - les broches dépendent du microcontrôleur utilisé
+    - Il y a des fréquences différentes
+    - Il y a beaucoup plus que type d’Arduino que vous vous imaginiez!
 
 ---
 
@@ -98,10 +75,12 @@ void loop() {
 ---
 
 # Luminosité d’une DEL
+
 - Avec analogWrite, on pourra modifier la valeur selon des conditions précises ou encore faire varier celle-ci
 - Dans quelle situation où l’on peut voir des variations de luminosité?
 
 ## Exercice
+
 - Complétez et expérimentez avec l’exemple suivant
 
 ```cpp
@@ -125,14 +104,14 @@ void loop() {
 
 ```
 
-> **Question :**
->
-> Pourquoi après une certaine période, le code cesse de fonctionner comme prévu?
-> <!-- Réponse : Parce que le type de fadePrevious n'est pas suffisant pour gérer le temps -->
+!!! question "Question"
+    Pourquoi après une certaine période, le code cesse de fonctionner comme prévu?
+    <!-- Réponse : Parce que le type de fadePrevious n'est pas suffisant pour gérer le temps -->
 
 ---
 
 # Le servomoteur
+
 - Un servomoteur (servo) est un moteur capable de maintenir sa position
 - La position est vérifiée et corrigée en continu
 - On le retrouve souvent dans les modèles RC pour contrôler la direction des roues ou encore des ailettes
@@ -158,8 +137,8 @@ void loop() {
 ## Mise en garde
 
 - Un servo consomme passablement de courant
-- Selon cette [datasheet](https://media.digikey.com/pdf/Data%20Sheets/DFRobot%20PDFs/SER0039_Web.pdf), le courant maximal est de 300 mA (milliampère)
-- Le uC ne peut fournir plus de 40 mA par pin, avec une limite totale de ~200 mA pour toutes les pins. [Documentation](https://www.arduino.cc/en/Tutorial/Foundations/DigitalPins#properties-of-pins-configured-as-output)
+- Selon cette [datasheet](https://media.digikey.com/pdf/Data%20Sheets/DFRobot%20PDFs/SER0039_Web.pdf){target="_blank"}, le courant maximal est de 300 mA (milliampère)
+- Le uC ne peut fournir plus de 40 mA par pin, avec une limite totale de ~200 mA pour toutes les pins. [Documentation](https://www.arduino.cc/en/Tutorial/Foundations/DigitalPins#properties-of-pins-configured-as-output){target="_blank"}
 - Ainsi, il ne peut fournir assez de courant pour un servo
 - On peut le faire fonctionner, mais sans faire forcer le moteur (allège)
 - Généralement, on utilisera un contrôleur PWM pour servos typique à la photo ci-contre
@@ -175,10 +154,7 @@ void loop() {
 
 ![Alt text](img/servoWiring.png)
 
-<table>
-
-<tr>
-<td>
+<div class="grid" markdown>
 
 ```cpp
 #include <Servo.h> // Inclusion de la librairie
@@ -205,14 +181,9 @@ void loop() {
 
 ```
 
-</td>
-<td>
-
 ![Alt text](img/servoDemo.gif)
 
-</td>
-</tr>
-</table>
+</div>
 
 ---
 
@@ -225,28 +196,29 @@ void loop() {
 ---
 
 # Lecture analogue
+
 - La fonction `analogRead` permet de lire le voltage sur les broches qui acceptent la lecture analogue
 - Les broches qui peuvent lire les valeurs analogues sont marquées « Ax » où `A` tient pour analogue et x le numéro de la broche
-  - Sur le Mega A0-A15, sur le Uno A0-A5
+    - Sur le Mega A0-A15, sur le Uno A0-A5
 - Pour lire des valeurs analogues, il faut ce que l’on appelle un ADC soit un **C**onvertisseur **A**nalogue à **D**igitale.
-  - Le ADC permet de lire des valeurs de 0v à 5v
-  - Il a une résolution de 10 bit. Ainsi  $$2^{10} - 1 = 1023$$
+    - Le ADC permet de lire des valeurs de 0v à 5v
+    - Il a une résolution de 10 bit. Ainsi  $2^{10} - 1 = 1023$
 - Les valeurs retournées sont entre 0 (0v) et 1023 (5v)
 
 ---
 
 - La fonction principale des broches analogues est de lire des capteurs analogue.
-  - Par exemple, un potentiomètre, une sonde à température, un microphone, une cellule photo-électrique, etc.
+    - Par exemple, un potentiomètre, une sonde à température, un microphone, une cellule photo-électrique, etc.
 - Pour lire sur une broche analogue, on doit préalablement l’avoir configuré en tant qu’entrée
-  - Exemple : `pinMode(A0, INPUT);`
+    - Exemple : `pinMode(A0, INPUT);`
 - Exemple de lecture
-  - `valeur = analogRead(A0)`
+    - `valeur = analogRead(A0)`
 
-> **Attention!**
-> 
-> Les fonctions `analogRead` et `analogWrite` n’ont aucun lien entre elles.
+!!! warning "Attention!"
+    Les fonctions `analogRead` et `analogWrite` n’ont aucun lien entre elles.
 
 # Lecture d’un potentiomètre
+
 - Un potentiomètre est un dispositif mécanique simple qui se présente sous de nombreuses formes différentes
 - Il fournit une résistance variable qui change lorsque vous le manipulez
 - On retrouve les potentiomètres dans plusieurs situations, par exemple sur les ajustements sur un ampli de guitare ou encore une manette de console
@@ -256,7 +228,7 @@ void loop() {
 
 ---
 
-- Le « wiper » est branché sur la broche analogue
+- L'aiguille de lecture (*wiper*) est branchée sur la broche analogue
 - Le voltage est branché sur le 5v
 
 ![Alt text](img/potExamples.png)![Alt text](img/potConcept.gif)
@@ -264,6 +236,8 @@ void loop() {
 ## Exemple
 
 Voici un exemple de code simple
+
+<div class="grid" markdown>
 
 ```cpp
 void setup() {
@@ -283,7 +257,10 @@ void loop() {
 
 ![Alt text](img/potDemo.gif)
 
+</div>
+
 ## Dans le kit
+
 - Dans le kit, il y a 2 potentiomètres (10k Ω) comme dans la photo
 - Ils sont dans la boîte qui a des petits composants
 - Il y a aussi un *joystick* qui est composé 2 potentiomètres et un bouton
@@ -297,11 +274,11 @@ void loop() {
 - La fonction `map()` permet de convertir d’une plage de valeurs vers une autre
 - Par exemple, si je reçois des valeurs de 0 à 1023 et j’aimerais les convertir vers une plage de 0 à 255, je peux utiliser `map()`
 - Cette fonction prend 5 paramètres soit:
-  - Value : Valeur source à convertir
-  - fromLow : Valeur source la plus basse
-  - fromHigh : Valeur source la plus haute
-  - toLow : Valeur destination la plus basse
-  - toHigh : Valeur destination la plus haute
+    - Value : Valeur source à convertir
+    - fromLow : Valeur source la plus basse
+    - fromHigh : Valeur source la plus haute
+    - toLow : Valeur destination la plus basse
+    - toHigh : Valeur destination la plus haute
 
 ## Exemple
   
@@ -319,22 +296,31 @@ void loop() {
 ---
 
 # Exercices
-- Testez chacun des sujets vus dans la leçon
-  - Faire changer l’intensité d’une DEL automatiquement
-  - Faire un mouvement d’essuie-glace avec le servomoteur
-  - Faire changer l’intensité d’une DEL à l’aide du potentiomètre
-  - Contrôler le servo avec le potentiomètre ou joystick
+
+Testez chacun des sujets vus dans la leçon
+
+- Faire changer l’intensité d’une DEL automatiquement
+- Faire un mouvement d’essuie-glace avec le servomoteur
+- Faire changer l’intensité d’une DEL à l’aide du potentiomètre
+- Contrôler le servo avec le potentiomètre ou joystick
 
 ## Exercice de rappel
-- Faites un branchement avec 1 servo, 2 DEL et le joystick.
-  - Placez les DELs à chaque extrémité du servo
-  - Contrôlez la position du servo avec le joystick
-  - Les DELs devront changer d’intensité selon la position du servo, i.e. au milieu, les 2 DELs sont à 50% de leur intensité, à l’extrémité, une des DELs est à 100% et l’autre à 0%
+
+Faites un branchement avec 1 servo, 2 DEL et le joystick.
+
+- Placez les DELs à chaque extrémité du servo
+- Contrôlez la position du servo avec le joystick
+- Les DELs devront changer d’intensité selon la position du servo, i.e. au milieu, les 2 DELs sont à 50% de leur intensité, à l’extrémité, une des DELs est à 100% et l’autre à 0%
 
 ---
 
 # Références
-- [analogWrite](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/)
-- [Les bases du PWM](https://docs.arduino.cc/learn/microcontrollers/analog-output)
-- [Sparkfun Servos](https://www.sparkfun.com/servos)
-- [Variable resistors](https://makeabilitylab.github.io/physcomp/electronics/variable-resistors.html)
+
+- [analogWrite](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/){target="_blank"}
+- [Les bases du PWM](https://docs.arduino.cc/learn/microcontrollers/analog-output){target="_blank"}
+- [Sparkfun Servos](https://www.sparkfun.com/servos){target="_blank"}
+- [Variable resistors](https://makeabilitylab.github.io/physcomp/electronics/variable-resistors.html){target="_blank"}
+
+---
+
+**[Retour au sommaire de la leçon](./index.md)**

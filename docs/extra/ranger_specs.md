@@ -2,10 +2,12 @@
 # Version 1.0
 
 # Roues
+
 - Diamètre: 64 mm
 - Distance entre les roues: 149 mm
 
 # Capteur de ligne
+
 - Largeur : 24 mm
 - Longueur : 48 mm
 - Épaisseur : 1.6 mm

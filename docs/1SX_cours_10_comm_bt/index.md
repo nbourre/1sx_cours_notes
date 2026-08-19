@@ -1,18 +1,5 @@
-# Communication série via Bluetooth <!-- omit in toc -->
+# Communication série via Bluetooth
 Document décrivant comment utiliser le module du robot MakeBlock Ranger pour communiquer avec un appareil externe via Bluetooth.
-
-# Table des matières <!-- omit in toc -->
-- [Introduction](#introduction)
-- [Bluetooth Low Energy (BLE)](#bluetooth-low-energy-ble)
-- [Sur le robot](#sur-le-robot)
-- [Python](#python)
-  - [Installation de Thonny](#installation-de-thonny)
-    - [Exercices - Installation de Thonny](#exercices---installation-de-thonny)
-  - [Le script Python](#le-script-python)
-    - [Fonctionnement du script](#fonctionnement-du-script)
-- [Code rapide du robot](#code-rapide-du-robot)
-- [Exercices](#exercices)
-- [Références](#références)
 
 ---
 
@@ -23,7 +10,8 @@ Pour le robot, la communication Bluetooth n'est pas différente de la communicat
 
 Le module Bluetooth est connecté sur le port série 0 du robot. Ainsi, il s'agit des commandes `Serial` qui sont utilisées pour communiquer avec le module.
 
-> **Note :** Un des points négatifs de la connexion avec le port série 0 est que le module Bluetooth ne peut pas être utilisé en même temps que le moniteur série de l'IDE Arduino. Il est donc nécessaire de débrancher le module Bluetooth pour pouvoir utiliser le moniteur série.
+!!! note "Note"
+    Un des points négatifs de la connexion avec le port série 0 est que le module Bluetooth ne peut pas être utilisé en même temps que le moniteur série de l'IDE Arduino. Il est donc nécessaire de débrancher le module Bluetooth pour pouvoir utiliser le moniteur série.
 
 ---
 
@@ -48,7 +36,8 @@ L'objectif du cours n'étant pas d'enseigner Python et étant donné que vous n'
 Au lieu d'installer Python de façon traditionnelle, je vous propose d'installer Thonny. C'est un IDE Python qui est très simple d'utilisation et qui est parfait pour débuter.
 
 ### Exercices - Installation de Thonny
-1. Télécharger Thonny à l'adresse suivante : [https://thonny.org/](https://thonny.org/)
+
+1. Télécharger Thonny à l'adresse suivante : [https://thonny.org/](https://thonny.org/){target="_blank"}
 2. Écoutez la vidéo de 35 secondes suivantes
 
 <a href="https://www.youtube.com/watch?feature=player_embedded&v=jYAvJqxHs5E" target="_blank"><img src="https://img.youtube.com/vi/jYAvJqxHs5E/0.jpg" 
@@ -61,20 +50,21 @@ Le script Python général est disponible à l'adresse suivante : https://github
 J'ai réalisé quelques scripts utilitaire pour vous permettre de communiquer avec le module Bluetooth du robot MakeBlock Ranger ainsi que de trouver l'adresse MAC du module.
 
 Pour pouvoir exécuter les scripts, vous devez installer les librairies manquantes. Dans Thonny, vous pouvez le faire en cliquant sur `Outils` > `Gérer les paquets...` et en ajoutant les librairies suivantes :
+
 - `bleak`
 - `asyncio`
 
 
 - Le dossier `cli_apps` contient les scripts en ligne de commande.
-  - Le script `scan_robots.py` : Permet de scanner les appareils Bluetooth à proximité et d'afficher les noms et adresses MAC des appareils MakeBlock Ranger.
-    - Lors de l'exécution de ce script, il sauvegardera les adresses MAC des appareils MakeBlock Ranger dans un fichier nommé `makeblock_robots.csv`.
-  - Le script `makeblock_bluetooth.py` : Permet de communiquer avec le module Bluetooth du robot MakeBlock Ranger et d'envoyer/recevoir des messages.
+    - Le script `scan_robots.py` : Permet de scanner les appareils Bluetooth à proximité et d'afficher les noms et adresses MAC des appareils MakeBlock Ranger.
+        - Lors de l'exécution de ce script, il sauvegardera les adresses MAC des appareils MakeBlock Ranger dans un fichier nommé `makeblock_robots.csv`.
+    - Le script `makeblock_bluetooth.py` : Permet de communiquer avec le module Bluetooth du robot MakeBlock Ranger et d'envoyer/recevoir des messages.
 - Le dossier `gui_apps` contient les scripts avec une interface graphique.
-  - Le script `gui_ble.py` : Permet de communiquer avec le module Bluetooth du robot MakeBlock Ranger via une interface graphique simple.
-  - Le script `gui_ble_wasd.py` permet de contrôler le robot avec les touches WASD du clavier.
+    - Le script `gui_ble.py` : Permet de communiquer avec le module Bluetooth du robot MakeBlock Ranger via une interface graphique simple.
+    - Le script `gui_ble_wasd.py` permet de contrôler le robot avec les touches WASD du clavier.
 - Le dossier `arduino` contient des projets Arduino en lien avec le bluetooth.
-  - Le projet `beep_when_found` permet de faire biper le robot lorsqu'il est détecté par le script `scan_robots.py`.
-  - Le projet `auriga_ble_test` permet de tester la communication série via Bluetooth avec certaines commandes compatibles avec le script `gui_ble_wasd.py`.
+    - Le projet `beep_when_found` permet de faire biper le robot lorsqu'il est détecté par le script `scan_robots.py`.
+    - Le projet `auriga_ble_test` permet de tester la communication série via Bluetooth avec certaines commandes compatibles avec le script `gui_ble_wasd.py`.
 
 
 ---
@@ -140,8 +130,9 @@ void serialEvent() {
 ---
 
 # Exercices
+
 1. Installez Thonny sur votre ordinateur.
-   - Installez les librairies `bleak` et `asyncio` dans Thonny.
+    - Installez les librairies `bleak` et `asyncio` dans Thonny.
 2. Mettez le code Arduino de la section 'Code rapide du robot' dans votre robot MakeBlock Ranger.
 3. Téléchargez les scripts Python sur votre ordinateur.
 4. Exécutez le script `scan_robots.py` pour trouver l'adresse MAC de votre robot.
@@ -149,4 +140,5 @@ void serialEvent() {
 
 ---
 # Références
+
 - TODO : Ajouter les références...

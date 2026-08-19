@@ -1,4 +1,4 @@
-# Les prototypes de fonctions avec Arduino <!-- omit in toc -->
+# Les prototypes de fonctions avec Arduino
 
 # Situation
 Malgré la présence de la fonction qui est indiquée dans l'erreur, vous obtenez une erreur similaire à la suivante :
@@ -68,6 +68,7 @@ void maFonction(int param1, int param2) {
 ```
 
 # Résumé
+
 - Les prototypes de fonctions sont des fonctions qui sont déclarées avant leur utilisations et définies après.
 - Les prototypes de fonctions sont optionnels si la fonction n'a pas de paramètres optionnels.
 - Les prototypes de fonctions sont obligatoires si la fonction a des paramètres optionnels.

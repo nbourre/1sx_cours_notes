@@ -1,4 +1,4 @@
-# Le capteur LyneTracker <!-- omit in toc -->
+# Le capteur LyneTracker
 Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 
 ![Robot regardant une ligne](assets/robot.jpg)
@@ -8,30 +8,6 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 <img src="https://img.youtube.com/vi/leQzOFaGmLs/hqdefault.jpg" width="600" height="300"
 /></a>
 
-## Sommaire <!-- omit in toc -->
-- [Introduction au suivi de ligne](#introduction-au-suivi-de-ligne)
-  - [Définition](#définition)
-  - [Applications](#applications)
-  - [Démonstration](#démonstration)
-- [Les capteurs infra-rouges](#les-capteurs-infra-rouges)
-- [Le capteur LyneTracker](#le-capteur-lynetracker)
-  - [Caractéristiques techniques](#caractéristiques-techniques)
-- [Utilisation dans le code](#utilisation-dans-le-code)
-  - [Visualisation des valeurs des capteurs](#visualisation-des-valeurs-des-capteurs)
-  - [Exercices](#exercices)
-- [Suivre une ligne](#suivre-une-ligne)
-  - [Méthode : Suivre une ligne en fonction de la valeur des capteurs](#méthode--suivre-une-ligne-en-fonction-de-la-valeur-des-capteurs)
-- [Calibration des données](#calibration-des-données)
-  - [Calibration automatique](#calibration-automatique)
-- [Contrôleur PID](#contrôleur-pid)
-  - [Étape 1 : Normalisation des valeurs des capteurs](#étape-1--normalisation-des-valeurs-des-capteurs)
-  - [Étape 2 : Calcul de la position de la ligne](#étape-2--calcul-de-la-position-de-la-ligne)
-  - [Étape 3 : Utilisation du PID](#étape-3--utilisation-du-pid)
-- [Mon robot s'emballe! Le PID fait n'importe quoi!](#mon-robot-semballe-le-pid-fait-nimporte-quoi)
-- [Exercices](#exercices-1)
-- [Références](#références)
-
-
 # Introduction au suivi de ligne
 
 ## Définition
@@ -39,6 +15,7 @@ Le suivi de ligne consiste à guider un appareil en occurence un robot pour notr
 
 ## Applications
 On retrouve le suivi de ligne dans de nombreuses applications, notamment :
+
 - Robots de livraison autonomes
 - Robots mobiles en production industrielle
 - Véhicules autonomes
@@ -48,9 +25,10 @@ On retrouve le suivi de ligne dans de nombreuses applications, notamment :
 
 Voici une vidéo montrant un robot suivant une ligne noire sur un fond pâle à l'aide de capteurs de ligne :
 
-[![Suivi de ligne](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FRQCW7ib3Avs)](https://youtu.be/RQCW7ib3Avs)
+[![Suivi de ligne](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FRQCW7ib3Avs)](https://youtu.be/RQCW7ib3Avs){target="_blank"}
 
-> **Note** : Le robot n'est pas équipé du LyneTracker, mais d'un capteur de ligne de base. Le LyneTracker permettra une détection plus précise de la ligne grâce à ses valeurs analogiques.
+!!! note "Note"
+    Le robot n'est pas équipé du LyneTracker, mais d'un capteur de ligne de base. Le LyneTracker permettra une détection plus précise de la ligne grâce à ses valeurs analogiques.
 
 ---
 
@@ -70,14 +48,16 @@ Question : Considérant que les capteurs sont branchés sur les ports analogique
 # Le capteur LyneTracker
 Le LyneTracker est un capteur de ligne spécialement conçu au département pour les projets du cours de robotique. Il est compatible avec le robot Makeblock Ranger. Contrairement au capteur qui provient dans le kit original qui utilise des valeurs binaires (0 ou 1) pour détecter la ligne, le LyneTracker est équipé de **cinq capteurs infrarouges** qui retournent des **valeurs analogiques**, ce qui permet une détection plus précise de la position de la ligne.
 
-Le LyneTracker fonctionne en utilisant la puce [**Adafruit Attiny1616 Seesaw**](https://www.adafruit.com/product/5690), qui nécessite l'utilisation de la librairie Seesaw fournie par Adafruit. Grâce à ses valeurs analogiques, il est possible d'obtenir une granularité plus fine et d'ajuster plus précisément la trajectoire du robot.
+Le LyneTracker fonctionne en utilisant la puce [**Adafruit Attiny1616 Seesaw**](https://www.adafruit.com/product/5690){target="_blank"}, qui nécessite l'utilisation de la librairie Seesaw fournie par Adafruit. Grâce à ses valeurs analogiques, il est possible d'obtenir une granularité plus fine et d'ajuster plus précisément la trajectoire du robot.
 
-> **Note** : Étant en nombre relativement limité, on vous demande de ne pas retirer le module ATtiny1616 du LyneTracker, car cela pourrait l'endommager à la longue.
+!!! note "Note"
+    Étant en nombre relativement limité, on vous demande de ne pas retirer le module ATtiny1616 du LyneTracker, car cela pourrait l'endommager à la longue.
 
 ## Caractéristiques techniques
+
 - **Nombre de capteurs** : 5 capteurs infrarouges.
 - **Type de signal** : Analogique (lecture via `analogRead()`).
-- **Compatibilité** : Nécessite la librairie [Seesaw d'Adafruit](https://github.com/adafruit/Adafruit_Seesaw).
+- **Compatibilité** : Nécessite la librairie [Seesaw d'Adafruit](https://github.com/adafruit/Adafruit_Seesaw){target="_blank"}.
 - **Port de connexion** : Le LyneTracker se branche sur un port I2C du robot.
 
 Voici à quoi ressemble le LyneTracker :
@@ -130,9 +110,10 @@ Dans cet exemple, les valeurs analogiques des cinq capteurs sont lues et affich�
 
 Voici une vidéo montrant comment les valeurs des capteurs changent en fonction de la position du LyneTracker par rapport à une ligne noire :
 
-[![LyneTracker Data example](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2Fp_WWJNkt0SE)](https://youtu.be/p_WWJNkt0SE)
+[![LyneTracker Data example](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2Fp_WWJNkt0SE)](https://youtu.be/p_WWJNkt0SE){target="_blank"}
 
 ## Exercices
+
 - Testez le code pour lire les valeurs des capteurs du LyneTracker.
 
 ---
@@ -189,7 +170,8 @@ void loop() {
 }
 ```
 
-> **Note** : Dans cet exemple, le seuil de détection est arbitraire. Vous devrez ajuster ces valeurs en fonction de l'environnement et de la luminosité ambiante.
+!!! note "Note"
+    Dans cet exemple, le seuil de détection est arbitraire. Vous devrez ajuster ces valeurs en fonction de l'environnement et de la luminosité ambiante.
 
 ---
 
@@ -222,7 +204,8 @@ Ensuite, on peut utiliser ces valeurs pour déterminer les seuils de détection�
 seuil = (valMin + valMax) / 2
 ```
 
-> **Note importante** : Il faut effectuer la **calibration pour chaque capteur** individuellement, car chaque capteur peut avoir des caractéristiques différentes. Il est donc important de stocker les valeurs minimales et maximales pour chaque capteur.
+!!! note "Note importante"
+    Il faut effectuer la **calibration pour chaque capteur** individuellement, car chaque capteur peut avoir des caractéristiques différentes. Il est donc important de stocker les valeurs minimales et maximales pour chaque capteur.
 
 ---
 
@@ -252,7 +235,8 @@ fonction calibrationAutomatique :
 # Contrôleur PID
 On vous rappelle que le contrôleur PID est un mécanisme de contrôle qui permet de maintenir un système à une valeur de consigne.
 
-> **Note :** Si vous avez besoin de revoir les notes de cours sur le PID, elles sont disponibles [dans le cours 09](../1SX_cours_09_PID/readme.md).
+!!! note "Note"
+    Si vous avez besoin de revoir les notes de cours sur le PID, elles sont disponibles [dans le cours 09](../1SX_cours_09_PID/index.md).
 
 Pour le suivi de ligne, le contrôleur PID peut être utilisé pour ajuster la trajectoire du robot en fonction de la position de la ligne par rapport aux capteurs. Le PID peut être utilisé pour ajuster la vitesse des moteurs ou la direction du robot en fonction de l'erreur de position.
 
@@ -286,7 +270,8 @@ fonction normaliserValeurs :
 
 Ainsi chaque capteur aura toujours une valeur entre 0 et 1000, peu importe les valeurs minimales et maximales des capteurs.
 
-> **Perle de culture** : La fonction `map()` d'Arduino est une forme de normalisation, mais elle ne gère pas les nombres à virgule flottante. C'est pourquoi on utilise une approche manuelle pour la normalisation dans ce cas.
+!!! info "Perle de culture"
+    La fonction `map()` d'Arduino est une forme de normalisation, mais elle ne gère pas les nombres à virgule flottante. C'est pourquoi on utilise une approche manuelle pour la normalisation dans ce cas.
 
 ---
 
@@ -312,7 +297,8 @@ Pour chaque capteur i de 0 à 4 :
 position = numerateur / denominateur * 1000
 ```
 
-> **Attention!** Les valeurs peuvent devenir trop grande pour un entier, il est important d'**utiliser les bons types de données** pour éviter le dépassement de capacité.
+!!! warning "Attention!"
+    Les valeurs peuvent devenir trop grande pour un entier, il est important d'**utiliser les bons types de données** pour éviter le dépassement de capacité.
 
 Testez cet algorithme pour voir comment il fonctionne avec les valeurs des capteurs.
 
@@ -401,6 +387,7 @@ float computePID(float position, float consigne = 0.0f) {
 ---
 
 # Exercices
+
 1. Testez le code pour suivre une ligne noire sur fond blanc.
 2. Effectuez une calibration des données pour déterminer les seuils de détection.
 3. Implémentez une calibration automatique pour déterminer les valeurs minimales et maximales des capteurs.
@@ -409,9 +396,10 @@ float computePID(float position, float consigne = 0.0f) {
 ---
 
 # Références
-- [Wikipedia : Integral windup](https://en.wikipedia.org/wiki/Integral_windup)
 
-[Retour au sommaire](../README.md)
+- [Wikipedia : Integral windup](https://en.wikipedia.org/wiki/Integral_windup){target="_blank"}
+
+[Retour au sommaire](../index.md)
 
 <img src="assets/aia.jpeg" alt="drawing" width="100"/>
 

@@ -1,19 +1,4 @@
-# Cours 02 - Rappel Arduino <!-- omit in toc -->
-
-<!-- PANDOC-IGNORE-START -->
-
-# Table des matières <!-- omit in toc -->
-- [Communication série](#communication-série)
-  - [Comment utiliser la communication série](#comment-utiliser-la-communication-série)
-    - [Exemple pour envoyer des données à l'ordinateur](#exemple-pour-envoyer-des-données-à-lordinateur)
-  - [Formatage des données](#formatage-des-données)
-  - [Envoyer des données à l'Arduino](#envoyer-des-données-à-larduino)
-    - [Exemple de lecture d'un nombre entier unique](#exemple-de-lecture-dun-nombre-entier-unique)
-    - [Exemple - Lecture d'un nombre entier avec `parseInt()` et `read()`](#exemple---lecture-dun-nombre-entier-avec-parseint-et-read)
-- [Résumé](#résumé)
-- [Références](#références)
-
-<!-- PANDOC-IGNORE-END -->
+# Cours 02 - Rappel Arduino
 
 ---
 
@@ -23,11 +8,11 @@
 - Cela permet d'intéragir avec un ordinateur, un autre microcontrôleur, un téléphone, etc.
 - Lorsque l'on téléverse un programme, la communication série est utilisée pour transférer le programme dans la mémoire du microcontrôleur.
 - La communication série utilise 2 fils pour transférer les données.
-  - TX : Transmission de données
-  - RX : Réception de données
+    - TX : Transmission de données
+    - RX : Réception de données
 - Lorsqu'il y a communication, il y a 2 DEL qui clignotent sur la carte Arduino.
-  - La DEL TX clignote lorsque la carte envoie des données.
-  - La DEL RX clignote lorsque la carte reçoit des données.
+    - La DEL TX clignote lorsque la carte envoie des données.
+    - La DEL RX clignote lorsque la carte reçoit des données.
 - Les Arduinos avec le µC Atmega328 possède un port série
 - Ceux avec le Atmega2560 possède 4 ports série
 
@@ -40,17 +25,19 @@
 | Serial3   | 15           | 14          |
 
 ## Comment utiliser la communication série
+
 - Pour utiliser la communication série, il faut initialiser le port avec la vitesse de transfert dans la fonction `setup()`
 - La fonction `Serial.begin(baudrate)` sert à initialiser le port série.
-  - La vitesse de transfert est en bauds. (bits par seconde)
-  - Les vitesses de transfert les plus courantes sont 9600, 19200, 38400, 57600, 115200.
-  - **La vitesse de transfert doit être la même pour l'ordinateur et le microcontrôleur.**
+    - La vitesse de transfert est en bauds. (bits par seconde)
+    - Les vitesses de transfert les plus courantes sont 9600, 19200, 38400, 57600, 115200.
+    - **La vitesse de transfert doit être la même pour l'ordinateur et le microcontrôleur.**
 - Pour envoyer des données, on utilise la fonction `Serial.print()` ou `Serial.println()`
-  - On peut envoyer des nombres, des caractères, des chaînes de caractères, etc.
+    - On peut envoyer des nombres, des caractères, des chaînes de caractères, etc.
 
 **Section science**
+
 - Par défaut, chaque octet envoyé prend 10 bits pour être envoyé.
-  - 1 bit de start, 8 bits de données, 1 bit de stop.
+    - 1 bit de start, 8 bits de données, 1 bit de stop.
 
 | Vitesse (bauds) | Temps pour 1 caractère* | Temps pour 100 caractères* |
 |----------------:|------------------------:|---------------------------:|
@@ -67,9 +54,7 @@ Ainsi, il est important de choisir une vitesse de transfert qui convient à l'ap
 
 ### Exemple pour envoyer des données à l'ordinateur
 
-<table>
-<tr>
-<td width="50%">
+<div class="grid" markdown>
 
 ```cpp
 void setup() {
@@ -88,21 +73,18 @@ void loop() {
 }
 ```
 
-</td>
-<td>
-
 ![Alt text](img/03_wokwi_serial.gif)
 
-</td>
-</tr>
-</table>
+</div>
 
-> **Important :** Comme mentionner précédemment, il faut que les vitesses d'échange entre les appareils soient la même. Sinon, on risque de se retrouver avec des données corrompues.
-> 
-> Par exemple : `3??f<ÌxÌ▯▯▯ü³??f<`
+!!! important "Important"
+    Comme mentionner précédemment, il faut que les vitesses d'échange entre les appareils soient la même. Sinon, on risque de se retrouver avec des données corrompues.
+
+    Par exemple : `3??f<ÌxÌ▯▯▯ü³??f<`
 
 ## Formatage des données
 On peut formater les données que l'on désire envoyer avec le paramètre `format` de la fonction `Serial.print()`.
+
 - `DEC` : Décimal
 - `BIN` : Binaire
 - `OCT` : Octal
@@ -149,23 +131,22 @@ Solution : On peut envoyer des données à l'Arduino avec le moniteur série et 
 
 - Il faut aussi programmer l'Arduino pour qu'il puisse lire les données qu'il reçoit.
 - Les fonctions importantes sont les suivantes :
-  - [`Serial.available()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/available/) : Indique le nombre d'octets disponibles dans le tampon (*buffer*) de réception. S'il y a des données, la valeur sera > 0. Ainsi, on peut la mettre dans un `if`.
-  - [`Serial.read()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/read) : Lit un octet du buffer de réception.
-  - [`Serial.parseInt()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/parseInt/) : Lit un nombre entier du buffer de réception.
-  - [`Serial.parseFloat()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/parseFloat/) : Lit un nombre décimal du buffer de réception.	
-  - `Serial.readBytes(tampon, longueur)` : Lit un tableau d'octets de longueur déterminé.
-  - [`Serial.readBytesUntil(caractère, tampon, longueur)`](https://docs.arduino.cc/language-reference/en/functions/communication/stream/streamReadBytesUntil/) : Lit un tableau d'octets jusqu'à un caractère déterminé et l'enregistre dans le tampon.
-  - [`Serial.readStringUntil(caractère)`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/readStringUntil/) : Lit une chaîne de caractères jusqu'à un caractère déterminé.
+    - [`Serial.available()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/available/){target="_blank"} : Indique le nombre d'octets disponibles dans le tampon (*buffer*) de réception. S'il y a des données, la valeur sera > 0. Ainsi, on peut la mettre dans un `if`.
+    - [`Serial.read()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/read){target="_blank"} : Lit un octet du buffer de réception.
+    - [`Serial.parseInt()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/parseInt/){target="_blank"} : Lit un nombre entier du buffer de réception.
+    - [`Serial.parseFloat()`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/parseFloat/){target="_blank"} : Lit un nombre décimal du buffer de réception.	
+    - `Serial.readBytes(tampon, longueur)` : Lit un tableau d'octets de longueur déterminé.
+    - [`Serial.readBytesUntil(caractère, tampon, longueur)`](https://docs.arduino.cc/language-reference/en/functions/communication/stream/streamReadBytesUntil/){target="_blank"} : Lit un tableau d'octets jusqu'à un caractère déterminé et l'enregistre dans le tampon.
+    - [`Serial.readStringUntil(caractère)`](https://docs.arduino.cc/language-reference/en/functions/communication/serial/readStringUntil/){target="_blank"} : Lit une chaîne de caractères jusqu'à un caractère déterminé.
 
-La liste des fonctions est disponible sur la page [Arduino - Communication série](https://docs.arduino.cc/language-reference/en/functions/communication/serial/).
+La liste des fonctions est disponible sur la page [Arduino - Communication série](https://docs.arduino.cc/language-reference/en/functions/communication/serial/){target="_blank"}.
 
 ### Exemple de lecture d'un nombre entier unique
 
 Voici un exemple :
 
-<table><tr>
-<td>
-  
+<div class="grid" markdown>
+
 ```cpp
 int   blinkRate=0; // taux de rafraichissement sauvegardé
 
@@ -200,18 +181,14 @@ void blink()
 
 ```
 
-</td>
-<td>
-
 ![Alt text](img/05_rx_blink.gif)
 
-</td>
-</tr>
-</table>
+</div>
 
-> ***Astuce :*** Le caractère '0' vaut 48 en code **ASCII**. Pour convertir, un chiffre en valeur numérique, il suffit de lui soustraire ‘0’.
-> 
-> Rappel : Le type `char` est un octet non signé. Il peut donc contenir des valeurs entre 0 et 255. (2^8 - 1)
+!!! tip "Astuce"
+    Le caractère '0' vaut 48 en code **ASCII**. Pour convertir, un chiffre en valeur numérique, il suffit de lui soustraire ‘0’.
+
+    Rappel : Le type `char` est un octet non signé. Il peut donc contenir des valeurs entre 0 et 255. (2^8 - 1)
 
 ### Exemple - Lecture d'un nombre entier avec `parseInt()` et `read()`
 
@@ -273,12 +250,14 @@ void loop() {
 
 ```
 
-> **Note :** Pour cet exemple, il faudra configurer le moniteur série pour terminer la ligne avec un retour à la ligne. (Newline)
+!!! note "Note"
+    Pour cet exemple, il faudra configurer le moniteur série pour terminer la ligne avec un retour à la ligne. (Newline)
 
 ---
 
 # Résumé
 La communication série est très utile pour :
+
 - Envoyer des données à l'ordinateur pour les afficher.
 - Envoyer des données à l'Arduino pour contrôler le programme.
 - Envoyer des données à un autre microcontrôleur pour communiquer entre eux.
@@ -289,6 +268,7 @@ On doit mettre un délai lorsque l'on envoie des données à l'ordinateur pour n
 ---
 
 # Références
-- [Arduino - Communication série](https://docs.arduino.cc/language-reference/en/functions/communication/serial/)
 
-**[Retour au sommaire de la leçon](./readme.md)**
+- [Arduino - Communication série](https://docs.arduino.cc/language-reference/en/functions/communication/serial/){target="_blank"}
+
+**[Retour au sommaire de la leçon](./index.md)**

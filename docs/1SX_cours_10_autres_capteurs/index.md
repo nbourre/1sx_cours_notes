@@ -1,19 +1,4 @@
-# Les autres capteurs <!-- omit in toc -->
-
-# Sommaire <!-- omit in toc -->
-- [Rappel du diagramme](#rappel-du-diagramme)
-- [Capteurs de luminosité](#capteurs-de-luminosité)
-  - [Exemple de code](#exemple-de-code)
-  - [Cas d'utilisation](#cas-dutilisation)
-- [Capteur sonore](#capteur-sonore)
-  - [Exemple de code](#exemple-de-code-1)
-  - [Cas d'utilisation](#cas-dutilisation-1)
-- [Capteur de température](#capteur-de-température)
-  - [Exemple de code](#exemple-de-code-2)
-- [Avertisseur sonore](#avertisseur-sonore)
-  - [Exemple de code simple](#exemple-de-code-simple)
-- [Exercices](#exercices)
-- [Références](#références)
+# Les autres capteurs
 
 ---
 
@@ -30,13 +15,10 @@ La valeur renvoyée par le capteur est proportionnelle à la luminosité ambiant
 
 Ils sont branchés sur les entrées analogiques A3 et A2.
 
-> **Question :** Quelle est la valeur renvoyée par le capteur lorsque la luminosité est au minimum? Quelle est la valeur renvoyée par le capteur lorsque la luminosité est à son maximum? 
-> <details>
->     <summary>Réponse</summary>
->     Étant une valeur analogique 10-bit, les valeurs oscilleront entre 0 (minimum) et 1023 (maximum)
-> </details>
+**Question :** Quelle est la valeur renvoyée par le capteur lorsque la luminosité est au minimum? Quelle est la valeur renvoyée par le capteur lorsque la luminosité est à son maximum?
 
-<br />
+??? question "Réponse"
+    Étant une valeur analogique 10-bit, les valeurs oscilleront entre 0 (minimum) et 1023 (maximum)
 
 ## Exemple de code
 
@@ -61,6 +43,7 @@ void loop() {
 ```
 
 ## Cas d'utilisation
+
 - Panneau solaire qui suit le soleil
 - Robot qui traque la lumière
 
@@ -95,6 +78,7 @@ Tapez des mains près du capteur sono. Vous verrez que la valeur renvoyée par l
 Pour mieux apprécier les valeurs retournées, vous pouvez utiliser le **traceur série** de l'IDE Arduino.
 
 ## Cas d'utilisation
+
 - Robot qui s'active au son
 - Alarme
 
@@ -203,12 +187,14 @@ void buzzer(){
 ---
 
 # Exercices
+
 - Programmer le robot pour qu'il avance vers la source lumineuse la plus forte et avec les propriétés suivantes :
-  - Lorqu'il détecte une collision, un son retentit pendant 1 seconde, la lumière s'affiche en rouge et il s'arrête.
-  - Si l'on claque des mains, il recule pendant 0.5 seconde
+    - Lorqu'il détecte une collision, un son retentit pendant 1 seconde, la lumière s'affiche en rouge et il s'arrête.
+    - Si l'on claque des mains, il recule pendant 0.5 seconde
 
 ---
 
 # Références
-- [Super Mario theme song](https://www.princetronics.com/supermariothemesong/)
-- [In-Depth: Arduino and the MPU-6050](https://lastminuteengineers.com/mpu6050-accel-gyro-arduino-tutorial/)
+
+- [Super Mario theme song](https://www.princetronics.com/supermariothemesong/){target="_blank"}
+- [In-Depth: Arduino and the MPU-6050](https://lastminuteengineers.com/mpu6050-accel-gyro-arduino-tutorial/){target="_blank"}

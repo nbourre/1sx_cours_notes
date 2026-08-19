@@ -1,25 +1,4 @@
-# Robot Ranger <!-- omit in toc -->
-
-<!-- PANDOC-IGNORE-START -->
-
-# Table des matières <!-- omit in toc -->
-- [Plan de leçon](#plan-de-leçon)
-- [Distribution du matériel](#distribution-du-matériel)
-- [mBot Ranger de MakeBlock](#mbot-ranger-de-makeblock)
-- [Spécifications](#spécifications)
-- [Le robot](#le-robot)
-- [Sortie des broches (*pinout*)](#sortie-des-broches-pinout)
-  - [Points saillants](#points-saillants)
-- [Différences avec le Arduino Mega](#différences-avec-le-arduino-mega)
-- [Configuration de l'environnement](#configuration-de-lenvironnement)
-- [Premier test](#premier-test)
-  - [Dépannage](#dépannage)
-- [Analyse du code testé](#analyse-du-code-testé)
-- [Gyroscope](#gyroscope)
-- [Exercices](#exercices)
-- [Références](#références)
-
-<!-- PANDOC-IGNORE-END -->
+# Robot Ranger
 
 ---
 
@@ -33,6 +12,7 @@
 ---
 
 # Distribution du matériel
+
 - **Vous êtes responsable de ce robot.**
 - Chacun d'entre vous recevra un robot mBot Ranger.
 - Chaque robot a un numéro d'identification qui vous sera assigné.
@@ -42,14 +22,16 @@
 ---
 
 # mBot Ranger de MakeBlock
+
 - Le robot utilisé sera le mBot Ranger de la compagnie MakeBlock
-- [Page officielle](https://www.makeblock.com/steam-kits/mbot-ranger)
+- [Page officielle](https://www.makeblock.com/steam-kits/mbot-ranger){target="_blank"}
   
 ![](assets/mBot-Ranger_500_EN.png)
 
 ---
 
 # Spécifications
+
 - Moteurs avec encodeur
 - Châssis en aluminium
 - Capteur ultrason
@@ -63,31 +45,37 @@
 # Le robot
 
 ![](assets/PXL_20220926_173204042.jpg)
+
 - Capteur ultrason
 
 ---
 ![](assets/PXL_20220926_173207785.jpg)
+
 - Code d'identification associé à l'étudiant
   
 ---
 ![](assets/PXL_20220926_173220149.jpg)
+
 - Anneau de DEL RGB
 - Bouton de mise sous tension
 - Identifiant pour les ports de connexion
-- Compatible avec Lego <!-- omit in toc -->
+- Compatible avec Lego
 
 ---
 ![alt text](<assets/PXL_20250903_121923421 (Custom).jpg>)
+
 - Capteur de lignes maison
 - Bloc de batterie rechargeable
-- Roulette <!-- omit in toc -->
+- Roulette
 
 ---
 ![](assets/PXL_20220926_173238651.jpg)
+
 - Moteur avec encodeur intégré
 
 ---
 ![](assets/PXL_20220926_173254078.jpg)
+
 - Bouton de mise sous tension
 - Bouton de remise à zéro
 - Port USB type B
@@ -96,9 +84,11 @@
 ---
 # Sortie des broches (*pinout*)
 ![](assets/auriga_pinout.png)
+
 - Observer les différentes étiquettes, elles font références aux différentes broches du Arduino
 
 ## Points saillants
+
 - Les broches `SDA` et `SCL` sont dans la majorité des ports de connexion
 - Une anneau de DEL RGB
 - Un MPU-6050
@@ -109,21 +99,24 @@
 ---
 
 # Différences avec le Arduino Mega
+
 - Plusieurs ports sont occupés par les différents composants
-  - Voir le *pinout* pour plus de détails
+    - Voir le *pinout* pour plus de détails
 - Les ports de connexion sont compatibles avec les connecteurs RJ25 6P6C
 - La carte-mère est appelé "**Auriga**"  
 
 ---
 
 # Configuration de l'environnement
+
 - Avoir la dernière version de l'Arduino IDE
 - Télécharger la dernière version des librairies MakeBlock
-  - Rechercher "MakeBlock" dans le gestionnaire de librairies et prenez la version titrée "MakeBlock Drive Updated"
+    - Rechercher "MakeBlock" dans le gestionnaire de librairies et prenez la version titrée "MakeBlock Drive Updated"
 
 ---
 
 # Premier test
+
 - Dans un nouveau projet Arduino, copier le code que l'on retrouve ci-bas
 - Compiler l'application
 - Téléverser le projet sur le robot
@@ -347,6 +340,7 @@ float tempTask(unsigned long currentTime) {
 ## Dépannage
 
 Il se peut qu'Arduino IDE ne reconnaisse pas la carte du robot. Il faudra alors la configurer manuellement.
+
 - À l'endroit où l'on sélectionne le board, il y a dans le bas de la liste "*Select other board and port*". Cliquer sur cette option.
 - Dans la liste des *BOARDS*, taper `Mega`
 - Sélectionner le bon port COM
@@ -357,12 +351,14 @@ Il se peut qu'Arduino IDE ne reconnaisse pas la carte du robot. Il faudra alors 
 ---
 
 # Analyse du code testé  
+
 - Les classes de MakeBlock débutent avec le préfix `Me`
-  - Exemples : MeRGBLed, MeGyro, etc.
-  - Il y a certains bogues pour le `MeAuriga` dans la librairie
+    - Exemples : MeRGBLed, MeGyro, etc.
+    - Il y a certains bogues pour le `MeAuriga` dans la librairie
 
 ---
 # Gyroscope
+
 - Modèle MPU-6050
 - Configuré sur l'adresse 0x69 pour le `MeAuriga`
 - Utiliser la classe `MeGyro`
@@ -397,25 +393,27 @@ void loop()
 
 # Exercices
 À l'aide des exemples, testez les composants suivants:
+
 - Convertissez les fonctions des exemples pour utiliser des tâches.
 - Le capteur de son
-  - Affichez le niveau de son dans le port série
-  - L'exemple de base qui vient avec MakeBlock Libraries ne fonctionne pas avec l'Auriga, lisez bien la feuille du pinout et parcourez le fichier [`MeAuriga.h`](https://github.com/Makeblock-official/Makeblock-Libraries/blob/master/src/MeAuriga.h). Quel était le problème?
+    - Affichez le niveau de son dans le port série
+    - L'exemple de base qui vient avec MakeBlock Libraries ne fonctionne pas avec l'Auriga, lisez bien la feuille du pinout et parcourez le fichier [`MeAuriga.h`](https://github.com/Makeblock-official/Makeblock-Libraries/blob/master/src/MeAuriga.h){target="_blank"}. Quel était le problème?
 - Le gyroscope
-  - Affichez dans le moniteur série les données. 
+    - Affichez dans le moniteur série les données. 
 - Le capteur de puissance
-  - Affichez dans le moniteur série la puissance de la batterie restante.
+    - Affichez dans le moniteur série la puissance de la batterie restante.
 
 - Modifiez le code des exercices précédents pour permettre l'envoie de données au port série pour contrôler les données en sortie. Utilisez `'g'` pour le gyroscope, `'s'` pour le capteur de son et `'p'` pour la puissance de la batterie et la température.
-  - Voici un tableau avec les sorties
+    - Voici un tableau avec les sorties
   
-    | Commande | Sortie attendue               | Description                        |
-    |----------|-------------------------------|------------------------------------|
-    | g        | x:angleX,y:angleY,z:angleZ    | Affiche les angles du gyroscope (20 ms)   |
-    | s        | son:niveau                    | Affiche le niveau sonore (20 ms)           |
-    | p        | batt:valeur,temp:valeurTemp   | Affiche la puissance de la batterie et la température (500 ms)|
-    - Affichez les données dans le traceur série
+      | Commande | Sortie attendue               | Description                        |
+      |----------|-------------------------------|------------------------------------|
+      | g        | x:angleX,y:angleY,z:angleZ    | Affiche les angles du gyroscope (20 ms)   |
+      | s        | son:niveau                    | Affiche le niveau sonore (20 ms)           |
+      | p        | batt:valeur,temp:valeurTemp   | Affiche la puissance de la batterie et la température (500 ms)|
+        - Affichez les données dans le traceur série
 
 # Références
+
 - <a href="https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino" target="_blank">Programming mBot Ranger in Arduino</a>
 - https://www.instructables.com/Advanced-Makeblock-Sensors-DIY/

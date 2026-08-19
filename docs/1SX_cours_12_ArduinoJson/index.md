@@ -1,19 +1,4 @@
-# Crash Course sur ArduinoJson <!-- omit in toc -->
-
-# Table des matières <!-- omit in toc -->
-- [Introduction](#introduction)
-- [Pourquoi utiliser le json](#pourquoi-utiliser-le-json)
-- [Installation](#installation)
-- [Structure de base](#structure-de-base)
-- [Créer un message JSON](#créer-un-message-json)
-- [Envoyer un message au port série](#envoyer-un-message-au-port-série)
-- [Lecture de JSON (optionnel)](#lecture-de-json-optionnel)
-- [Différence entre StaticJsonDocument et DynamicJsonDocument](#différence-entre-staticjsondocument-et-dynamicjsondocument)
-- [Exemple complet sur le Ranger](#exemple-complet-sur-le-ranger)
-- [Bonnes pratiques](#bonnes-pratiques)
-- [Références](#références)
-
----
+# Crash Course sur ArduinoJson
 
 # Introduction
 
@@ -40,7 +25,8 @@ Sur le **Makeblock Ranger**, on peut s’en servir pour transmettre les données
 3. Recherche **ArduinoJson**
 4. Installe la version **6.x** (la plus récente de cette série)
 
-> **Note** : La version 6 de la librairie ArduinoJson est recommandée pour les microcontrôleurs 8-bits comme l’Arduino.
+!!! note "Note"
+    La version 6 de la librairie ArduinoJson est recommandée pour les microcontrôleurs 8-bits comme l’Arduino.
 
 ---
 
@@ -187,8 +173,8 @@ void loop() {
 - Ajoute un `Serial.println()` après `serializeJson()` pour séparer les lignes dans le moniteur série.
 - Utilise des **noms courts** pour réduire la taille du message (ex: `gz`, `ts`, `pwm`).
 - Si le robot envoie souvent des données → limite la fréquence.
-- Calcule la taille de ton message avec l'assistant de taille : [https://arduinojson.org/v6/assistant/](https://arduinojson.org/v6/assistant/)
-- Teste ton JSON avec [https://jsonlint.com](https://jsonlint.com).
+- Calcule la taille de ton message avec l'assistant de taille : [https://arduinojson.org/v6/assistant/](https://arduinojson.org/v6/assistant/){target="_blank"}
+- Teste ton JSON avec [https://jsonlint.com](https://jsonlint.com){target="_blank"}.
 - Utilise la version 6.x de la librairie ArduinoJson pour une meilleure compatibilité avec les microcontrôleurs 8-bits.
 - Utilise la version 7.x de la librairie ArduinoJson si tu travailles avec des microcontrôleurs plus puissants (ex: ESP32, Teensy).
 
@@ -196,8 +182,8 @@ void loop() {
 
 # Références
 
-- [ArduinoJson — Documentation officielle](https://arduinojson.org/v6/doc/)
-- [Makeblock mBot Ranger – Documentation technique](https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino)
+- [ArduinoJson — Documentation officielle](https://arduinojson.org/v6/doc/){target="_blank"}
+- [Makeblock mBot Ranger – Documentation technique](https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino){target="_blank"}
 
 
 <img src="assets/aia.jpeg" alt="drawing" width="100"/>

@@ -1,33 +1,4 @@
-# Utiliser la classe `MeEncoderOnBoard` <!-- omit in toc -->
-
-<!-- PANDOC-IGNORE-START -->
-
-# Table des matières <!-- omit in toc -->
-- [Les principales méthodes de la classe](#les-principales-méthodes-de-la-classe)
-- [Comprendre l'erreur](#comprendre-lerreur)
-  - [Qu'est-ce que l'erreur?](#quest-ce-que-lerreur)
-    - [Exemples concrets d'erreur :](#exemples-concrets-derreur-)
-  - [Comment mesurer l'erreur?](#comment-mesurer-lerreur)
-    - [Exemple avec un encodeur :](#exemple-avec-un-encodeur-)
-  - [Exemple de correction simple](#exemple-de-correction-simple)
-    - [Correction proportionnelle de base :](#correction-proportionnelle-de-base-)
-    - [Exemple concret :](#exemple-concret-)
-    - [Problèmes de la correction simple :](#problèmes-de-la-correction-simple-)
-- [La précision avec une boucle d'asservissement](#la-précision-avec-une-boucle-dasservissement)
-  - [Principe](#principe)
-  - [Régulateur PID](#régulateur-pid)
-- [Faire rouler le robot droit](#faire-rouler-le-robot-droit)
-  - [Mais ça ne marche pas!!!](#mais-ça-ne-marche-pas)
-- [Pivoter le robot à un angle précis](#pivoter-le-robot-à-un-angle-précis)
-- [Faire tourner le robot](#faire-tourner-le-robot)
-- [Exercices](#exercices)
-- [Questions](#questions)
-  - [Questions de compréhension](#questions-de-compréhension)
-  - [Questions de calcul](#questions-de-calcul)
-  - [Questions d'analyse](#questions-danalyse)
-  - [Questions de programmation](#questions-de-programmation)
-
-<!-- PANDOC-IGNORE-END -->
+# Utiliser la classe `MeEncoderOnBoard`
 
 # Les principales méthodes de la classe
 
@@ -72,21 +43,22 @@ $$erreur = consigne - valeur\_mesurée$$
 ### Exemples concrets d'erreur :
 
 1. **Vitesse d'un moteur :**
-   - Consigne : 100 RPM
-   - Vitesse mesurée : 95 RPM
-   - Erreur = 100 - 95 = **+5 RPM**
+    - Consigne : 100 RPM
+    - Vitesse mesurée : 95 RPM
+    - Erreur = 100 - 95 = **+5 RPM**
 
 2. **Position d'un robot :**
-   - Consigne : avancer de 50 cm
-   - Distance parcourue : 48 cm
-   - Erreur = 50 - 48 = **+2 cm**
+    - Consigne : avancer de 50 cm
+    - Distance parcourue : 48 cm
+    - Erreur = 50 - 48 = **+2 cm**
 
 3. **Angle de rotation :**
-   - Consigne : tourner de 90°
-   - Angle mesuré : 92°
-   - Erreur = 90 - 92 = **-2°**
+    - Consigne : tourner de 90°
+    - Angle mesuré : 92°
+    - Erreur = 90 - 92 = **-2°**
 
 **Interprétation du signe :**
+
 - **Erreur positive (+)** : Le système est en dessous de la consigne (il faut augmenter)
 - **Erreur négative (-)** : Le système est au-dessus de la consigne (il faut diminuer)
 
@@ -137,12 +109,14 @@ encodeur.setMotorPwm(nouveau_pwm);
 ### Exemple concret :
 
 **Situation initiale :**
+
 - Vitesse cible : 100 RPM
 - Vitesse mesurée : 95 RPM
 - PWM actuel : 150
 - Erreur = 100 - 95 = +5 RPM
 
 **Correction :**
+
 - Correction = 5 × 2 = +10
 - Nouveau PWM = 150 + 10 = 160
 
@@ -165,6 +139,7 @@ Une boucle d'asservissement est une fonction dont l'objectif est d'atteindre le 
 Le principe de base d'un asservissement est de mesurer, en permanence, l'écart entre la valeur réelle et la valeur de consigne que l'on désire atteindre (l'**erreur** que nous avons vue précédemment), et de calculer la commande appropriée à appliquer de manière à réduire cet écart le plus rapidement possible.
 
 ## Régulateur PID
+
 - Lorsque l'on donne une consigne à un moteur, on ne peut garantir que celui-ci atteindra vraiment la valeur ciblée.
 - Ceci est dû à plusieurs facteurs externes telles que la friction, l'inertie, les imperfections, etc.
 - C'est pour ces raisons que les robots ne font pas une belle ligne droite lorsque l'on programme directement les moteurs sans prendre en considération l'encodeur.
@@ -173,7 +148,7 @@ Il y a une méthode éprouvée qui permet à un mécanisme d'atteindre sa cible 
 
 - Le principe est de lire l'erreur (comme nous l'avons vu dans la section précédente) et d'effectuer des opérations mathématiques spécifiques avec cette erreur pour calculer une correction optimale.
 - PID signifie **P**roportionnelle, **I**ntégrale et **D**érivée (différentielle).
-  - Dans notre contexte, nous utiliserons principalement un système **PD** (Proportionnel-Dérivé), c'est-à-dire que nous laisserons de côté le terme intégral pour simplifier.
+    - Dans notre contexte, nous utiliserons principalement un système **PD** (Proportionnel-Dérivé), c'est-à-dire que nous laisserons de côté le terme intégral pour simplifier.
 
 La fonction complète pour calculer est la suivante:
 
@@ -193,17 +168,18 @@ L'effet de la modification des coefficients peut donner le résultat suivant:
 Pour ceux qui ont vu cette fonction mathématique complexe, ne vous inquiétez pas! Les fonctions PID sont déjà implémentées dans la classe `MeEncoderOnBoard`.
 
 Simplifions la compréhension avec un exemple concret :
+
 - **Fréquence de lecture** : L'encodeur est lu toutes les 20 ms
 - **Consigne** : Le moteur doit tourner à 100 RPM
 - **Valeur mesurée** : L'encodeur indique 98 RPM
 - **Erreur** : $100-98 = +2$ RPM
 - **Problème de la correction simple** : Si on ajoute simplement 2 au PWM, on ne peut pas prédire l'erreur à la prochaine lecture. Le robot pourrait monter une pente, descendre, avoir plus de friction, etc.
 - Ce que l'on fait c'est que l'on multiplie l'erreur par un facteur et on l'additionne à la consigne actuelle. Soit le $k_\text{p} e$.
-  - En code ça donnerait `prop = kp * error;`
+    - En code ça donnerait `prop = kp * error;`
 - Ensuite pour la partie dérivée, on soustrait l'erreur actuelle de l'erreur précédente et on multiplie par le facteur $k_d$.
-  - En code : `diff = kd * (error - errorPrevious);`
+    - En code : `diff = kd * (error - errorPrevious);`
 - Pour calculer le correctif, on ne fait qu'additionner la proportionnelle avec la différentielle.
-  - En code : `correction = prop + diff;`
+    - En code : `correction = prop + diff;`
 - Pour combler le tout, on additionne la correction à la valeur actuelle. Par exemple :
 
 ```cpp
@@ -234,9 +210,8 @@ Encoder_1.setPosPid(1.8,0,1.2);
 Encoder_1.setSpeedPid(0.18,0,0);
 ```
 
-> **Extra**
-> 
-> Si vous avez de l'intérêt pour fouiller un peu, regardez les fonctions `PID_angle_compute` et `PID_speed_compute` dans l'exemple `Firmware_for_Auriga`. Essayez de trouver les éléments vus dans la théorie précédente.
+!!! info "Extra"
+    Si vous avez de l'intérêt pour fouiller un peu, regardez les fonctions `PID_angle_compute` et `PID_speed_compute` dans l'exemple `Firmware_for_Auriga`. Essayez de trouver les éléments vus dans la théorie précédente.
 
 ---
 
@@ -244,6 +219,7 @@ Encoder_1.setSpeedPid(0.18,0,0);
 Maintenant que nous avons compris les concepts d'erreur et de régulation PID, nous pouvons apprécier les fonctions de précision comme `runSpeed()` qui utilisent ces principes.
 
 Pour s'assurer que le robot suit une ligne droite, nous devons :
+
 1. **Configurer les paramètres** : PID, encodeur et ratio du motoréducteur
 2. **Utiliser les bonnes fonctions** : Les méthodes qui intègrent le contrôle PID
 3. **Surveiller et ajuster** : Observer le comportement et ajuster au besoin
@@ -263,6 +239,7 @@ Vous pouvez tester avec le projet `ranger_encoder_ligne_droite` qui est dans mes
 
 ## Mais ça ne marche pas!!!
 En effet, certains robots tendent vers la droite ou la gauche. C'est dû à plusieurs facteurs. Voici quelques-uns :
+
 - Le poids du robot n'est pas équilibré.
 - Les roues ne sont pas bien alignées.
 - Les roues ne sont pas bien fixées.
@@ -273,7 +250,7 @@ Vous constatez qu'il y a plusieurs facteurs possibles. Cela est principalement d
 
 Nous pouvons utiliser le gyroscope pour compenser. Il suffit de lire la valeur du gyroscope et de faire une correction en conséquence.
 
-Le projet [`ranger_straight`](https://github.com/nbourre/1SX_robotique/blob/master/cours_08_encodeurs/ranger_straight/ranger_straight.ino) est un exemple qui utilise le gyroscope pour corriger la trajectoire du robot.
+Le projet [`ranger_straight`](https://github.com/nbourre/1SX_robotique/blob/master/cours_08_encodeurs/ranger_straight/ranger_straight.ino){target="_blank"} est un exemple qui utilise le gyroscope pour corriger la trajectoire du robot.
 
 Voici la principale fonction qui permet au robot d'aller droit :
 
@@ -337,11 +314,11 @@ Pour faire pivoter le robot avec précision, nous devons utiliser la géométrie
 **Calculs nécessaires :**
 
 - Trouver la distance pour 1/4 tour.
-  - $quartTour = circRobot / 4$
+    - $quartTour = circRobot / 4$
 - Trouver le nombre de tours de roue
-  - $nbTours = quartTour / circRoue$
+    - $nbTours = quartTour / circRoue$
 - Trouver le nombre de pulsation pour effectuer 1/4 tour.
-  - $nbPulsations = nbTours * 9 * 39.267$
+    - $nbPulsations = nbTours * 9 * 39.267$
 - Faire avancer/reculer le moteur de `nbPulsations`
 
 ---
@@ -353,12 +330,13 @@ Pour faire pivoter le robot avec précision, nous devons utiliser la géométrie
 Pour faire tourner le robot en courbe, il faudra faire un peu de géométrie et d'algèbre.
 
 1. Trouver l'arc de cercle à parcourir en prenant le centre du robot. (`float arc`)
-   - $arc = \frac{degre}{360}* 2\pi R$
+    - $arc = \frac{degre}{360}* 2\pi R$
 2. Trouver les arcs des cercles externes et internes
-   - $arcExt = \frac{degre}{360}*  2\pi (R + \frac{w2w}{2})$
-   - $arcInt = \frac{degre}{360}*  2\pi (R - \frac{w2w}{2})$
+    - $arcExt = \frac{degre}{360}*  2\pi (R + \frac{w2w}{2})$
+    - $arcInt = \frac{degre}{360}*  2\pi (R - \frac{w2w}{2})$
 
 Où :
+
 - $w2w$ = distance entre les 2 roues
 - $R$ = rayon de courbure à partir du centre du robot
 - $degre$ = Nombre de degrés à pivoter
@@ -366,9 +344,8 @@ Où :
 3. Trouver la distance pour les roues gauches et droites selon les arcs intérieurs et extérieurs.
 
 
-> **IMPORTANT!!!**
-> 
-> Ceci est la théorie où on ne prend pas en considération le niveau de la pile, le frottement, le glissement, etc. On pourra compenser avec le gyroscope.
+!!! important "IMPORTANT!!!"
+    Ceci est la théorie où on ne prend pas en considération le niveau de la pile, le frottement, le glissement, etc. On pourra compenser avec le gyroscope.
 
 ---
 
@@ -377,14 +354,15 @@ Où :
 **Objectifs :** Mettre en pratique les concepts d'encodeurs et de précision vus dans ce cours.
 
 1. **Déplacement précis** : Programmer le robot pour qu'il avance exactement de 1 mètre avec une précision de ±5%. 
-   - Utiliser les encodeurs pour mesurer la distance parcourue
-   - Implémenter une correction si nécessaire
+    - Utiliser les encodeurs pour mesurer la distance parcourue
+    - Implémenter une correction si nécessaire
 
 2. **Aller-retour précis** : Faire avancer le robot à 1 mètre ±5% puis le faire revenir exactement à son point de départ.
-   - Tester la répétabilité du système
-   - Observer l'accumulation des erreurs
+    - Tester la répétabilité du système
+    - Observer l'accumulation des erreurs
 
 **Conseils :**
+
 - Calibrer les valeurs PID avant de commencer
 - Mesurer physiquement la distance pour valider vos résultats
 - Noter les facteurs qui affectent la précision (surface, batterie, etc.)
@@ -396,8 +374,8 @@ Où :
 ## Questions de compréhension
 
 1. **Définition de base :**
-   - Qu'est-ce que l'erreur dans un système de contrôle? Donnez la formule.
-   - Quelle est la différence entre une erreur positive et une erreur négative?
+    - Qu'est-ce que l'erreur dans un système de contrôle? Donnez la formule.
+    - Quelle est la différence entre une erreur positive et une erreur négative?
 
 <!-- 
 Réponses 1:
@@ -407,8 +385,8 @@ Réponses 1:
 -->
 
 2. **Calculs d'erreur :**
-   - Si un moteur doit tourner à 120 RPM et qu'il tourne actuellement à 115 RPM, quelle est l'erreur?
-   - Interprétez le signe de cette erreur : que doit faire le système?
+    - Si un moteur doit tourner à 120 RPM et qu'il tourne actuellement à 115 RPM, quelle est l'erreur?
+    - Interprétez le signe de cette erreur : que doit faire le système?
 
 <!-- 
 Réponses 2:
@@ -417,9 +395,9 @@ Réponses 2:
 -->
 
 3. **Régulateur PID :**
-   - Que signifient les lettres P, I et D dans "PID"?
-   - Pourquoi utilise-t-on principalement PD (sans l'intégrale) dans nos applications?
-   - Quel est le rôle du terme dérivé (D) dans le contrôle?
+    - Que signifient les lettres P, I et D dans "PID"?
+    - Pourquoi utilise-t-on principalement PD (sans l'intégrale) dans nos applications?
+    - Quel est le rôle du terme dérivé (D) dans le contrôle?
 
 <!-- 
 Réponses 3:
@@ -429,8 +407,8 @@ Réponses 3:
 -->
 
 4. **Applications pratiques :**
-   - Pourquoi un robot ne roule-t-il pas droit même si on donne la même vitesse aux deux moteurs?
-   - Comment le gyroscope peut-il aider à corriger la trajectoire d'un robot?
+    - Pourquoi un robot ne roule-t-il pas droit même si on donne la même vitesse aux deux moteurs?
+    - Comment le gyroscope peut-il aider à corriger la trajectoire d'un robot?
 
 <!-- 
 Réponses 4:
@@ -441,8 +419,8 @@ Réponses 4:
 ## Questions de calcul
 
 5. **Géométrie du robot :**
-   - Un robot a un diamètre de roue de 6 cm et une distance entre roues de 15 cm. Combien de degrés chaque moteur doit-il tourner pour faire pivoter le robot de 90°?
-   - Montrez vos calculs étape par étape.
+    - Un robot a un diamètre de roue de 6 cm et une distance entre roues de 15 cm. Combien de degrés chaque moteur doit-il tourner pour faire pivoter le robot de 90°?
+    - Montrez vos calculs étape par étape.
 
 <!-- 
 Réponses 5:
@@ -454,8 +432,8 @@ Réponses 5:
 -->
 
 6. **Paramètres d'encodeur :**
-   - Avec 9 pulsations par tour et un ratio de 39.267, combien de pulsations représente une rotation complète de la roue?
-   - Si la roue a une circonférence de 18.8 cm, quelle distance représente une pulsation?
+    - Avec 9 pulsations par tour et un ratio de 39.267, combien de pulsations représente une rotation complète de la roue?
+    - Si la roue a une circonférence de 18.8 cm, quelle distance représente une pulsation?
 
 <!-- 
 Réponses 6:
@@ -466,8 +444,8 @@ Réponses 6:
 ## Questions d'analyse
 
 7. **Problèmes de précision :**
-   - Listez 5 facteurs qui peuvent affecter la précision du déplacement d'un robot.
-   - Pour chaque facteur, proposez une solution ou compensation possible.
+    - Listez 5 facteurs qui peuvent affecter la précision du déplacement d'un robot.
+    - Pour chaque facteur, proposez une solution ou compensation possible.
 
 <!-- 
 Réponses 7:
@@ -480,8 +458,8 @@ Autres: température, usure des pièces, jeu mécanique
 -->
 
 8. **Réglage PID :**
-   - Si un système oscille beaucoup autour de sa cible, quel paramètre PID devriez-vous ajuster et comment?
-   - Si un système met trop de temps à atteindre sa cible, quel paramètre ajusteriez-vous?
+    - Si un système oscille beaucoup autour de sa cible, quel paramètre PID devriez-vous ajuster et comment?
+    - Si un système met trop de temps à atteindre sa cible, quel paramètre ajusteriez-vous?
 
 <!-- 
 Réponses 8:
@@ -490,8 +468,8 @@ Réponses 8:
 -->
 
 9. **Capteurs et erreur :**
-   - Quel capteur utiliseriez-vous pour mesurer l'erreur de vitesse d'un moteur? Pourquoi?
-   - Quel capteur utiliseriez-vous pour mesurer l'erreur d'orientation du robot? Pourquoi?
+    - Quel capteur utiliseriez-vous pour mesurer l'erreur de vitesse d'un moteur? Pourquoi?
+    - Quel capteur utiliseriez-vous pour mesurer l'erreur d'orientation du robot? Pourquoi?
 
 <!-- 
 Réponses 9:

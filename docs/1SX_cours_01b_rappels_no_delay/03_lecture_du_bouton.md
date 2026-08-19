@@ -1,9 +1,11 @@
-# Cours 02 - Rappel Arduino <!-- omit in toc -->
+# Cours 02 - Rappel Arduino
 
 # Plan de leçon
+
 - La fonction `digitalRead()`
 
 # digitalRead()
+
 - Nous avons vu la fonction `digitalWrite()` dernièrement pour activer ou désactiver une sortie numérique.
 - Il y aussi la fonction complémentaire `digitalRead()` qui permet de lire l'état d'une entrée numérique.
 - La fonction `digitalRead()` retourne un `int` qui peut être 0 ou 1.
@@ -12,29 +14,23 @@
 
 # Brancher un bouton
 
-> **Attention!** Ce montage spécifique n'utilise pas de résistance explicite. Il faut utiliser la résistance interne de l'Arduino avec le mode `INPUT_PULLUP`.
-> 
-> Si on n'utilise pas de `pullup` interne, généralement, on utilise une résistance de 10kΩ pour ce genre de montage.
+!!! warning "Attention!"
+    Ce montage spécifique n'utilise pas de résistance explicite. Il faut utiliser la résistance interne de l'Arduino avec le mode `INPUT_PULLUP`.
 
-<table>
-<tr>
-<td>
+    Si on n'utilise pas de `pullup` interne, généralement, on utilise une résistance de 10kΩ pour ce genre de montage.
+
+<div class="grid" markdown>
 
 - Reproduire le montage ci-contre.
 - Matériel requis
-  - Bouton poussoir
-  - 2 fils
-
-</td>
-<td>
+    - Bouton poussoir
+    - 2 fils
 
 ![Alt text](img/06_arduino_bouton.png)
 
-</td>
-</tr>
-</table>
+</div>
 
-Le code d'accompgnement est le suivant :
+Le code d'accompagnement est le suivant :
 
 ```cpp
 short btnPin = 2; // Broche 2
@@ -59,9 +55,10 @@ void loop() {
 ---
 
 # Références
-- [Dépôt de code du cours](https://github.com/nbourre/1SX_robotique)
-- [Livre O'Reilly : Chapitre 4](https://www.oreilly.com/library/view/arduino-cookbook/9781449399368/ch04.html)
+
+- [Dépôt de code du cours](https://github.com/nbourre/1SX_robotique){target="_blank"}
+- [Livre O'Reilly : Chapitre 4](https://www.oreilly.com/library/view/arduino-cookbook/9781449399368/ch04.html){target="_blank"}
 
 ---
 
-**[Retour au sommaire de la leçon](./readme.md)**
+**[Retour au sommaire de la leçon](./index.md)**
