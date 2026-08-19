@@ -47,7 +47,7 @@ alt="IMAGE ALT TEXT HERE" width="320" height="240" border="10" /></a>
 ## Le script Python
 Le script Python général est disponible à l'adresse suivante : https://github.com/nbourre/auriga_bluetooth_python_comm/
 
-J'ai réalisé quelques scripts utilitaire pour vous permettre de communiquer avec le module Bluetooth du robot MakeBlock Ranger ainsi que de trouver l'adresse MAC du module.
+J'ai réalisé quelques scripts utilitaires pour vous permettre de communiquer avec le module Bluetooth du robot MakeBlock Ranger ainsi que de trouver l'adresse MAC du module.
 
 Pour pouvoir exécuter les scripts, vous devez installer les librairies manquantes. Dans Thonny, vous pouvez le faire en cliquant sur `Outils` > `Gérer les paquets...` et en ajoutant les librairies suivantes :
 

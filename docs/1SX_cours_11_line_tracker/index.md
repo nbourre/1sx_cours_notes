@@ -11,7 +11,7 @@ Cours sur l'utilisation du capteur de ligne LyneTracker avec le robot Ranger.
 # Introduction au suivi de ligne
 
 ## Définition
-Le suivi de ligne consiste à guider un appareil en occurence un robot pour notre cas, le long d'une trajectoire définie par une ligne. Souvent la ligne est noire sur un fond pâle. Le robot utilise des capteurs de ligne pour détecter la position de la ligne et ajuster sa trajectoire en conséquence. Le suivi de ligne est une tâche courante dans les compétitions de robotique et les projets de robotique éducative.
+Le suivi de ligne consiste à guider un appareil en occurrence un robot pour notre cas, le long d'une trajectoire définie par une ligne. Souvent la ligne est noire sur un fond pâle. Le robot utilise des capteurs de ligne pour détecter la position de la ligne et ajuster sa trajectoire en conséquence. Le suivi de ligne est une tâche courante dans les compétitions de robotique et les projets de robotique éducative.
 
 ## Applications
 On retrouve le suivi de ligne dans de nombreuses applications, notamment :
@@ -183,8 +183,8 @@ La calibration consiste à mesurer les valeurs minimales et maximales des capteu
 Ainsi, il s'agit d'un algorithme de base pour trouver les valeurs minimales et maximales des capteurs. Voici un rappel du pseudo-code :
 
 ```text
-valMin = 1023; // Initiatilisé à la valeur maximale des capteurs
-valMax = 0;    // Initiatilisé à la valeur minimale des capteurs
+valMin = 1023; // Initialisé à la valeur maximale des capteurs
+valMax = 0;    // Initialisé à la valeur minimale des capteurs
 
 fonction calibrer :
     pour chaque capteur i de 0 à 4 :

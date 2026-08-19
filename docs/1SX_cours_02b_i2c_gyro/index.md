@@ -1,5 +1,5 @@
 # Communication i2c
-Article qui indique comment exploiter la communication i2c avec divers appareils électroniques. On n'explore pas la science derrière ce protocole, mais plutôt sont utilisation.
+Article qui indique comment exploiter la communication i2c avec divers appareils électroniques. On n'explore pas la science derrière ce protocole, mais plutôt son utilisation.
 
 ---
 
@@ -8,7 +8,7 @@ Article qui indique comment exploiter la communication i2c avec divers appareils
 
 Il existe un autre protocole de communication qui est très utilisé dans les systèmes embarqués: le protocole **i2c**. Ce protocole est un protocole de communication synchrone. C'est-à-dire que les données sont transmises en utilisant une horloge commune (SCL) qui synchronise la communication entre l'émetteur et le récepteur.
 
-On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la réception de données sont plus complexes. Par exemple :
+On retrouve ce protocole sur les capteurs qui nécessitent la transmission ou la réception de données plus complexes. Par exemple :
 
 - Horloge en temps réel
     - Date, heure
@@ -18,7 +18,7 @@ On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la 
     - Les données d'accélération sont souvent sur 3 axes
     - Un accéléromètre vient parfois avec un gyroscope intégré qui a lui-même 3 axes
     - Chaque axe est un capteur
-    - Anecdote : Les manettes de Wii fonctionne avec le protocole i2c
+    - Anecdote : Les manettes de Wii fonctionnent avec le protocole i2c
 
 ---
 
@@ -45,7 +45,7 @@ On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la 
     - Voir l’illustration plus bas
 - Chaque appareil possède une adresse qui lui est propre
 - Souvent les manufacturiers de composants fournissent les adresses dans la documentation
-- De plus dans le cercle Arduino, la plupart des composants ont des  librairies
+- De plus dans le cercle Arduino, la plupart des composants ont des librairies
 
 ![Alt text](img/plusieurs_appareils.png)
 
@@ -83,7 +83,7 @@ On retrouve ce protocole sur les capteurs qui nécessites la transmission ou la 
 
 ![Alt text](img/no_movement.png)
 
-- Si l’on donne un coup sur le côté de l’accéléromètre dans l’axe des X, ce dernier retournera un valeur sur cet axe
+- Si l’on donne un coup sur le côté de l’accéléromètre dans l’axe des X, ce dernier retournera une valeur sur cet axe
 
 ![Alt text](img/left_tap.png)
 
@@ -294,7 +294,7 @@ mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 - Navigation (drones, robots)
 
 !!! note "Note"
-    Les robots sur deux roues ou encore les overboard utilisent entres autres un gyroscope pour garder l'équilibre.
+    Les robots sur deux roues ou encore les hoverboards utilisent entre autres un gyroscope pour garder l'équilibre.
 
 ![Alt text](img/hoverboard.jpg)
 
@@ -309,7 +309,7 @@ mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 ![Alt text](img/SSD1306.jpg)
 
 !!! question "Question"
-    À partir de la photo, quel indice nous indique l'appareil fonctionne avec le protocole `i2c`?
+    À partir de la photo, quel indice nous indique que l'appareil fonctionne avec le protocole `i2c`?
 
 - Nous allons utiliser la librairie `Adafruit_SSD1306` **modifiée** pour contrôler l'écran
 
@@ -744,7 +744,7 @@ S'assurer que les branchements sont corrects. Vous devriez voir du contenu qui s
 
 
 ### Analyse du code
-Malgré la longueur du code, il y a beaucoup de lignes très similaire.
+Malgré la longueur du code, il y a beaucoup de lignes très similaires.
 
 #### Les inclusions
 Pour utiliser l'écran, il faut inclure les librairies suivantes: `Wire.h`, `Adafruit_GFX.h` et `Adafruit_SSD1306.h`.
@@ -756,7 +756,7 @@ Pour utiliser l'écran, il faut inclure les librairies suivantes: `Wire.h`, `Ada
 
 #### Variables et objets initialisés
 
-- La variable `logo_bmp` est un tableau d'`unsigned char` qui contient l'image d'un étoile.
+- La variable `logo_bmp` est un tableau d'`unsigned char` qui contient l'image d'une étoile.
 - La variable `display` est un objet de type `Adafruit_SSD1306` qui permet de contrôler l'écran.
 
 #### `setup()`

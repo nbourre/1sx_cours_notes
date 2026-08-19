@@ -13,7 +13,7 @@ Voici une liste de questions typiques qui pourraient être posées lors de l'év
 - Pourquoi est-il préférable d'utiliser le type `unsigned long` pour stocker le temps écoulé depuis le démarrage du programme?
 - À quoi sert l'instruction `Serial.begin(9600);`?
 - Quelle librairie doit-on importer pour utiliser les fonctions du robot?
-- Selon ce que l'on a vu en classe, quels sont les deux principes de programmation nécessaire pour implémenter une machine à état fini dans un robot? Et à quoi servent-il?
+- Selon ce que l'on a vu en classe, quels sont les deux principes de programmation nécessaire pour implémenter une machine à état fini dans un robot? Et à quoi servent-ils?
 - Quelle est l'utilité du MPU-6050 dans le robot?
 - Sur l'ensemble des capteurs présents sur le robot, nommes-en trois?
 - Même si l'on attribue la même puissance au moteur, pour quelle raison le robot ne roule pas toujours droit? Décris une façon de faire pour corriger ce problème sans modifier physiquement le robot.
@@ -22,7 +22,7 @@ Voici une liste de questions typiques qui pourraient être posées lors de l'év
 - Quelle est la différence entre une fonction d'interruption et une fonction normale?
 - Pourquoi est-il mieux d'utiliser une machine à état fini au lieu d'un programme séquentiel pour contrôler le robot?
 - J'ai plusieurs appareils fonctionnant avec le protocole I2C. Je voudrais les connecter sur le port I2C du robot déjà monté. Conceptuellement, comment le code choisit-il l'appareil ciblé (ex. adresse I2C) sans qu'on ait besoin de modifier le câblage existant?
-- Lorsque j'active le moniteur série, je reçois des caractères bizarres comme-ci "`3??à.□□□□" Pourquoi?
+- Lorsque j'active le moniteur série, je reçois des caractères bizarres comme ceci "`3??à.□□□□" Pourquoi?
 - Comment est-ce que le gyroscope dans le robot peut l'aider à se déplacer en ligne droite?
 - Pourquoi calibrer un suiveur de ligne avant une course et comment interpréter les valeurs lues par le capteur.
 

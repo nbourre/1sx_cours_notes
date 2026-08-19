@@ -15,7 +15,7 @@
 
 - Le sonar est un appareil permettant de mesurer la distance à un objet
 - Il s'agit d'un capteur ultrasonique
-    - Comme ce qu'utilise les chauve-souris et dauphin
+    - Comme ce qu'utilisent les chauves-souris et dauphins
 - Le principe du sonar est qu'il envoie une courte impulsion ultrasonique et reçoit la réponse
 - Le délai de réponse permet de déterminer la distance à l'objet
     - La vitesse du son est d'environ 343 m/s au niveau de la mer
@@ -64,11 +64,11 @@
 ### Algorithme
 
 - On active le déclencheur
-- On attend quelques __micro__secondes (10)
+- On attend quelques $\mu$-secondes (10)
 - On désactive le déclencheur
 - On lit l’écho (durée)
 - On calcule la distance (cm) avec le délai
-    - `𝑑𝑖𝑠𝑡=𝑑𝑢𝑟é𝑒 ∗0.034/2; // C’est en microsecondes`
+    - `𝑑𝑖𝑠𝑡=𝑑𝑢𝑟é𝑒 * 0.034/2; // C’est en microsecondes`
 
 ### Exemple de code
 
@@ -143,7 +143,7 @@ void printDistanceTask(unsigned long ct, int distance) {
 
   lastTime = ct;
 
-  // Filtrer les valeurs abberantes
+  // Filtrer les valeurs aberrantes
   if (distance >= 2 && distance <= 400) {
     Serial.print("Distance: ");
     Serial.print(distance);
@@ -171,7 +171,7 @@ void printDistanceTask(unsigned long ct, int distance) {
     - Dans Arduino, une bibliothèque est une classe qui facilite le développement de projet en réutilisant le code
 - Plusieurs bibliothèques viennent par défaut avec l'environnement d'Arduino.
 - Toutefois, il existe une panoplie de bibliothèques téléchargeables pour des composants communs
-- L'installation d'une bibliothèque ajoute généralement des exemples qui sont liés à la bibliothèque téléchargées
+- L'installation d'une bibliothèque ajoute généralement des exemples qui sont liés à la bibliothèque téléchargée
     - Rappel : Les exemples sont dans "Fichier --> Exemples..."
    
 ---

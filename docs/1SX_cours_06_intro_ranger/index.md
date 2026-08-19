@@ -6,7 +6,7 @@
 
 - MakeBlock mBot Ranger
 - Spécifications
-- Différences avec le Arduino Mega
+- Différences avec l'Arduino Mega
 - Premier code
 
 ---
@@ -39,7 +39,7 @@
 - Capteur de température, de lumière (x2), de puissance
 - Un *buzzer*
 - Expansible
-- Carte-mère compatible avec le Arduino Mega
+- Carte-mère compatible avec l'Arduino Mega
 
 ---
 # Le robot
@@ -85,12 +85,12 @@
 # Sortie des broches (*pinout*)
 ![](assets/auriga_pinout.png)
 
-- Observer les différentes étiquettes, elles font références aux différentes broches du Arduino
+- Observer les différentes étiquettes, elles font références aux différentes broches de l'Arduino
 
 ## Points saillants
 
 - Les broches `SDA` et `SCL` sont dans la majorité des ports de connexion
-- Une anneau de DEL RGB
+- Un anneau de DEL RGB
 - Un MPU-6050
 - Un module Bluetooth
 - Deux détecteurs de lumière
@@ -98,12 +98,12 @@
 
 ---
 
-# Différences avec le Arduino Mega
+# Différences avec l'Arduino Mega
 
 - Plusieurs ports sont occupés par les différents composants
     - Voir le *pinout* pour plus de détails
 - Les ports de connexion sont compatibles avec les connecteurs RJ25 6P6C
-- La carte-mère est appelé "**Auriga**"  
+- La carte-mère est appelée "**Auriga**"  
 
 ---
 
@@ -352,7 +352,7 @@ Il se peut qu'Arduino IDE ne reconnaisse pas la carte du robot. Il faudra alors 
 
 # Analyse du code testé  
 
-- Les classes de MakeBlock débutent avec le préfix `Me`
+- Les classes de MakeBlock débutent avec le préfixe `Me`
     - Exemples : MeRGBLed, MeGyro, etc.
     - Il y a certains bogues pour le `MeAuriga` dans la librairie
 
@@ -403,7 +403,7 @@ void loop()
 - Le capteur de puissance
     - Affichez dans le moniteur série la puissance de la batterie restante.
 
-- Modifiez le code des exercices précédents pour permettre l'envoie de données au port série pour contrôler les données en sortie. Utilisez `'g'` pour le gyroscope, `'s'` pour le capteur de son et `'p'` pour la puissance de la batterie et la température.
+- Modifiez le code des exercices précédents pour permettre l'envoi de données au port série pour contrôler les données en sortie. Utilisez `'g'` pour le gyroscope, `'s'` pour le capteur de son et `'p'` pour la puissance de la batterie et la température.
     - Voici un tableau avec les sorties
   
       | Commande | Sortie attendue               | Description                        |

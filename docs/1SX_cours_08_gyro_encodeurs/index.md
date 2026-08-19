@@ -6,7 +6,7 @@
 
 - Nous avons jusqu'à maintenant exploré les moteurs du robot en contrôlant directement les broches ENA et ENB.
 - Cela répondait à un certain besoin soit de déplacer le robot.
-- Certains d'entre-vous aviez demandé comment effectuer des déplacements précis tel que pivoter à X degré ou encore avancer de Y cm.
+- Certains d'entre vous avaient demandé comment effectuer des déplacements précis tel que pivoter à X degré ou encore avancer de Y cm.
 - D'autres ont remarqué que le robot n'avançait pas droit
 - Ma réponse était soit vous devez utiliser du *timing* direct ou encore vous allez voir cela dans un futur cours.
 - Ce cours c'est aujourd'hui!
@@ -24,12 +24,12 @@ Dans un cours précédent, nous avons rapidement survolé le gyroscope. Nous n'a
     - `resetData()` : Réinitialise les données du gyroscope
 
 ## Exemple
-Voici un exemple qui retourne en degrée l'angle de rotation du robot. Utilisez le traceur série pour afficher les valeurs.
+Voici un exemple qui retourne en degré l'angle de rotation du robot. Utilisez le traceur série pour afficher les valeurs.
 
 ```cpp
 #include <MeAuriga.h>
 
-// Pour le Auriga, il faut utiliser l'adresse 0x69.
+// Pour l'Auriga, il faut utiliser l'adresse 0x69.
 MeGyro gyro(PORT_0, 0x69);
 
 void setup()
@@ -61,7 +61,7 @@ void loop()
 
 # L'encodeur incrémental
 
-- Pour palier aux problèmes cités au début de l'article, il y a un mécanisme qui s'appelle un encodeur.
+- Pour pallier aux problèmes cités au début de l'article, il y a un mécanisme qui s'appelle un encodeur.
 - Dans sa forme la plus basique, un encodeur consiste en un disque rotatif percé de plusieurs trous autour de la circonférence. Un faisceau lumineux est positionné devant les trous et un capteur est placé derrière les trous.
 - Lorsque le disque tourne, le capteur reçoit de la lumière ou non selon la position des trous. (Voir l'illustration ci-bas)
 
@@ -72,7 +72,7 @@ void loop()
 ![](../img/drawit-diagram-127.png)
 
 - Ainsi, avec ce simple mécanisme on peut connaître la vitesse et la position de rotation.
-- Plus que le disque tourne rapidement, plus que l'on recevra de pulsion.
+- Plus le disque tourne rapidement, plus l'on recevra de pulsations.
 - Ainsi, en comptant le nombre de pulsations dans un temps donné, on pourra calculer la vitesse de rotation.
 - En comptant le nombre de pulsations, on peut aussi connaître la position de la roue.
 
@@ -100,7 +100,7 @@ L'illustration suivante montre la version avec une piste et deux signaux décal�
 
 ![Alt text](img/rotary-encoder-working-animation.gif)
 
-- Ainsi, on peut savoir de sens de rotation du disque ou de la roue.
+- Ainsi, on peut savoir le sens de rotation du disque ou de la roue.
 - Sur le robot du cours, c'est ce type d'encodeur.
 
 ---
@@ -377,7 +377,7 @@ Nous allons étudier le projet `ranger_encodeur_position` qui est dans le dossie
 - La fonction `isr_process_encoder1()` est la fonction appelée à chaque fois qu'il y aura une interruption sur la broche d'`Encoder_1` et ce sur le front montant.
 - Dans `loop` :
     - On remarque la fonction `setTarPWM`. Cette fonction permet de mettre un objectif `PWM` à atteindre pour l'`Encoder_1`.
-    - On remarque aussi `Encoder_1.loop()`. Il s'agit de la tâche que l'encodeur doit effectuer à chaque fois. Cette appel de fonction est obligatoire.
+    - On remarque aussi `Encoder_1.loop()`. Il s'agit de la tâche que l'encodeur doit effectuer à chaque fois. Cet appel de fonction est obligatoire.
 
 ---
 
@@ -393,7 +393,7 @@ Nous allons étudier le projet `ranger_encodeur_position` qui est dans le dossie
 - On utilise le terme **rapport proportionnel** (*gear ratio*) pour désigner la spécificité d'un *gearbox*.
 - Ainsi, on pourra voir des valeurs telles que  1:20, 1:42.5, 20:1, 3:1, etc.
 - Le premier nombre désigne le nombre de rotation du moteur et le second de celui de l'arbre de sortie.
-- Par exemple, pour un rapport de 20:1, il faudra 20 rotation à la source pour obtenir 1 rotation à la sortie.
+- Par exemple, pour un rapport de 20:1, il faudra 20 rotations à la source pour obtenir 1 rotation à la sortie.
     - Par la bande, cela indique aussi que la sortie sera 20 fois plus forte pour le même rayon.
  
 ---
@@ -404,11 +404,11 @@ Voici ce qui se retrouve à l'intérieur d'un motoréducteur du robot.
 
 - Le robot a deux motoréducteurs avec encodeur
 - Selon les exemples de code dans les exemples du fabricant, chacun a un rapport proportionnel de 39.267:1
-    - Ainsi il faut 39.267 rotation pour faire une rotation de roue.
+    - Ainsi il faut 39.267 rotations pour faire une rotation de roue.
 - Chaque encodeur fait 9 pulsations pour effectuer une rotation complète à la sortie du moteur.
 
 !!! bug "Alerte aux bogues!"
-    La fonction `setRatio` n'accepte que les entiers, mais les exemples fournient envoie un `float`. Ce qui porte à confusion.
+    La fonction `setRatio` n'accepte que les entiers, mais les exemples fournis envoient un `float`. Ce qui porte à confusion.
 
     Pour corriger le bug, on modifie la fonction `setRatio` dans la librairie pour accepter un float.
 
@@ -416,8 +416,8 @@ Voici ce qui se retrouve à l'intérieur d'un motoréducteur du robot.
 !!! question "Question"
     Chaque roue a un diamètre d'approximativement 6.5 cm
 
-    - Combien de pulsations sont nécessaire pour effectuer une rotation complète d'une roue?<!-- 9 * 39.267 -->
-    - Combien de pulsation? sont nécessaire pour parcourir 1 mètre?<!-- (100 / (6.5 * PI)) * 9 * 39.267 -->
+    - Combien de pulsations sont nécessaires pour effectuer une rotation complète d'une roue?<!-- 9 * 39.267 -->
+    - Combien de pulsations sont nécessaires pour parcourir 1 mètre?<!-- (100 / (6.5 * PI)) * 9 * 39.267 -->
 
 ---
 

@@ -10,7 +10,7 @@
 ---
 
 - Disons que l’on utilise un délai de 50 ms pour faire clignoter un LED, on aura un clignotement assez rapide
-- Si l’on réduit passablement la durée du délai, que ce passera-t-il?
+- Si l’on réduit passablement la durée du délai, que se passera-t-il?
 
 ```cpp
 void loop() {
@@ -29,7 +29,7 @@ void loop() {
 
 - Avec l’exemple présenté précédemment, on doit gérer les délais manuellement
 - On aurait pu mettre allumé 1ms et éteint 9ms pour simuler une luminosité de 10%
-- On peut gérer le mécanisme manuellement, mais Arduino offre une fonctionnalité qui permet d’effectué cette gestion
+- On peut gérer le mécanisme manuellement, mais Arduino offre une fonctionnalité qui permet d’effectuer cette gestion
 - Il utilise le concept de modulation de largeur d’impulsion (PWM : *Pulse width modulation*)
 
 ![Alt text](img/pwm.png)
@@ -59,7 +59,7 @@ void loop() {
 - On constate que :
     - les broches dépendent du microcontrôleur utilisé
     - Il y a des fréquences différentes
-    - Il y a beaucoup plus que type d’Arduino que vous vous imaginiez!
+    - Il y a beaucoup plus de types d’Arduino que vous vous imaginiez!
 
 ---
 
@@ -138,11 +138,11 @@ void loop() {
 
 - Un servo consomme passablement de courant
 - Selon cette [datasheet](https://media.digikey.com/pdf/Data%20Sheets/DFRobot%20PDFs/SER0039_Web.pdf){target="_blank"}, le courant maximal est de 300 mA (milliampère)
-- Le uC ne peut fournir plus de 40 mA par pin, avec une limite totale de ~200 mA pour toutes les pins. [Documentation](https://www.arduino.cc/en/Tutorial/Foundations/DigitalPins#properties-of-pins-configured-as-output){target="_blank"}
-- Ainsi, il ne peut fournir assez de courant pour un servo
+- Le µC ne peut fournir plus de 40 mA par pin, avec une limite totale de ~200 mA pour toutes les pins. [Documentation](https://www.arduino.cc/en/Tutorial/Foundations/DigitalPins#properties-of-pins-configured-as-output){target="_blank"}
+- Ainsi, il ne peut pas fournir assez de courant pour un servo
 - On peut le faire fonctionner, mais sans faire forcer le moteur (allège)
 - Généralement, on utilisera un contrôleur PWM pour servos typique à la photo ci-contre
-- Sur le contrôleur illustré, on peut mettre du courant supplémentaire et controller jusqu’à 16 servos
+- Sur le contrôleur illustré, on peut mettre du courant supplémentaire et contrôler jusqu’à 16 servos
 
 ![Alt text](img/servoController.png)
 

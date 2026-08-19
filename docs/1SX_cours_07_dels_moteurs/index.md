@@ -79,13 +79,13 @@ On la met dans la configuration.
 
 !!! important "Important"
     - La valeur assignée est **persistante**. C'est-à-dire que si on ne change pas la couleur, elle restera tant et aussi longtemps que l'on ne change pas la couleur d'où la ligne `led.setColor (0, 0, 0);` qui permet de remettre toutes les DEL à 0.
-    - La nouvelle couleur ne s'affiche pas tant et aussi longtemps que l'on appelle pas la méthode `show()`
+    - La nouvelle couleur ne s'affiche pas tant et aussi longtemps que l'on n'appelle pas la méthode `show()`
 
 **`show()`**
 
 Permet d'envoyer et d'activer les couleurs configurées pour l'anneau.
 
-Lorsqu'il y a changement de couleur pour affecter l'anneau, il faut faire appelle à la méthode `show`.
+Lorsqu'il y a changement de couleur pour affecter l'anneau, il faut faire appel à la méthode `show`.
 
 ## Les principales méthodes
 Voici les principales méthodes pour manipuler l'anneau.
@@ -118,7 +118,7 @@ Voici les principales méthodes pour manipuler l'anneau.
 
 # Les moteurs du robot
 
-- Le robot a deux moteurs d'installer.
+- Le robot a deux moteurs d'installés.
 - Dans un premier temps, nous allons utiliser mon code
 - Dans un second temps, nous utiliserons les librairies officielles.
 
@@ -131,7 +131,7 @@ Les moteurs à courant continu (DC) sur le robot fonctionnent grâce à un champ
 
 ## Principes de base - magnétisme
 
-- Avant toute chose, il faut se rappeler que les aimants s'attirent avec les pôles opposés et se répulsent dans le cas inverse.
+- Avant toute chose, il faut se rappeler que les aimants s'attirent avec les pôles opposés et se repoussent dans le cas inverse.
 - En résumé : Nord-Sud ça colle, Nord-Nord ça s'éloigne
 
 ![](img/magnetic-force.gif)
@@ -142,11 +142,11 @@ Le magnétisme est au cœur du fonctionnement des moteurs électriques. L'intera
 ---
 ## Principes de base - moteur
 
-- Un moteur est composé d'aimants permanents et de bobinnes de fil
-- Lorsqu'il y a du courant dans une bobinne, elle devient un aimant, donc elle a un sens Nord-Sud.
+- Un moteur est composé d'aimants permanents et de bobines de fil
+- Lorsqu'il y a du courant dans une bobine, elle devient un aimant, donc elle a un sens Nord-Sud.
 - Lorsque la bobine n'a plus de courant, elle ne génère plus de champ magnétique
-- À l'intérieur du moteur, les aimants et bobinnes sont disposés de manière à ce que lorsqu'on applique du courant, les bobinnes sont attirées vers les aimants et celles-ci se déconnectent à un certain point donc perd le courant.
-- L'inertie de la bobine fait en sorte que celle-ci continue sont chemin et reprend contact avec le courant.
+- À l'intérieur du moteur, les aimants et bobines sont disposés de manière à ce que lorsqu'on applique du courant, les bobines sont attirées vers les aimants et celles-ci se déconnectent à un certain point donc perdent le courant.
+- L'inertie de la bobine fait en sorte que celle-ci continue son chemin et reprend contact avec le courant.
   
 ![](../img/moteur_dc.jpg)
 
@@ -160,7 +160,7 @@ Le magnétisme est au cœur du fonctionnement des moteurs électriques. L'intera
 
 ## Moteur sur le robot
 
-- Maintenant qu'on connaît les principles de base, on va pouvoir comprendre la logique derrière le code.
+- Maintenant qu'on connaît les principes de base, on va pouvoir comprendre la logique derrière le code.
 - Selon le schéma électrique et la documentation, l'Auriga possède un contrôleur de moteur [TB6612](https://learn.adafruit.com/adafruit-tb6612-h-bridge-dc-stepper-motor-driver-breakout){target="_blank"}
   
 ![Alt text](img/H-bridge_mod.png)
@@ -331,7 +331,7 @@ void FullSpeedMode() {
 
 ## Mises en garde
 
-- Malgré que l'on vu le fonctionnement du contrôleur du moteur, il se peut que la logique soit inversée. C'est-à-dire que `IN1` deviennent `IN2` si le moteur tourne dans le sens opposé.
+- Malgré que l'on a vu le fonctionnement du contrôleur du moteur, il se peut que la logique soit inversée. C'est-à-dire que `IN1` devient `IN2` si le moteur tourne dans le sens opposé.
 - En effet, le robot a deux moteurs, mais qui sont installés de manière symétrique. Il faudra prendre en considération l'inversion d'un des moteurs.
 - La manière la plus simple est simplement d'inverser les numéros de broche sur l'un des moteurs.
 

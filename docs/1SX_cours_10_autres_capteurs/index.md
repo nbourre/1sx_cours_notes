@@ -85,7 +85,7 @@ Pour mieux apprécier les valeurs retournées, vous pouvez utiliser le **traceur
 ---
 
 # Capteur de température
-L'Auriga est équipé d'un capteur de température (NCP18XH103F03RB). Ce capteur est un thermistance. Il est branché sur l'entrée analogique A0.
+L'Auriga est équipé d'un capteur de température (NCP18XH103F03RB). Ce capteur est une thermistance. Il est branché sur l'entrée analogique A0.
 
 Ainsi, la valeur renvoyée par le capteur est une valeur résistive. Il faudra donc convertir cette valeur en température.
 
@@ -189,7 +189,7 @@ void buzzer(){
 # Exercices
 
 - Programmer le robot pour qu'il avance vers la source lumineuse la plus forte et avec les propriétés suivantes :
-    - Lorqu'il détecte une collision, un son retentit pendant 1 seconde, la lumière s'affiche en rouge et il s'arrête.
+    - Lorsqu'il détecte une collision, un son retentit pendant 1 seconde, la lumière s'affiche en rouge et il s'arrête.
     - Si l'on claque des mains, il recule pendant 0.5 seconde
 
 ---

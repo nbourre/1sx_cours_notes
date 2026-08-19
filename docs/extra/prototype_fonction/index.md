@@ -19,7 +19,7 @@ Soit `Compilation error : 'fonctionX' was not declared in this scope`
 Il y a des chances que vous ayez besoin de déclarer un prototype de fonction.
 
 # Introduction
-Les prototypes de fonctions sont des fonctions qui sont déclarées avant leur utilisations et définies après. Ils sont utilisés pour permettre à une fonction d'être utilisée avant sa définition. Cela permet de définir les fonctions dans l'ordre qui nous convient le mieux.
+Les prototypes de fonctions sont des fonctions qui sont déclarées avant leurs utilisations et définies après. Ils sont utilisés pour permettre à une fonction d'être utilisée avant sa définition. Cela permet de définir les fonctions dans l'ordre qui nous convient le mieux.
 
 Voici un exemple de prototype :
 
@@ -69,7 +69,7 @@ void maFonction(int param1, int param2) {
 
 # Résumé
 
-- Les prototypes de fonctions sont des fonctions qui sont déclarées avant leur utilisations et définies après.
+- Les prototypes de fonctions sont des fonctions qui sont déclarées avant leurs utilisations et définies après.
 - Les prototypes de fonctions sont optionnels si la fonction n'a pas de paramètres optionnels.
 - Les prototypes de fonctions sont obligatoires si la fonction a des paramètres optionnels.
 

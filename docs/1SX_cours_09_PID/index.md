@@ -141,7 +141,7 @@ Le principe de base d'un asservissement est de mesurer, en permanence, l'écart 
 ## Régulateur PID
 
 - Lorsque l'on donne une consigne à un moteur, on ne peut garantir que celui-ci atteindra vraiment la valeur ciblée.
-- Ceci est dû à plusieurs facteurs externes telles que la friction, l'inertie, les imperfections, etc.
+- Ceci est dû à plusieurs facteurs externes tels que la friction, l'inertie, les imperfections, etc.
 - C'est pour ces raisons que les robots ne font pas une belle ligne droite lorsque l'on programme directement les moteurs sans prendre en considération l'encodeur.
 
 Il y a une méthode éprouvée qui permet à un mécanisme d'atteindre sa cible rapidement et avec précision. Cette méthode est un **régulateur PID**.
@@ -154,7 +154,7 @@ La fonction complète pour calculer est la suivante:
 
 $$ u(t) = k_\text{p} e(t) + k_\text{i} \int_0^t e(\tau) \mathrm{d}\tau + k_\text{d} \frac{\mathrm{d}e(t)}{\mathrm{d}t},$$
 
-- $k_x$ sont des coefficients arbitraire que l'on obtient en faisant des tests.
+- $k_x$ sont des coefficients arbitraires que l'on obtient en faisant des tests.
 - $e$ est l'erreur
 - Le $t$ est le temps
 - **L'intégrale est la somme des erreurs.**

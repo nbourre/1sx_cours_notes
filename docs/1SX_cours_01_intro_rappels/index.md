@@ -8,7 +8,7 @@ Lecture du plan de cours.
 
 # Objectifs terminaux
 
-- Comprendre comment fonctionne les éléments de base en robotique
+- Comprendre comment fonctionnent les éléments de base en robotique
 - Comprendre les limites de chaque discipline impliquée dans la robotique
 - Être capable de lire et comprendre de la documentation spécialisée
 - Être en mesure de définir nos besoins pour un projet
@@ -45,7 +45,7 @@ Lecture du plan de cours.
 # Kit Arduino Mega
 
 - Comme mentionné plus tôt, la première partie sera consacrée à la programmation avec un Arduino Mega
-    - J’ai choisi le Arduino Mega, car il s’agit du même microcontrôleur que l’on retrouve dans le robot Ranger ainsi la transition se plus aisée
+    - J’ai choisi l’Arduino Mega, car il s’agit du même microcontrôleur que l’on retrouve dans le robot Ranger ainsi la transition sera plus aisée
 - Chacun aura accès à un kit comprenant plusieurs composants
 - Nous allons faire un rappel sur l'utilisation des composants pendant les prochains cours et labos
 

@@ -53,7 +53,7 @@ void loop() {
 # Délai sans `delay()`
 
 - La fonction `delay()` est pratique pour gérer des délais dans un programme. Cependant, elle bloque l’exécution du programme pendant le délai. Il est donc impossible de faire autre chose pendant ce temps.
-- Par exemple, si on voulait faire un clignoter un DEL, mais que l’on puisse lire un bouton pendant la pause, ça ne fonctionnerait pas.
+- Par exemple, si on voulait faire clignoter un DEL, mais que l’on puisse lire un bouton pendant la pause, ça ne fonctionnerait pas.
 
 ```cpp
 // La fonction setup s’exécute une seule fois lorsque 
@@ -77,7 +77,7 @@ void loop() {
 ```
 
 - En gros, je compare le temps actuel avec la dernière fois qu’il a été comparé
-- Il faut 3 variables par actions (fonctions) que l'on désire effectuer
+- Il faut 3 variables par action (fonction) que l'on désire effectuer
     - `currentTime` <-- Temps actuel
     - `lastTime` <-- Variable statique pour sauvegarder le temps de la dernière exécution de l'action.
     - `rate` <-- Variable ou constante pour déterminer le délai entre les actions.

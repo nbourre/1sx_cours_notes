@@ -5,7 +5,7 @@
 # Communication série
 
 - La communication série permet de transférer des données entre périphériques.
-- Cela permet d'intéragir avec un ordinateur, un autre microcontrôleur, un téléphone, etc.
+- Cela permet d'interagir avec un ordinateur, un autre microcontrôleur, un téléphone, etc.
 - Lorsque l'on téléverse un programme, la communication série est utilisée pour transférer le programme dans la mémoire du microcontrôleur.
 - La communication série utilise 2 fils pour transférer les données.
     - TX : Transmission de données
@@ -13,8 +13,8 @@
 - Lorsqu'il y a communication, il y a 2 DEL qui clignotent sur la carte Arduino.
     - La DEL TX clignote lorsque la carte envoie des données.
     - La DEL RX clignote lorsque la carte reçoit des données.
-- Les Arduinos avec le µC Atmega328 possède un port série
-- Ceux avec le Atmega2560 possède 4 ports série
+- Les Arduinos avec le µC Atmega328 possèdent un port série
+- Ceux avec l'Atmega2560 possèdent 4 ports série
 
 <!-- Tableau des broches des ports série pour le arduino mega -->
 | Port name | Transmit pin | Receive pin |
@@ -78,7 +78,7 @@ void loop() {
 </div>
 
 !!! important "Important"
-    Comme mentionner précédemment, il faut que les vitesses d'échange entre les appareils soient la même. Sinon, on risque de se retrouver avec des données corrompues.
+    Comme mentionné précédemment, il faut que les vitesses d'échange entre les appareils soient la même. Sinon, on risque de se retrouver avec des données corrompues.
 
     Par exemple : `3??f<ÌxÌ▯▯▯ü³??f<`
 
@@ -163,7 +163,7 @@ void loop()
     char ch = Serial.read(); // Lire le prochain octet
     if(ch >= '0' && ch <= '9') // Est-ce que c'est une valeur entre '0' et '9'
     {
-       blinkRate = (ch - '0');      // Valeur ASCII converti en numérique
+       blinkRate = (ch - '0');      // Valeur ASCII convertie en numérique
        blinkRate = blinkRate * 100; // Interval
     }
   }
@@ -186,7 +186,7 @@ void blink()
 </div>
 
 !!! tip "Astuce"
-    Le caractère '0' vaut 48 en code **ASCII**. Pour convertir, un chiffre en valeur numérique, il suffit de lui soustraire ‘0’.
+    Le caractère '0' vaut 48 en code **ASCII**. Pour convertir un chiffre en valeur numérique, il suffit de lui soustraire ‘0’.
 
     Rappel : Le type `char` est un octet non signé. Il peut donc contenir des valeurs entre 0 et 255. (2^8 - 1)
 
