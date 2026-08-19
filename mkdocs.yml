@@ -1,0 +1,111 @@
+site_name: Programmation jeux et multimédias (420-0SW - Cégep de Shawinigan)
+site_url: https://nbourre.github.io/0sw_notes_cours/
+theme:
+  name: material
+  language: fr
+  features:
+    - search.suggest
+    - search.highlight
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.top
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+
+plugins:
+  - search
+  - print-site
+  - mkdocs-video
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      linenums: true
+      anchor_linenums: true
+      line_spans: true
+      pygments_lang_class: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.snippets:
+      base_path: .
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+
+extra_javascript:
+  - javascripts/mathjax.js
+  #- javascripts/tex-mml-chtml.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://cdn.jsdelivr.net/npm/p5@1/lib/p5.min.js
+  - javascripts/p5-embed.js
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Accueil: index.md
+  - Cours 00:
+    - Processing Crash Course: c00_processing/index.md
+  - Cours 01:
+    - A - Les nombres aléatoires: c01_nombres_aleatoires/index.md
+    - B - Les classes: c01b_classes/index.md
+    - C - Les vecteurs: c01c_vecteurs/index.md
+  - Cours 02:
+    - A - Déplacement d'un objet avec les vecteurs: c02_deplacements/index.md
+    - B - Les forces: c02_forces/index.md
+    - C - Les patrons de projet: c02a_templates/index.md
+    - D - Attraction gravitationnelle: c02b_attraction/index.md
+    - E - Les oscillations et les collisions circulaires: c02c_oscillation/index.md
+  - Cours 03:
+    - Systèmes de particules: c03_particules/index.md
+  - Cours 04:
+    - Premier pas avec Godot: c04_godot/index.md
+  - Cours 05:
+    - A - Algorithme d'agrégation: c05_godot_agregation/index.md
+    - B - Mécanique des projectiles en Godot: c05b_projectiles/index.md
+  - Cours 06:
+    - A - Godot - Bases du jeu 2D: c06_spritesheets_animation/index.md
+    - B - Créer un joueur avec le CharacterBody2D: c06b_character_body_2d/index.md
+  - Cours 07:
+    - A - Utilisation des TileSets: c07a_plateformes_TileSets/index.md
+    - B - Les plateformes mobiles: c07b_plateformes/index.md
+    - C - Ajouter des pièces à ramasser: c07c_plateformes_loots/index.md
+    - D - Mourir: c07d_plateformes_mort/index.md
+    - E - Le ray casting: c07e_ennemi_raycast/index.md
+  - Cours 08:
+    - A - La machine à état fini: c08_fsm/index.md
+    - B - La parallaxe: c08a_parallaxe/index.md
+  - Cours 09:
+    - A - Jouer des sons et de la musique dans Godot: c09_audio/index.md
+    - B - Le TextureProgressBar: c09b_ui_TextureProgressBar/index.md
+  - Cours 11:
+    - Les shaders en Godot: c11_shaders/index.md
+  - Cours 12:
+    - Sauvegarder les données avec des ressources personnalisées: c12_save_data/index.md
+  - AnimationTree: animation_tree/index.md
+  - Génération procédurale - Plateforme: procedural_generation_platform/index.md
+  - Le Tilemap Terrain: tilemap_terrain/index.md
+  - Utiliser le débogueur distant: remote_debugger/index.md
+  - Déployer le jeu sur l'arcade: arcade_game/index.md
+#  - Projet de session:
+#    - Énoncé: projet_session/01_enonce/index.md
+#    - Documentation et suivis:
+#      - Aperçu: projet_session/02_documentation_suivis/index.md
+#      - Suivi du projet: projet_session/02_documentation_suivis/suivis.md
+#      - Documentation du projet: projet_session/02_documentation_suivis/documentation_projet.md
+#    - Critères d'évaluation - Présentations: projet_session/03_presentation/index.md
+  - Extras:
+    - Liste de ressources: extras/liste_de_ressources.md
+
+not_in_nav: |
+  no_nav/*.md
+  p5js/*.md
