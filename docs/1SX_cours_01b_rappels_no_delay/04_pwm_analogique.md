@@ -1,5 +1,8 @@
 # PWM et lecture analogique
 
+!!! note "Pourquoi ce rappel?"
+    Les notions couvertes dans cette leçon (PWM, lecture analogue, `map()`) seront réutilisées tout au long de la session.
+
 # Modulation de largeur d’impulsion (PWM)
 
 - Nous avons vu la fonction `digitalWrite` qui permet de mettre ou non du voltage à une broche
@@ -110,91 +113,6 @@ void loop() {
 
 ---
 
-# Le servomoteur
-
-- Un servomoteur (servo) est un moteur capable de maintenir sa position
-- La position est vérifiée et corrigée en continu
-- On le retrouve souvent dans les modèles RC pour contrôler la direction des roues ou encore des ailettes
-- Lorsque je ferai référence aux servos, ce seront ceux utilisés dans le hobby
-- Les modèles les plus fréquents ont deux limites soit la basse et la haute
-- Il y a aussi des modèles qui sont capables de faire des rotations complètes
-
-![Alt text](img/servo9g.png)
-
-- Il y a typiquement 3 fils
-- Noir ou brun pour la mise à la terre (GND)
-- Rouge pour le 5v (voltage)
-- Jaune ou orange pour le signal
-
-![Alt text](img/servoSizes.png)
-
-- Le servo utilisé en électronique est généralement contrôlé par un signal PWM, mais différent de celui utilisé pour les DELs.
-- Les dimensions sont standardisées
-- Celui qui est inclus dans le kit est un « Micro 9g »
-
----
-
-## Mise en garde
-
-- Un servo consomme passablement de courant
-- Selon cette [datasheet](https://media.digikey.com/pdf/Data%20Sheets/DFRobot%20PDFs/SER0039_Web.pdf){target="_blank"}, le courant maximal est de 300 mA (milliampère)
-- Le µC ne peut fournir plus de 40 mA par pin, avec une limite totale de ~200 mA pour toutes les pins. [Documentation](https://www.arduino.cc/en/Tutorial/Foundations/DigitalPins#properties-of-pins-configured-as-output){target="_blank"}
-- Ainsi, il ne peut pas fournir assez de courant pour un servo
-- On peut le faire fonctionner, mais sans faire forcer le moteur (allège)
-- Généralement, on utilisera un contrôleur PWM pour servos typique à la photo ci-contre
-- Sur le contrôleur illustré, on peut mettre du courant supplémentaire et contrôler jusqu’à 16 servos
-
-![Alt text](img/servoController.png)
-
-## Expérimentation
-
-- Dans le cadre de l’expérimentation, on va quand même brancher le servo sur l'Arduino, mais il sera important de ne **pas mettre de force sur le bras**
-- Voici le branchement de base pour expérimenter avec un servo
-- Ce circuit permettra d’aller chercher les valeurs minimales et maximales du servo
-
-![Alt text](img/servoWiring.png)
-
-<div class="grid" markdown>
-
-```cpp
-#include <Servo.h> // Inclusion de la librairie
-
-Servo myservo;  // Création d'un objet Servo pour contrôler
-int pos = 0;    // Position du servo
-
-void setup() {
-  myservo.attach(9);  // Servo sur pin 9
-}
-
-void loop() {
-  // Aller de 0 à 180
-  for (pos = 0; pos <= 180; pos += 1) { 
-    myservo.write(pos); // Indiquer la position
-    delay(15);          // Attendre 15ms pour laisser le temps
-  }
-  // Aller de 180 à 0
-  for (pos = 180; pos >= 0; pos -= 1) {
-    myservo.write(pos);
-    delay(15);
-  }
-}
-
-```
-
-![Alt text](img/servoDemo.gif)
-
-</div>
-
----
-
-## Complément d’information
-
-- Le servo inclut dans votre kit n’est pas très précis
-- Ainsi, il est très probable qu’il ne soit pas capable de se rendre à 0° et 180°
-- Il est judicieux d’utiliser une variable minimum et maximum pour les angles limites du servo
-
----
-
 # Lecture analogue
 
 - La fonction `analogRead` permet de lire le voltage sur les broches qui acceptent la lecture analogue
@@ -217,27 +135,30 @@ void loop() {
 !!! warning "Attention!"
     Les fonctions `analogRead` et `analogWrite` n’ont aucun lien entre elles.
 
-# Lecture d’un potentiomètre
+# Lecture d’une photorésistance
 
-- Un potentiomètre est un dispositif mécanique simple qui se présente sous de nombreuses formes différentes
-- Il fournit une résistance variable qui change lorsque vous le manipulez
-- On retrouve les potentiomètres dans plusieurs situations, par exemple sur les ajustements sur un ampli de guitare ou encore une manette de console
-
-![Alt text](img/guitarAmp.png)
-![Alt text](img/consoleRemote.png)
+- Une photorésistance (LDR : *Light Dependent Resistor*) est un composant simple dont la résistance varie selon la quantité de lumière qu’elle reçoit
+- Plus elle reçoit de lumière, plus sa résistance diminue (et inversement dans le noir)
+- On retrouve les photorésistances dans plusieurs situations, par exemple pour allumer automatiquement un lampadaire à la tombée du jour ou pour ajuster la luminosité d’un écran
 
 ---
 
-- L'aiguille de lecture (*wiper*) est branchée sur la broche analogue
-- Le voltage est branché sur le 5v
+- Contrairement au potentiomètre, la photorésistance n’a que 2 broches : elle ne fait que faire varier sa résistance, elle ne fournit pas un voltage variable directement
+- Pour obtenir une tension qui varie avec la lumière, on doit la brancher en **diviseur de tension** avec une résistance fixe (ex. 10k Ω)
+    - Une des broches de la photorésistance est branchée au 5v, l’autre est branchée à la fois sur la broche analogue et sur une résistance fixe reliée à la masse (GND)
+    - C’est le point entre la photorésistance et la résistance fixe que l’on lit avec `analogRead` (Dans le schéma ci-bas où c'est inscrit *ANALOG*.)
 
-![Alt text](img/potExamples.png)![Alt text](img/potConcept.gif)
+<div class="grid" markdown>
+
+![alt text](img/ldr_schematic.png)
+
+![alt text](img/ldr_setup.png)
+
+</div>
 
 ## Exemple
 
 Voici un exemple de code simple
-
-<div class="grid" markdown>
 
 ```cpp
 void setup() {
@@ -255,19 +176,11 @@ void loop() {
 
 ```
 
-![Alt text](img/potDemo.gif)
-
-</div>
-
 ## Dans le kit
 
-- Dans le kit, il y a 2 potentiomètres (10k Ω) comme dans la photo
-- Ils sont dans la boîte qui a des petits composants
-- Il y a aussi un *joystick* qui est composé 2 potentiomètres et un bouton
+- Dans le kit, vous retrouverez des photorésistances ainsi que des résistances fixes (ex. 10k Ω) pour former le diviseur de tension
 
-![Alt text](img/potKitA.png)
-
-![Alt text](img/joystick.png)
+---
 
 # La fonction map()
  
@@ -300,26 +213,25 @@ void loop() {
 Testez chacun des sujets vus dans la leçon
 
 - Faire changer l’intensité d’une DEL automatiquement
-- Faire un mouvement d’essuie-glace avec le servomoteur
-- Faire changer l’intensité d’une DEL à l’aide du potentiomètre
-- Contrôler le servo avec le potentiomètre ou joystick
+- Faire changer l’intensité d’une DEL à l’aide d’une photorésistance
+- Afficher la valeur lue sur une photorésistance dans le moniteur série
+- Utiliser `map()` pour convertir la valeur d’une photorésistance en une intensité PWM (0-255)
 
 ## Exercice de rappel
 
-Faites un branchement avec 1 servo, 2 DEL et le joystick.
+Faites un branchement avec 2 DEL et une photorésistance.
 
-- Placez les DELs à chaque extrémité du servo
-- Contrôlez la position du servo avec le joystick
-- Les DELs devront changer d’intensité selon la position du servo, i.e. au milieu, les 2 DELs sont à 50% de leur intensité, à l’extrémité, une des DELs est à 100% et l’autre à 0%
+- Utilisez `map()` pour convertir la valeur lue sur la photorésistance en une intensité PWM pour les DELs
+- Lorsqu’il fait sombre, les DELs doivent s’allumer à pleine intensité; lorsqu’il fait clair, elles doivent être éteintes
+- Une DEL doit être à l’inverse de l’autre, i.e. si une DEL est à 25% d’intensité, l’autre doit être à 75%
 
 ---
 
 # Références
 
-- [analogWrite](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/){target="_blank"}
-- [Les bases du PWM](https://docs.arduino.cc/learn/microcontrollers/analog-output){target="_blank"}
-- [Sparkfun Servos](https://www.sparkfun.com/servos){target="_blank"}
-- [Variable resistors](https://makeabilitylab.github.io/physcomp/electronics/variable-resistors.html){target="_blank"}
+- [analogWrite (traduit)](https://docs-arduino-cc.translate.goog/language-reference/en/functions/analog-io/analogWrite/?_x_tr_sl=auto&_x_tr_tl=fr-CA&_x_tr_hl=en-US&_x_tr_pto=wapp){target="_blank"}
+- [Les bases du PWM (traduit)](https://docs-arduino-cc.translate.goog/learn/microcontrollers/analog-output/?_x_tr_sl=auto&_x_tr_tl=fr-CA&_x_tr_hl=en-US&_x_tr_pto=wapp&_x_tr_hist=true){target="_blank"}
+- [Variable resistors (traduit)](https://makeabilitylab-github-io.translate.goog/physcomp/electronics/variable-resistors.html?_x_tr_sl=auto&_x_tr_tl=fr-CA&_x_tr_hl=en-US&_x_tr_pto=wapp){target="_blank"}
 
 ---
 
