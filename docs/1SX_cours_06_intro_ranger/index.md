@@ -119,7 +119,7 @@
 
     - Allez dans le gestionnaire de board
     - Sélectionnez Arduino AVR...
-    - Installez la version 1.8.3 ou plus ancienne.
+    - Installez la version 1.8.6 ou plus ancienne.
     - Testez
 
 ---
@@ -404,6 +404,8 @@ void loop()
 À l'aide des exemples, testez les composants suivants:
 
 - Convertissez les fonctions des exemples pour utiliser des tâches.
+- Anneau de DEL
+    - Modifiez le code pour affiche la DEL de gauche en rouge et celle de droite en vert.
 - Le capteur de son
     - Affichez le niveau de son dans le port série
     - L'exemple de base qui vient avec MakeBlock Libraries ne fonctionne pas avec l'Auriga, lisez bien la feuille du pinout et parcourez le fichier [`MeAuriga.h`](https://github.com/Makeblock-official/Makeblock-Libraries/blob/master/src/MeAuriga.h){target="_blank"}. Quel était le problème?
@@ -411,7 +413,6 @@ void loop()
     - Affichez dans le moniteur série les données. 
 - Le capteur de puissance
     - Affichez dans le moniteur série la puissance de la batterie restante.
-
 - Modifiez le code des exercices précédents pour permettre l'envoi de données au port série pour contrôler les données en sortie. Utilisez `'g'` pour le gyroscope, `'s'` pour le capteur de son et `'p'` pour la puissance de la batterie et la température.
     - Voici un tableau avec les sorties
   
