@@ -113,6 +113,15 @@
 - Télécharger la dernière version des librairies MakeBlock
     - Rechercher "MakeBlock" dans le gestionnaire de librairies et prenez la version titrée "MakeBlock Drive Updated"
 
+
+!!! bug "Attention! Bug avec Arduino IDE et le robot"
+    Arduino IDE a introduit une mise à jour qui cause un bug de téléversement avec le robot. Pour corriger le bug, il faut descendre la version du board Arduino pour la version 1.8.6 ou plus ancienne.
+
+    - Allez dans le gestionnaire de board
+    - Sélectionnez Arduino AVR...
+    - Installez la version 1.8.3 ou plus ancienne.
+    - Testez
+
 ---
 
 # Premier test
@@ -417,3 +426,4 @@ void loop()
 
 - <a href="https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino" target="_blank">Programming mBot Ranger in Arduino</a>
 - https://www.instructables.com/Advanced-Makeblock-Sensors-DIY/
+- [Réparation pour le téléversement sur le robot](https://forum.arduino.cc/t/makeblock-ranger-auriga-upload-timeout-error-caused-by-avrdude-8-0-solved-by-downgrade-to-6-3/1446701/4)
