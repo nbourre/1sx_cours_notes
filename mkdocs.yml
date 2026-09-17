@@ -67,11 +67,11 @@ nav:
     - Les capteurs: 1SX_cours_02_ultrason_hum_temp/index.md
     - Les appareils i2c: 1SX_cours_02b_i2c_gyro/index.md
   - Cours 03:
-    - Initiation au mBot Ranger: 1SX_cours_06_intro_ranger/index.md
+    - Initiation au mBot Ranger: 1SX_cours_03_intro_ranger/index.md
   - Cours 04:
-    - Les moteurs: 1SX_cours_07_dels_moteurs/index.md
+    - Les moteurs: 1SX_cours_04_dels_moteurs/index.md
   - Cours 05:
-    - Le capteur de distance: 1SX_cours_10_autres_capteurs/index.md
+    - Le capteur de distance: 1SX_cours_05_autres_capteurs/index.md
   - Cours 08:
     - Les moteurs avec encodeur: 1SX_cours_08_gyro_encodeurs/index.md
   - Cours 09:

@@ -6,9 +6,9 @@
     - Délais sans `delay()`, la fonction `millis()`, etc.
     - Communication série, `Serial.print()`, `Serial.read()` etc.
     - Lecture d'un bouton avec `digitalRead()`
-- [Cours 03 - Initiation au mBot Ranger](1SX_cours_06_intro_ranger/index.md)
+- [Cours 03 - Initiation au mBot Ranger](1SX_cours_03_intro_ranger/index.md)
     - Détail du robot
-- [Cours 04 - Les moteurs](1SX_cours_07_dels_moteurs/index.md)
+- [Cours 04 - Les moteurs](1SX_cours_04_dels_moteurs/index.md)
     - Principes d'un moteur et d'un pont en H
 - [Cours 05 - PWM et lecture analogique](1SX_cours_01b_rappels_no_delay/04_pwm_analogique.md)
     - PWM, lecture analogique, servo-moteur, etc.
@@ -24,14 +24,14 @@
     - Bluetooth Low Energy, communication avec Python
 - [Cours 11 - Le capteur de ligne](1SX_cours_11_line_tracker/index.md)
     - Suivi de lignes
-- [Cours 12 - Le capteur de distance](1SX_cours_10_autres_capteurs/index.md)
+- [Cours 12 - Le capteur de distance](1SX_cours_05_autres_capteurs/index.md)
     - Capteur de distance et autres
 - [ArduinoJson](1SX_cours_12_ArduinoJson/index.md)
     - Sérialisation et désérialisation de données JSON
 
 # Extra
 
-- [Anneau de DELS](1SX_cours_07_dels_moteurs/index.md#lumière-avant-tout)
+- [Anneau de DELS](1SX_cours_04_dels_moteurs/index.md#lumière-avant-tout)
 - [Prototypes de fonctions](extra/prototype_fonction/index.md)
 
 # Évaluations
