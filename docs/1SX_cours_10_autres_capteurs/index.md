@@ -135,6 +135,73 @@ float calculate_temp(int16_t In_temp)
 
 ---
 
+# Niveau de la batterie
+
+Le robot est alimenté par un bloc de piles rechargeables NiMH 7.2V (6 cellules, 3600 mAh). Comme cette tension dépasse ce que l'entrée analogique peut mesurer directement, il faut passer par un **diviseur de tension** avant de la lire sur une broche analogique.
+
+Le montage utilisé est le même que celui vu au cours sur l'initiation au mBot Ranger : le diviseur de tension est branché sur l'entrée analogique A4, avec R1 = 100 kΩ et R2 = 51 kΩ.
+
+Une fois la tension réelle retrouvée, on peut la convertir en pourcentage de charge à l'aide d'un mappage linéaire entre une tension "vide" et une tension "pleine".
+
+**Question :** Pourquoi ne peut-on pas brancher directement le bloc de piles sur une entrée analogique de l'Arduino?
+
+??? question "Réponse"
+    L'entrée analogique de l'Arduino Mega (utilisé par l'Auriga) ne peut mesurer qu'une tension entre 0V et 5V (VREF). Une tension de 7.2V (ou plus, en pleine charge) endommagerait la broche. Le diviseur de tension permet de ramener la tension dans une plage sécuritaire.
+
+## Exemple de code
+
+```cpp
+const int BATT_PIN = A4;
+
+// Diviseur de tension : R1 entre le + de la batterie et A4, R2 entre A4 et la masse
+const float VREF = 5.0;      // Référence ADC (VCC de la carte)
+const float R1 = 100000.0;   // 100 kOhm
+const float R2 = 51000.0;    // 51 kOhm
+
+// Pack NiMH 7.2V (6 cellules x 1.2V nominal), 3600 mAh
+// Ces valeurs sont approximatives : ajustez-les selon des mesures réelles au multimètre
+const float TENSION_PLEINE = 8.4; // ~1.4V/cellule, juste après une charge complète
+const float TENSION_VIDE   = 6.0; // ~1.0V/cellule, seuil de décharge sécuritaire
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int raw = analogRead(BATT_PIN);
+  float tension = raw * (VREF / 1023.0) * ((R1 + R2) / R2);
+
+  int pourcentage = calculerPourcentageBatterie(tension);
+
+  Serial.print("Tension : ");
+  Serial.print(tension);
+  Serial.print(" V\tNiveau : ");
+  Serial.print(pourcentage);
+  Serial.println(" %");
+
+  delay(500);
+}
+
+// Convertit une tension en pourcentage de charge (mappage linéaire)
+int calculerPourcentageBatterie(float tension) {
+  float pourcentage = (tension - TENSION_VIDE) / (TENSION_PLEINE - TENSION_VIDE) * 100.0;
+
+  // On limite le résultat entre 0 et 100%, au cas où la tension mesurée
+  // dépasserait légèrement les bornes définies
+  pourcentage = constrain(pourcentage, 0, 100);
+
+  return (int)pourcentage;
+}
+```
+
+## Cas d'utilisation
+
+- Afficher un avertissement lorsque la batterie est faible
+- Arrêter le robot avant une décharge complète, ce qui peut endommager des piles NiMH
+- Afficher le niveau de charge sur un écran ou l'anneau de DEL
+
+---
+
 # Avertisseur sonore
 L'Auriga est équipé d'un buzzer. Il est branché sur la broche D45.
 
@@ -191,6 +258,11 @@ void buzzer(){
 - Programmer le robot pour qu'il avance vers la source lumineuse la plus forte et avec les propriétés suivantes :
     - Lorsqu'il détecte une collision, un son retentit pendant 1 seconde, la lumière s'affiche en rouge et il s'arrête.
     - Si l'on claque des mains, il recule pendant 0.5 seconde
+- Afficher le niveau de charge de la batterie à l'aide de l'anneau de DEL (`MeRGBLed`) :
+    - Le nombre de DEL allumées doit être proportionnel au niveau de charge (sur les 12 DEL de l'anneau)
+    - Les DEL allumées doivent être vertes si le niveau est à 75% ou plus
+    - Les DEL allumées doivent être jaunes si le niveau est entre 50% et 75%
+    - Les DEL allumées doivent être rouges si le niveau est sous 50%
 
 ---
 
