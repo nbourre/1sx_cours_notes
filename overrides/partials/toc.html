@@ -1,0 +1,32 @@
+{#-
+  Override of Material's partials/toc.html.
+
+  Material strips the page's first heading from the table of contents when
+  it's a level-1 heading, assuming it's the page title and its children are
+  the real sections. Our course pages use multiple sibling H1s as slide/section
+  titles (separated by `---`), so that first H1 usually has no children and
+  the stock template ends up rendering an empty TOC. Only strip the H1 when
+  it's the sole top-level heading (the classic "one page title" case).
+-#}
+{% set title = lang.t("toc") %}
+{% if config.mdx_configs.toc and config.mdx_configs.toc.title %}
+  {% set title = config.mdx_configs.toc.title %}
+{% endif %}
+<nav class="md-nav md-nav--secondary" aria-label="{{ title | e }}">
+  {% set toc = page.toc %}
+  {% set first = toc | first %}
+  {% if first and first.level == 1 and toc | length == 1 %}
+    {% set toc = first.children %}
+  {% endif %}
+  {% if toc %}
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      {{ title }}
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      {% for toc_item in toc %}
+        {% include "partials/toc-item.html" %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</nav>

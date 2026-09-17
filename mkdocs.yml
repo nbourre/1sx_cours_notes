@@ -3,6 +3,7 @@ site_url: https://nbourre.github.io/1sx_cours_notes/
 theme:
   name: material
   language: fr
+  custom_dir: overrides
   features:
     - search.suggest
     - search.highlight
