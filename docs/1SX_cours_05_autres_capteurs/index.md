@@ -275,10 +275,6 @@ void buzzer(){
 }
 ```
 
-
-
-
-
 # Exercices
 
 - Programmer le robot pour qu'il avance vers la source lumineuse la plus forte et avec les propriétés suivantes :
