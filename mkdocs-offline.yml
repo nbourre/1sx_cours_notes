@@ -1,0 +1,13 @@
+INHERIT: mkdocs.yml
+
+site_dir: site-offline
+
+extra:
+  polyfills:
+    - javascripts/vendor/iframe-worker-shim.js
+
+plugins:
+  - search
+  - mkdocs-video
+  - material/offline
+  - print-site

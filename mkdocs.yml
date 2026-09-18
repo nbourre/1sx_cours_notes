@@ -4,6 +4,7 @@ theme:
   name: material
   language: fr
   custom_dir: overrides
+  font: false
   features:
     - search.suggest
     - search.highlight
@@ -48,7 +49,7 @@ markdown_extensions:
 
 extra_javascript:
   - javascripts/mathjax.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - javascripts/mathjax-vendor/tex-mml-chtml.js
 
 extra_css:
   - stylesheets/extra.css
