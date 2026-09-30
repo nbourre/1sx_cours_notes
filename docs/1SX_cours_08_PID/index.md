@@ -238,17 +238,65 @@ void moveAtSpeed(int speed) {
 Vous pouvez tester avec le projet `ranger_encoder_ligne_droite` qui est dans mes exemples.
 
 ## Mais ça ne marche pas!!!
-En effet, certains robots tendent vers la droite ou la gauche. C'est dû à plusieurs facteurs. Voici quelques-uns :
+
+En effet, même les roues vont à la même vitesse,certains robots tendent vers la droite ou la gauche. C'est dû à plusieurs facteurs. Voici quelques-uns :
 
 - Le poids du robot n'est pas équilibré.
 - Les roues ne sont pas bien alignées.
 - Les roues ne sont pas bien fixées.
-- Les roues ne sont pas bien calibrées.
 - Etc.
 
 Vous constatez qu'il y a plusieurs facteurs possibles. Cela est principalement dû à la qualité des pièces et aux tolérances de fabrication. Il faut donc faire des ajustements logiciels pour compenser ces imperfections mécaniques.
 
-Nous pouvons utiliser le gyroscope pour compenser. Il suffit de lire la valeur du gyroscope et de faire une correction en conséquence.
+Pour contourner le problème des imperfections mécaniques, on peut utiliser le gyroscope. Il suffira de lire la valeur du gyroscope et de faire une correction de vitesse en conséquence de la déviation par rapport à la direction souhaitée.
+
+### Le gyroscope
+Dans un cours précédent, nous avons rapidement survolé le gyroscope. Nous n'avions pas vu comment l'exploiter.
+
+!!! note Le giroscope
+    Un gyroscope est un capteur qui mesure la vitesse angulaire. En intégrant la vitesse angulaire, on peut obtenir l'angle de rotation. Ce qui peut être utilisé pour déterminer l'orientation d'un objet dans l'espace. Dans le cas de notre robot, il nous permet de savoir si le robot dévie de sa trajectoire.
+
+- Le gyroscope dans le robot permet de connaître l'angle de rotation du robot à partir de sa position initiale.
+- Le gyroscope dans le robot est une des fonctionnalités du MPU-6050.
+- La librairie `MeGyro` offre les fonctions suivantes :
+    - `getAngleX|Y|Z()` : Retourne l'angle de rotation sur l'axe X|Y|Z
+    - `getGyroX|Y|Z()` : Retourne la vitesse angulaire sur l'axe X|Y
+    - `resetData()` : Réinitialise les données du gyroscope
+
+#### Exemple
+
+Voici un exemple qui retourne en degré l'angle de rotation du robot. Utilisez le traceur série pour afficher les valeurs.
+
+```cpp
+#include <MeAuriga.h>
+
+// Pour l'Auriga, il faut utiliser l'adresse 0x69.
+MeGyro gyro(0, 0x69);
+
+void setup()
+{
+  Serial.begin(115200);
+  gyro.begin();
+}
+
+void loop()
+{
+  gyro.update();
+  Serial.print("X:");
+  Serial.print(gyro.getAngleX() );
+  Serial.print(" Y:");
+  Serial.print(gyro.getAngleY() );
+  Serial.print(" Z:");
+  Serial.println(gyro.getAngleZ() );
+  delay(10);
+}
+```
+
+#### Utilisation
+
+- Le gyroscope peut être utilisé pour qu'un actuateur (moteur) se déplace à un angle précis.
+- On peut aussi l'utiliser pour que le robot se déplace en ligne droite. En corrigeant la trajectoire à chaque fois que l'angle de rotation change.
+    - Exemple : Avant d'aller en ligne droite, il faut lire la valeur actuelle du gyroscope en Z. Ensuite, on active les deux moteurs. À chaque fois que l'on lit le gyroscope, on compare la valeur actuelle avec la valeur initiale. Si la valeur est différente, on ajuste la vitesse des moteurs pour que le robot se déplace en ligne droite.
 
 Le projet [`ranger_straight`](https://github.com/nbourre/1SX_robotique/blob/master/cours_08_encodeurs/ranger_straight/ranger_straight.ino){target="_blank"} est un exemple qui utilise le gyroscope pour corriger la trajectoire du robot.
 
