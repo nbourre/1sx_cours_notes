@@ -40,7 +40,7 @@ L'**erreur** est la différence entre ce que nous voulons obtenir (la **consigne
 **Formule de base :**
 $$erreur = consigne - valeur\_mesurée$$
 
-### Exemples concrets d'erreur :
+### Exemples concrets d'erreur
 
 1. **Vitesse d'un moteur :**
     - Consigne : 100 RPM
@@ -57,6 +57,16 @@ $$erreur = consigne - valeur\_mesurée$$
     - Angle mesuré : 92°
     - Erreur = 90 - 92 = **-2°**
 
+4. **Température d'un four :**
+    - Consigne : 200°C
+    - Température mesurée : 205°C
+    - Erreur = 200 - 205 = **-5°C**
+
+5. **Vitesse d'un véhicule :**
+    - Consigne : 110 km/h
+    - Vitesse mesurée : 108 km/h
+    - Erreur = 110 - 108 = **+2 km/h**
+
 **Interprétation du signe :**
 
 - **Erreur positive (+)** : Le système est en dessous de la consigne (il faut augmenter)
@@ -70,8 +80,9 @@ Pour mesurer l'erreur, nous avons besoin de **capteurs** qui nous donnent la val
 - **Gyroscope** : mesure l'orientation et la rotation
 - **Capteurs de distance** : mesurent la position du robot
 - **Accéléromètre** : mesure l'accélération et l'inclinaison
+- **Thermomètres** : mesurent la température
 
-### Exemple avec un encodeur :
+### Exemple avec un encodeur
 
 ```cpp
 // Lecture de la vitesse actuelle du moteur
@@ -88,25 +99,9 @@ Serial.println(erreur);
 
 ## Exemple de correction simple
 
-Une fois que nous connaissons l'erreur, nous pouvons tenter une correction basique. Voici un exemple simple de correction proportionnelle :
+Une fois que nous connaissons l'erreur, nous pouvons tenter une correction basique : on ajoute l'erreur, multipliée par un facteur, au PWM actuel. Avec un facteur de 1.0, on ajoute simplement l'erreur.
 
-### Correction proportionnelle de base :
-
-```cpp
-float vitesse_cible = 100; // RPM
-float vitesse_actuelle = encodeur.getCurrentSpeed();
-float erreur = vitesse_cible - vitesse_actuelle;
-
-// Correction simple : si erreur positive, augmenter la puissance
-int pwm_actuel = encodeur.getCurPwm(); // Ex: 150
-int correction = erreur * 2; // Facteur de correction simple
-int nouveau_pwm = pwm_actuel + correction;
-
-// Appliquer la correction
-encodeur.setMotorPwm(nouveau_pwm);
-```
-
-### Exemple concret :
+### Exemple concret
 
 **Situation initiale :**
 
@@ -117,18 +112,274 @@ encodeur.setMotorPwm(nouveau_pwm);
 
 **Correction :**
 
-- Correction = 5 × 2 = +10
-- Nouveau PWM = 150 + 10 = 160
+- Correction = 5 × 1.0 = +5
+- Nouveau PWM = 150 + 5 = 155
 
 **Résultat espéré :** Le moteur devrait maintenant tourner plus vite et se rapprocher de 100 RPM.
 
-### Problèmes de la correction simple :
+### En code
+
+Voici la même correction en code. Ces lignes doivent être exécutées à chaque lecture de l'encodeur.
+
+```cpp
+float vitesse_cible = 100; // RPM
+float vitesse_actuelle = encodeur.getCurrentSpeed();
+float erreur = vitesse_cible - vitesse_actuelle;
+
+// Correction simple : si erreur positive, augmenter la puissance
+int pwm_actuel = encodeur.getCurPwm(); // Ex: 150
+int correction = erreur; // Correction simple basée sur l'erreur
+int nouveau_pwm = pwm_actuel + correction;
+
+// Appliquer la correction
+encodeur.setMotorPwm(nouveau_pwm);
+```
+
+### Et à la lecture suivante?
+
+Le moteur ne réagit pas instantanément. Son inertie fait qu'il lui faut un certain temps avant d'atteindre la nouvelle vitesse. Pendant ce temps, on continue de lire l'encodeur aux 20 ms et d'ajouter l'erreur au PWM.
+
+Voici ce qui peut se passer en poursuivant l'exemple concret (valeurs illustratives) :
+
+| Temps (ms) | Vitesse mesurée | Erreur | PWM appliqué |
+| ---------: | --------------: | -----: | -----------: |
+| 0          | 95              | +5     | 150 → 155    |
+| 20         | 95              | +5     | 155 → 160    |
+| 40         | 96              | +4     | 160 → 164    |
+| 60         | 97              | +3     | 164 → 167    |
+| 80         | 99              | +1     | 167 → 168    |
+| 100        | 103             | -3     | 168 → 165    |
+| 120        | 108             | -8     | 165 → 157    |
+| 140        | 110             | -10    | 157 → 147    |
+| 160        | 106             | -6     | 147 → 141    |
+| 180        | 99              | +1     | 141 → 142    |
+| 200        | 93              | +7     | 142 → 149    |
+
+- Entre 0 et 80 ms, le moteur n'a pas encore réagi. Les corrections s'accumulent et le PWM monte trop haut.
+- À 100 ms, la vitesse dépasse la consigne. On corrige dans l'autre sens, mais le moteur continue d'accélérer à cause des corrections précédentes.
+- À 200 ms, la vitesse est repassée sous la consigne et le cycle recommence.
+
+Le moteur **oscille** autour de la consigne sans jamais s'y stabiliser. Le code complet ci-dessous permet de l'observer avec le traceur série.
+
+??? info "Exemple de code complet"
+    Soulevez le robot, téléversez le code et ouvrez le traceur série à 115200 bauds.
+
+    ```cpp
+    #include <MeAuriga.h>
+
+    MeEncoderOnBoard encodeur(SLOT1);
+
+    float vitesse_cible = 100; // RPM
+
+    void isr_process_encoder1(void)
+    {
+      if (digitalRead(encodeur.getPortB()) == 0) {
+        encodeur.pulsePosMinus();
+      } else {
+        encodeur.pulsePosPlus();
+      }
+    }
+
+    void setup()
+    {
+      attachInterrupt(encodeur.getIntNum(), isr_process_encoder1, RISING);
+      Serial.begin(115200);
+
+      // DÉBUT : Ne pas modifier ce code!
+      TCCR1A = _BV(WGM10);
+      TCCR1B = _BV(CS11) | _BV(WGM12);
+
+      TCCR2A = _BV(WGM21) | _BV(WGM20);
+      TCCR2B = _BV(CS21);
+      // FIN : Ne pas modifier ce code!
+
+      encodeur.setPulse(9);
+      encodeur.setRatio(39.267);
+    }
+
+    void loop()
+    {
+      static unsigned long derniereCorrection = 0;
+      unsigned long maintenant = millis();
+
+      // Met à jour la vitesse mesurée
+      encodeur.loop();
+
+      // Correction aux 20 ms
+      if (maintenant - derniereCorrection >= 20) {
+        derniereCorrection = maintenant;
+
+        // Selon le sens du moteur, la vitesse peut être négative
+        float vitesse_actuelle = fabs(encodeur.getCurrentSpeed());
+        float erreur = vitesse_cible - vitesse_actuelle;
+
+        // Correction simple avec un facteur de 1.0
+        int pwm_actuel = encodeur.getCurPwm();
+        int correction = erreur * 1.0;
+        int nouveau_pwm = constrain(pwm_actuel + correction, 0, 255);
+
+        encodeur.setMotorPwm(nouveau_pwm);
+
+        // Format du traceur série
+        Serial.print("Consigne:");
+        Serial.print(vitesse_cible);
+        Serial.print(",Vitesse:");
+        Serial.println(vitesse_actuelle);
+      }
+    }
+    ```
+
+    La vitesse ne se stabilise jamais sur la consigne. Elle oscille autour de celle-ci. On corrige trop fort et trop souvent : le moteur n'a pas le temps de réagir à la correction précédente qu'on en ajoute une autre.
+
+    <video autoplay loop controls src="assets/robot_correction_oscillation.mp4" title="Title"></video>
+
+### Problèmes de la correction simple
 
 1. **Surcorrection** : Si le facteur est trop grand, le système peut osciller
 2. **Sous-correction** : Si le facteur est trop petit, le système sera lent à corriger
 3. **Pas de prévision** : La correction ne tient pas compte de la tendance (si l'erreur augmente ou diminue)
 
-C'est pourquoi nous utilisons des **régulateurs PID** plus sophistiqués, que nous verrons dans la prochaine section.
+La section suivante permet d'explorer l'effet du facteur sur la correction. C'est pour régler ces problèmes que nous utiliserons ensuite des **régulateurs PID**.
+
+---
+
+# Correction proportionnelle
+
+Cet exemple applique la correction simple au moteur de gauche (`SLOT1`). La consigne change automatiquement aux 3 secondes. La consigne et la vitesse mesurée sont envoyées au port série dans un format compatible avec le traceur série.
+
+**Marche à suivre :**
+
+1. Soulevez le robot pour que les roues tournent dans le vide.
+2. Téléversez le code.
+3. Ouvrez le traceur série à 115200 bauds.
+4. Envoyez `a`, `b` ou `c` pour changer le facteur de correction `kp`.
+
+??? example "Cliquez ici pour afficher le code"
+    ```cpp
+    #include <MeAuriga.h>
+
+    MeEncoderOnBoard moteur(SLOT1);
+
+    // Facteur de correction. Modifiable via le port série :
+    //   'a' : 0.02 (petit facteur)
+    //   'b' : 0.5  (facteur moyen)
+    //   'c' : 3.0  (grand facteur)
+    //   'd' : 1.0  (facteur par défaut)
+    float kp = 1.0;
+
+    // Consignes en RPM. On passe à la suivante aux 3 secondes.
+    const float consignes[] = {60, 120, 80, 0};
+    const int nbConsignes = 4;
+    int indexConsigne = 0;
+    float consigne = consignes[0];
+
+    float pwm = 0;
+
+    // Fonction d'interruption de l'encodeur
+    void isr_process_encoder1(void)
+    {
+      if (digitalRead(moteur.getPortB()) == 0) {
+        moteur.pulsePosMinus();
+      } else {
+        moteur.pulsePosPlus();
+      }
+    }
+
+    void setup()
+    {
+      attachInterrupt(moteur.getIntNum(), isr_process_encoder1, RISING);
+      Serial.begin(115200);
+
+      // DÉBUT : Ne pas modifier ce code!
+      TCCR1A = _BV(WGM10);
+      TCCR1B = _BV(CS11) | _BV(WGM12);
+
+      TCCR2A = _BV(WGM21) | _BV(WGM20);
+      TCCR2B = _BV(CS21);
+      // FIN : Ne pas modifier ce code!
+
+      moteur.setPulse(9);
+      moteur.setRatio(39.267);
+    }
+
+    void lireCommande()
+    {
+      if (Serial.available()) {
+        char c = Serial.read();
+        switch (c) {
+          case 'a': kp = 0.02; break;
+          case 'b': kp = 0.5;  break;
+          case 'c': kp = 3.0;  break;
+        }
+      }
+    }
+
+    void changerConsigne(unsigned long maintenant)
+    {
+      static unsigned long dernierChangement = 0;
+
+      if (maintenant - dernierChangement >= 3000) {
+        dernierChangement = maintenant;
+        indexConsigne = (indexConsigne + 1) % nbConsignes;
+        consigne = consignes[indexConsigne];
+      }
+    }
+
+    void correctionSimple(unsigned long maintenant)
+    {
+      static unsigned long derniereCorrection = 0;
+
+      if (maintenant - derniereCorrection >= 50) {
+        derniereCorrection = maintenant;
+
+        // Selon le sens du moteur, la vitesse peut être négative.
+        float vitesse = fabs(moteur.getCurrentSpeed());
+        float erreur = consigne - vitesse;
+
+        // Correction simple : on ajoute l'erreur (multipliée par kp) au PWM
+        pwm = pwm + kp * erreur;
+        pwm = constrain(pwm, 0, 255);
+
+        moteur.setTarPWM(pwm);
+      }
+    }
+
+    void afficher(unsigned long maintenant)
+    {
+      static unsigned long dernierAffichage = 0;
+
+      if (maintenant - dernierAffichage >= 50) {
+        dernierAffichage = maintenant;
+
+        // Format du traceur série : "Nom:valeur,Nom:valeur"
+        Serial.print("Consigne:");
+        Serial.print(consigne);
+        Serial.print(",Vitesse:");
+        Serial.println(fabs(moteur.getCurrentSpeed()));
+      }
+    }
+
+    void loop()
+    {
+      unsigned long maintenant = millis();
+
+      lireCommande();
+      changerConsigne(maintenant);
+      correctionSimple(maintenant);
+      afficher(maintenant);
+
+      moteur.loop();
+    }
+    ```
+
+**Ce qu'il faut observer :**
+
+- `a` (petit facteur) : la vitesse met beaucoup de temps à atteindre la consigne. Elle ne l'atteint parfois pas avant le prochain changement.
+- `b` (facteur moyen) : la vitesse dépasse la consigne, puis oscille avant de se stabiliser.
+- `c` (grand facteur) : la vitesse oscille sans jamais se stabiliser. Le PWM saute d'un extrême à l'autre.
+- Pincez légèrement la roue : la vitesse chute et la correction réagit mal.
+
+Il n'existe pas de facteur qui soit à la fois rapide et stable. La correction simple ne tient pas compte de la tendance de l'erreur. C'est pourquoi nous utilisons des régulateurs PID pour une correction plus efficace et stable.
 
 ---
 
@@ -161,11 +412,12 @@ $$ u(t) = k_\text{p} e(t) + k_\text{i} \int_0^t e(\tau) \mathrm{d}\tau + k_\text
 - **La différentielle est le taux de variation (pente) depuis la dernière erreur.**
 
 L'effet de la modification des coefficients peut donner le résultat suivant:
+
 ![](assets/PID_Compensation_Animated.gif)
 
 
 <br/>
-Pour ceux qui ont vu cette fonction mathématique complexe, ne vous inquiétez pas! Les fonctions PID sont déjà implémentées dans la classe `MeEncoderOnBoard`.
+Pour ceux qui ont vu cette fonction mathématique complexe, ne vous inquiétez pas! Je vais vous expliquer comment elle fonctionne en détail et simplement.
 
 Simplifions la compréhension avec un exemple concret :
 
@@ -174,7 +426,7 @@ Simplifions la compréhension avec un exemple concret :
 - **Valeur mesurée** : L'encodeur indique 98 RPM
 - **Erreur** : $100-98 = +2$ RPM
 - **Problème de la correction simple** : Si on ajoute simplement 2 au PWM, on ne peut pas prédire l'erreur à la prochaine lecture. Le robot pourrait monter une pente, descendre, avoir plus de friction, etc.
-- Ce que l'on fait c'est que l'on multiplie l'erreur par un facteur et on l'additionne à la consigne actuelle. Soit le $k_\text{p} e$.
+- Ce que l'on fait c'est que l'on multiplie l'erreur par un facteur et on l'additionne à la consigne actuelle. Soit le $k_\text{p} e$ dans la fonction.
     - En code ça donnerait `prop = kp * error;`
 - Ensuite pour la partie dérivée, on soustrait l'erreur actuelle de l'erreur précédente et on multiplie par le facteur $k_d$.
     - En code : `diff = kd * (error - errorPrevious);`
@@ -239,7 +491,7 @@ Vous pouvez tester avec le projet `ranger_encoder_ligne_droite` qui est dans mes
 
 ## Mais ça ne marche pas!!!
 
-En effet, même les roues vont à la même vitesse,certains robots tendent vers la droite ou la gauche. C'est dû à plusieurs facteurs. Voici quelques-uns :
+En effet, même les roues vont à la même vitesse, certains robots tendent vers la droite ou la gauche. C'est dû à plusieurs facteurs. Voici quelques-uns :
 
 - Le poids du robot n'est pas équilibré.
 - Les roues ne sont pas bien alignées.
@@ -253,7 +505,7 @@ Pour contourner le problème des imperfections mécaniques, on peut utiliser le 
 ### Le gyroscope
 Dans un cours précédent, nous avons rapidement survolé le gyroscope. Nous n'avions pas vu comment l'exploiter.
 
-!!! note Le giroscope
+!!! note "Le gyroscope"
     Un gyroscope est un capteur qui mesure la vitesse angulaire. En intégrant la vitesse angulaire, on peut obtenir l'angle de rotation. Ce qui peut être utilisé pour déterminer l'orientation d'un objet dans l'espace. Dans le cas de notre robot, il nous permet de savoir si le robot dévie de sa trajectoire.
 
 - Le gyroscope dans le robot permet de connaître l'angle de rotation du robot à partir de sa position initiale.
@@ -303,6 +555,8 @@ Le projet [`ranger_straight`](https://github.com/nbourre/1SX_robotique/blob/mast
 Voici la principale fonction qui permet au robot d'aller droit :
 
 ```cpp
+// go <-- Aller
+// Straight <-- Droit
 void goStraight(short speed = 100, short firstRun = 0) {
     static double zAngleGoal = 0.0;
     
@@ -345,8 +599,8 @@ void goStraight(short speed = 100, short firstRun = 0) {
     previousError = error;
     
     // On applique la correction
-    encoderLeft.setTarPWM(speed - output);
-    encoderRight.setTarPWM(-speed - output);
+    encoderLeft.setMotorPwm(speed - output);
+    encoderRight.setMotorPwm(-speed - output);
 }
 ```
 
@@ -355,7 +609,7 @@ void goStraight(short speed = 100, short firstRun = 0) {
 # Pivoter le robot à un angle précis
 Pour faire pivoter le robot avec précision, nous devons utiliser la géométrie du robot et les encodeurs. Voici une image avec les différentes mesures importantes :
 
-![](../img/ranger_calculs.jpg)
+![](assets/ranger_calculs.jpg)
 
 **Principe :** Pour faire tourner le robot sur lui-même de 90°, chaque roue doit parcourir 1/4 de la circonférence du cercle formé par la trajectoire du robot.
 
@@ -479,7 +733,7 @@ Réponses 5:
 5. Degrés moteur = 0.625 × 360° = 225°
 -->
 
-6. **Paramètres d'encodeur :**
+6. **Paramètres d'encodeur**
     - Avec 9 pulsations par tour et un ratio de 39.267, combien de pulsations représente une rotation complète de la roue?
     - Si la roue a une circonférence de 18.8 cm, quelle distance représente une pulsation?
 
@@ -491,7 +745,7 @@ Réponses 6:
 
 ## Questions d'analyse
 
-7. **Problèmes de précision :**
+7. **Problèmes de précision**
     - Listez 5 facteurs qui peuvent affecter la précision du déplacement d'un robot.
     - Pour chaque facteur, proposez une solution ou compensation possible.
 
