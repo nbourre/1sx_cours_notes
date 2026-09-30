@@ -25,9 +25,10 @@
     - Anneau de DELs, principes d'un moteur et d'un pont en H
 - [Cours 05 - Les autres capteurs](1SX_cours_05_autres_capteurs/index.md)
     - Capteur de distance et autres
-- [Cours 08 - Les moteurs avec encodeur](1SX_cours_08_gyro_encodeurs/index.md)
+- [Cours 06 - Examen intrasemestriel 1](1SX_cours_06_examen_intra_1/index.md)
+- [Cours 07 - Les moteurs avec encodeur](1SX_cours_07_gyro_encodeurs/index.md)
     - Gyroscope et encodeurs
-- [Cours 09 - PID](1SX_cours_09_PID/index.md)
+- [Cours 08 - PID](1SX_cours_08_PID/index.md)
     - Utiliser la classe `MeEncoderOnBoard`, pivoter à un angle précis
 - [Cours 10 - Communication série via Bluetooth](1SX_cours_10_comm_bt/index.md)
     - Bluetooth Low Energy, communication avec Python

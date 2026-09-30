@@ -236,7 +236,7 @@ fonction calibrationAutomatique :
 On vous rappelle que le contrôleur PID est un mécanisme de contrôle qui permet de maintenir un système à une valeur de consigne.
 
 !!! note "Note"
-    Si vous avez besoin de revoir les notes de cours sur le PID, elles sont disponibles [dans le cours 09](../1SX_cours_09_PID/index.md).
+    Si vous avez besoin de revoir les notes de cours sur le PID, elles sont disponibles [dans le cours 08](../1SX_cours_08_PID/index.md).
 
 Pour le suivi de ligne, le contrôleur PID peut être utilisé pour ajuster la trajectoire du robot en fonction de la position de la ligne par rapport aux capteurs. Le PID peut être utilisé pour ajuster la vitesse des moteurs ou la direction du robot en fonction de l'erreur de position.
 
