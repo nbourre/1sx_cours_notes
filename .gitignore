@@ -232,6 +232,8 @@ pyrightconfig.json
 [Ll]ib64
 [Ll]ocal
 [Ss]cripts
+# Garder les dossiers scripts/ du projet (génération de figures, outils)
+![Ss]cripts/
 pyvenv.cfg
 pip-selfcheck.json
 

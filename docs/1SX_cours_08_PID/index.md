@@ -38,7 +38,9 @@ Avant de plonger dans les boucles d'asservissement et les régulateurs PID, il e
 L'**erreur** est la différence entre ce que nous voulons obtenir (la **consigne** ou **valeur cible**) et ce que nous obtenons réellement (la **valeur mesurée**).
 
 **Formule de base :**
-$$erreur = consigne - valeur\_mesurée$$
+$erreur = consigne - valeur\_mesurée$
+
+![Erreur entre la consigne et la valeur mesurée](assets/erreur_consigne.svg)
 
 ### Exemples concrets d'erreur
 
@@ -140,6 +142,8 @@ encodeur.setMotorPwm(nouveau_pwm);
 Le moteur ne réagit pas instantanément. Son inertie fait qu'il lui faut un certain temps avant d'atteindre la nouvelle vitesse. Pendant ce temps, on continue de lire l'encodeur aux 20 ms et d'ajouter l'erreur au PWM.
 
 Voici ce qui peut se passer en poursuivant l'exemple concret (valeurs illustratives) :
+
+![Vitesse mesurée et PWM appliqué avec la correction simple](assets/correction_simple_oscillation.svg)
 
 | Temps (ms) | Vitesse mesurée | Erreur | PWM appliqué |
 | ---------: | --------------: | -----: | -----------: |
@@ -405,53 +409,184 @@ La fonction complète pour calculer est la suivante:
 
 $$ u(t) = k_\text{p} e(t) + k_\text{i} \int_0^t e(\tau) \mathrm{d}\tau + k_\text{d} \frac{\mathrm{d}e(t)}{\mathrm{d}t},$$
 
+??? question "Votre réaction devant cette formule?"
+    <video controls autoplay loop src="assets/math-zach-galifianakis.mp4" title="Title"></video>
+
 - $k_x$ sont des coefficients arbitraires que l'on obtient en faisant des tests.
 - $e$ est l'erreur
 - Le $t$ est le temps
 - **L'intégrale est la somme des erreurs.**
 - **La différentielle est le taux de variation (pente) depuis la dernière erreur.**
 
-L'effet de la modification des coefficients peut donner le résultat suivant:
+### L'intégrale, ce n'est qu'une somme
 
-![](assets/PID_Compensation_Animated.gif)
+Le symbole $\int$ fait peur, mais dans un microcontrôleur, l'intégrale est très simple. On ne lit pas l'erreur en continu : on la lit à intervalle régulier, par exemple toutes les 20 ms. C'est ce qu'on appelle l'**échantillonnage**.
 
+Reprenons le graphique de l'erreur. À chaque lecture, on mesure l'erreur (trait rouge). Si on garde cette erreur jusqu'à la lecture suivante, on obtient un rectangle. Sa hauteur est l'erreur lue et sa largeur est le temps entre deux lectures, noté $\Delta t$. Additionner les erreurs revient à additionner ces rectangles : c'est la surface rouge entre la consigne et la valeur mesurée.
 
-<br/>
-Pour ceux qui ont vu cette fonction mathématique complexe, ne vous inquiétez pas! Je vais vous expliquer comment elle fonctionne en détail et simplement.
+![Somme des erreurs lues à chaque lecture](assets/erreur_somme.svg)
 
-Simplifions la compréhension avec un exemple concret :
+??? info "Pour en savoir plus : la somme de Riemann"
+    En mathématiques, l'intégrale $\int_0^t e(\tau) \mathrm{d}\tau$ représente la surface exacte entre la consigne et la valeur mesurée.
 
-- **Fréquence de lecture** : L'encodeur est lu toutes les 20 ms
-- **Consigne** : Le moteur doit tourner à 100 RPM
-- **Valeur mesurée** : L'encodeur indique 98 RPM
-- **Erreur** : $100-98 = +2$ RPM
-- **Problème de la correction simple** : Si on ajoute simplement 2 au PWM, on ne peut pas prédire l'erreur à la prochaine lecture. Le robot pourrait monter une pente, descendre, avoir plus de friction, etc.
-- Ce que l'on fait c'est que l'on multiplie l'erreur par un facteur et on l'additionne à la consigne actuelle. Soit le $k_\text{p} e$ dans la fonction.
-    - En code ça donnerait `prop = kp * error;`
-- Ensuite pour la partie dérivée, on soustrait l'erreur actuelle de l'erreur précédente et on multiplie par le facteur $k_d$.
-    - En code : `diff = kd * (error - errorPrevious);`
-- Pour calculer le correctif, on ne fait qu'additionner la proportionnelle avec la différentielle.
-    - En code : `correction = prop + diff;`
-- Pour combler le tout, on additionne la correction à la valeur actuelle. Par exemple :
+    Découper cette surface en rectangles et additionner leurs aires s'appelle une **somme de Riemann**. Chaque rectangle a une aire de $e_k \times \Delta t$, où $e_k$ est l'erreur à la $k$-ième lecture et $\Delta t$ le temps entre deux lectures.
+
+    Plus les lectures sont rapprochées, plus les rectangles sont minces et plus la somme se rapproche de la surface exacte. Quand $\Delta t$ tend vers 0, on obtient exactement l'intégrale :
+
+    $$ \int_0^t e(\tau) \mathrm{d}\tau = \lim_{\Delta t \to 0} \sum_k e_k \Delta t $$
+
+    Comme $\Delta t$ est toujours le même (20 ms), on le regroupe dans $k_\text{i}$. C'est pourquoi le code ne fait qu'additionner les erreurs.
+
+    Référence : [Somme de Riemann (Wikipédia)](https://fr.wikipedia.org/wiki/Somme_de_Riemann)
+
+Avec des échantillons, l'intégrale devient une simple **addition des erreurs** lues jusqu'à maintenant. Reprenons les premières lectures du tableau de la correction simple :
+
+| Temps (ms) | Erreur | Somme des erreurs |
+| ---------: | -----: | ----------------: |
+| 0          | +5     | 5                 |
+| 20         | +5     | 10                |
+| 40         | +4     | 14                |
+| 60         | +3     | 17                |
+| 80         | +1     | 18                |
+
+À 80 ms, l'intégrale vaut donc :
+
+$$ \text{somme des erreurs} = 5 + 5 + 4 + 3 + 1 = 18 $$
+
+Avec un coefficient $k_\text{i} = 0.1$, le terme intégral donne :
+
+$$ k_\text{i} \times \text{somme des erreurs} = 0.1 \times 18 = 1.8 $$
+
+Pas besoin de multiplier par le temps : les lectures sont toujours espacées de 20 ms, le coefficient $k_\text{i}$ s'en charge.
+
+Même si l'erreur diminue, la somme continue de grossir tant que l'erreur reste positive. C'est ce qui permet au terme intégral de corriger une petite erreur qui persiste dans le temps.
+
+En code, il suffit d'une variable qui accumule l'erreur à chaque lecture :
 
 ```cpp
-// Exemple représentatif d'un calcul PID
-void calculatePid (float kp, float ki, float kd) {
-    current = GetPwm();                    // Lire la valeur actuelle
-    error = target - current;              // Calculer l'erreur
-    prop = kp * error;                     // Terme proportionnel
-    integ = ki * errorSum;                 // Terme intégral (ignoré dans nos exemples)
-    diff = kd * (error - errorPrevious);   // Terme dérivé
-    correction = prop + integ + diff;      // Calculer la correction totale
-    newValue = current + correction;       // Appliquer la correction
-    setPwm (newValue);                     // Envoyer la nouvelle valeur
+float errorSum = 0;  // Somme des erreurs, conservée d'une lecture à l'autre
 
-    errorPrevious = error;                 // Garder l'erreur pour la prochaine fois
-    errorSum += error;                     // Accumuler les erreurs (pour l'intégral)
+// À chaque lecture de l'encodeur (toutes les 20 ms)
+float error = target - current;
+errorSum += error;           // L'intégrale : on additionne l'erreur
+integ = ki * errorSum;       // Terme intégral
+```
+
+### La dérivée, ce n'est qu'une soustraction
+
+La dérivée mesure à quelle vitesse l'erreur change. Sur le graphique, c'est la **pente** de la courbe. Pour calculer la pente entre deux points, on fait $\frac{y_2 - y_1}{x_2 - x_1}$. Avec l'échantillonnage, les deux points sont deux lectures qui se suivent : $x_2 - x_1$ n'est que le temps entre deux lectures, $\Delta t$.
+
+![Pente entre deux lectures](assets/erreur_pente.svg)
+
+La hauteur $y_2 - y_1$ correspond au changement de l'erreur entre les deux lectures : quand la valeur mesurée monte, l'erreur diminue d'autant. C'est encore plus simple que l'intégrale : on **soustrait l'erreur précédente de l'erreur actuelle**.
+
+??? info "Pour en savoir plus : la pente en un point"
+    La droite orange passe par deux lectures. Plus les lectures sont rapprochées, plus cette droite colle à la courbe. Quand $\Delta t$ tend vers 0, elle ne touche la courbe qu'en un seul point : c'est la **tangente**, et sa pente est la dérivée exacte en ce point.
+
+    $$ \frac{\mathrm{d}e(t)}{\mathrm{d}t} = \lim_{\Delta t \to 0} \frac{e(t) - e(t - \Delta t)}{\Delta t} $$
+
+    Comme $\Delta t$ est toujours le même (20 ms), on le regroupe dans $k_\text{d}$. C'est pourquoi le code ne fait que soustraire les erreurs.
+
+    Référence : [Dérivée (Wikipédia)](https://fr.wikipedia.org/wiki/D%C3%A9riv%C3%A9e)
+
+Reprenons le tableau de la correction simple :
+
+| Temps (ms) | Erreur | Erreur précédente | Variation de l'erreur |
+| ---------: | -----: | ----------------: | --------------------: |
+| 40         | +4     | +5                | -1                    |
+| 60         | +3     | +4                | -1                    |
+| 80         | +1     | +3                | -2                    |
+| 100        | -3     | +1                | -4                    |
+| 120        | -8     | -3                | -5                    |
+
+À 100 ms, la variation de l'erreur vaut donc :
+
+$$ \text{erreur actuelle} - \text{erreur précédente} = -3 - 1 = -4 $$
+
+Avec un coefficient $k_\text{d} = 0.5$, le terme dérivé donne :
+
+$$ k_\text{d} \times \text{variation de l'erreur} = 0.5 \times (-4) = -2 $$
+
+Comme pour l'intégrale, pas besoin de diviser par le temps : les lectures sont toujours espacées de 20 ms, le coefficient $k_\text{d}$ s'en charge.
+
+Plus la variation est grande, plus la vitesse change rapidement. Ici, l'erreur diminue de plus en plus vite : le moteur accélère et va dépasser la consigne. Le terme dérivé est négatif, donc il réduit le PWM. Il agit comme un **frein** qui anticipe le dépassement.
+
+En code, il suffit de garder l'erreur de la lecture précédente :
+
+```cpp
+float errorPrevious = 0;  // Erreur de la lecture précédente, conservée d'une lecture à l'autre
+
+// À chaque lecture de l'encodeur (toutes les 20 ms)
+float error = target - current;
+diff = kd * (error - errorPrevious);  // La dérivée : on soustrait l'erreur précédente
+errorPrevious = error;                // Garder l'erreur pour la prochaine lecture
+```
+
+### La correction finale
+
+Récapitulons. À chaque lecture de l'encodeur (toutes les 20 ms), on calcule trois termes à partir de l'erreur :
+
+| Terme | Ce qu'on calcule                              | En code                               | Rôle                                         |
+| :---: | --------------------------------------------- | ------------------------------------- | -------------------------------------------- |
+| **P** | erreur × $k_\text{p}$                         | `prop = kp * error;`                  | Corrige selon l'erreur actuelle              |
+| **I** | somme des erreurs × $k_\text{i}$              | `integ = ki * errorSum;`              | Élimine la petite erreur qui reste près de la consigne |
+| **D** | (erreur − erreur précédente) × $k_\text{d}$   | `diff = kd * (error - errorPrevious);`| Freine quand l'erreur change rapidement      |
+
+La **correction** est la somme des trois termes. Comme pour la correction simple, on l'ajoute au PWM actuel.
+
+#### Exemple concret
+
+Reprenons la lecture à 100 ms du tableau de la correction simple, avec $k_\text{p} = 1.0$, $k_\text{i} = 0.1$ et $k_\text{d} = 0.5$ :
+
+- Erreur : $-3$
+- Erreur précédente : $+1$
+- Somme des erreurs : $5 + 5 + 4 + 3 + 1 - 3 = 15$
+
+| Terme          | Calcul                  | Résultat |
+| -------------- | ----------------------- | -------: |
+| P              | $1.0 \times (-3)$       | $-3$     |
+| I              | $0.1 \times 15$         | $+1.5$   |
+| D              | $0.5 \times (-3 - 1)$   | $-2$     |
+| **Correction** | $-3 + 1.5 - 2$          | **$-3.5$** |
+
+Le PWM passe donc de 168 à 164.5.
+
+- Le terme **D** freine davantage que la correction simple, qui ne retirait que 3. Il anticipe le dépassement.
+- Le terme **I**, lui, pousse encore vers le haut : les erreurs passées étaient positives, donc leur somme l'est encore. Si les erreurs négatives s'accumulent, la somme diminue et peut devenir négative. Le terme I pousse alors vers le bas.
+- Le terme **I** est surtout utile **près de la consigne**. Quand il reste une petite erreur, le terme P devient trop faible pour la corriger. La somme, elle, continue de grossir à chaque lecture jusqu'à ce que l'erreur disparaisse. C'est ce qui permet d'atteindre exactement la consigne.
+
+#### En code
+
+```cpp
+float target = 100;        // Consigne (RPM)
+float pwm = 150;           // PWM actuel
+float errorSum = 0;        // Somme des erreurs (intégrale)
+float errorPrevious = 0;   // Erreur de la lecture précédente (dérivée)
+
+// Exemple représentatif d'un calcul PID, appelé à chaque lecture (toutes les 20 ms)
+void calculatePid(float kp, float ki, float kd) {
+    float current = encodeur.getCurrentSpeed();  // Lire la vitesse actuelle
+    float error = target - current;              // Calculer l'erreur
+
+    errorSum += error;                           // Intégrale : on additionne l'erreur
+
+    float prop = kp * error;                     // Terme proportionnel
+    float integ = ki * errorSum;                 // Terme intégral
+    float diff = kd * (error - errorPrevious);   // Terme dérivé : on soustrait l'erreur précédente
+
+    float correction = prop + integ + diff;      // Correction totale
+    pwm = pwm + correction;                      // Ajouter la correction au PWM actuel
+    encodeur.setMotorPwm(pwm);                   // Envoyer le nouveau PWM
+
+    errorPrevious = error;                       // Garder l'erreur pour la prochaine lecture
 }
 ```
 
-- Comme mentionné plus tôt, nous utilisons principalement les termes proportionnel et dérivé pour nos besoins. Si un terme n'est pas nécessaire (comme l'intégral), on met `0` comme argument dans les fonctions.
+Comme mentionné plus tôt, nous utilisons principalement les termes proportionnel et dérivé (**PD**). Si un terme n'est pas nécessaire, comme l'intégrale, on met son coefficient à `0`.
+
+L'effet de la modification des coefficients peut donner le résultat suivant :
+
+![](assets/PID_Compensation_Animated.gif)
 
 Si on regarde le tableau des méthodes, on remarque la présence des méthodes `setPosPid` et `setSpeedPid`. Elles représentent l'implémentation d'un PID. Il suffit d'ajuster les coefficients au besoin. Pour calibrer ces paramètres, il faut faire des essais, car cela dépendra de chaque système (poids du robot, friction des roues, etc.).
 
