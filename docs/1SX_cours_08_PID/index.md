@@ -21,6 +21,8 @@ Voici un tableau avec la description des principales méthodes pour utiliser la 
 | `long distanceToGo()`                                          | Distance en degrés à parcourir avant d'atteindre la cible. <br>360° = 1 rotation.                                                                                                                                                                |
 | `void setSpeedPid(float p,float i,float d);`                   | Configure les paramètres PID de la vitesse de l'encodeur                                                                                                                                                                                                                                                        |
 | `void setPosPid(float p,float i,float d);`                     | Configure les paramètres PID de la position de l'encodeur                                                                                                                                                                                                                                                       |
+| `void setPosDeadBand(long deadBand)`, `long getPosDeadBand()` | Configure et retourne la zone morte de la position, en degrés. Valeur par défaut : 10°. Lorsque la distance à la cible est dans cette zone, le moteur est coupé. Une valeur négative est traitée comme 0. *Depuis la version 3.31.0.* |
+| `void setFullPositionPidEnabled(bool enabled)` | Active ou désactive le PID de position complet (P, I et D). Désactivé par défaut : le mode de position n'utilise alors que les termes P et D de `setPosPid`. *Depuis la version 3.31.0.* |
 | `void setPulse(int16_t pulseValue);`                           | Configure le nombre de pulsation par rotation de l'encodeur. **Doit être 9**.                                                                                                                                                                                                                                   |
 | `void setRatio(float ratio);`                                  | Configure le ratio de la boîte de motoréduction. **Doit être 39.267**.                                                                                                                                                                                                                                          |
 | `void setMotionMode(PID_MODE\|PWM_MODE)`                       | Configure le mode de déplacement. Les valeurs possibles sont `PID_MODE` ou `PWM_MODE`.                                                                                                                                                                                                                          |
@@ -139,7 +141,7 @@ encodeur.setMotorPwm(nouveau_pwm);
 
 ### Et à la lecture suivante?
 
-Le moteur ne réagit pas instantanément. Son inertie fait qu'il lui faut un certain temps avant d'atteindre la nouvelle vitesse. Pendant ce temps, on continue de lire l'encodeur aux 20 ms et d'ajouter l'erreur au PWM.
+Le moteur ne réagit pas instantanément. Son inertie fait qu'il lui faut un certain temps avant d'atteindre la nouvelle vitesse. Pendant ce temps, on continue de lire l'encodeur aux 40 ms et d'ajouter l'erreur au PWM.
 
 Voici ce qui peut se passer en poursuivant l'exemple concret (valeurs illustratives) :
 
@@ -148,20 +150,20 @@ Voici ce qui peut se passer en poursuivant l'exemple concret (valeurs illustrati
 | Temps (ms) | Vitesse mesurée | Erreur | PWM appliqué |
 | ---------: | --------------: | -----: | -----------: |
 | 0          | 95              | +5     | 150 → 155    |
-| 20         | 95              | +5     | 155 → 160    |
-| 40         | 96              | +4     | 160 → 164    |
-| 60         | 97              | +3     | 164 → 167    |
-| 80         | 99              | +1     | 167 → 168    |
-| 100        | 103             | -3     | 168 → 165    |
-| 120        | 108             | -8     | 165 → 157    |
-| 140        | 110             | -10    | 157 → 147    |
-| 160        | 106             | -6     | 147 → 141    |
-| 180        | 99              | +1     | 141 → 142    |
-| 200        | 93              | +7     | 142 → 149    |
+| 40         | 95              | +5     | 155 → 160    |
+| 80         | 96              | +4     | 160 → 164    |
+| 120        | 97              | +3     | 164 → 167    |
+| 160        | 99              | +1     | 167 → 168    |
+| 200        | 103             | -3     | 168 → 165    |
+| 240        | 108             | -8     | 165 → 157    |
+| 280        | 110             | -10    | 157 → 147    |
+| 320        | 106             | -6     | 147 → 141    |
+| 360        | 99              | +1     | 141 → 142    |
+| 400        | 93              | +7     | 142 → 149    |
 
-- Entre 0 et 80 ms, le moteur n'a pas encore réagi. Les corrections s'accumulent et le PWM monte trop haut.
-- À 100 ms, la vitesse dépasse la consigne. On corrige dans l'autre sens, mais le moteur continue d'accélérer à cause des corrections précédentes.
-- À 200 ms, la vitesse est repassée sous la consigne et le cycle recommence.
+- Entre 0 et 160 ms, le moteur n'a pas encore réagi. Les corrections s'accumulent et le PWM monte trop haut.
+- À 200 ms, la vitesse dépasse la consigne. On corrige dans l'autre sens, mais le moteur continue d'accélérer à cause des corrections précédentes.
+- À 400 ms, la vitesse est repassée sous la consigne et le cycle recommence.
 
 Le moteur **oscille** autour de la consigne sans jamais s'y stabiliser. Le code complet ci-dessous permet de l'observer avec le traceur série.
 
@@ -209,8 +211,8 @@ Le moteur **oscille** autour de la consigne sans jamais s'y stabiliser. Le code 
       // Met à jour la vitesse mesurée
       encodeur.loop();
 
-      // Correction aux 20 ms
-      if (maintenant - derniereCorrection >= 20) {
+      // Correction aux 40 ms
+      if (maintenant - derniereCorrection >= 40) {
         derniereCorrection = maintenant;
 
         // Selon le sens du moteur, la vitesse peut être négative
@@ -420,7 +422,7 @@ $$ u(t) = k_\text{p} e(t) + k_\text{i} \int_0^t e(\tau) \mathrm{d}\tau + k_\text
 
 ### L'intégrale, ce n'est qu'une somme
 
-Le symbole $\int$ fait peur, mais dans un microcontrôleur, l'intégrale est très simple. On ne lit pas l'erreur en continu : on la lit à intervalle régulier, par exemple toutes les 20 ms. C'est ce qu'on appelle l'**échantillonnage**.
+Le symbole $\int$ fait peur, mais dans un microcontrôleur, l'intégrale est très simple. On ne lit pas l'erreur en continu : on la lit à intervalle régulier. La bibliothèque `MeEncoderOnBoard` calcule son PID environ toutes les 40 ms. C'est ce qu'on appelle l'**échantillonnage**.
 
 Reprenons le graphique de l'erreur. À chaque lecture, on mesure l'erreur (trait rouge). Si on garde cette erreur jusqu'à la lecture suivante, on obtient un rectangle. Sa hauteur est l'erreur lue et sa largeur est le temps entre deux lectures, noté $\Delta t$. Additionner les erreurs revient à additionner ces rectangles : c'est la surface rouge entre la consigne et la valeur mesurée.
 
@@ -435,7 +437,7 @@ Reprenons le graphique de l'erreur. À chaque lecture, on mesure l'erreur (trait
 
     $$ \int_0^t e(\tau) \mathrm{d}\tau = \lim_{\Delta t \to 0} \sum_k e_k \Delta t $$
 
-    Comme $\Delta t$ est toujours le même (20 ms), on le regroupe dans $k_\text{i}$. C'est pourquoi le code ne fait qu'additionner les erreurs.
+    Comme $\Delta t$ est toujours le même (40 ms), on le regroupe dans $k_\text{i}$. C'est pourquoi le code ne fait qu'additionner les erreurs.
 
     Référence : [Somme de Riemann (Wikipédia)](https://fr.wikipedia.org/wiki/Somme_de_Riemann)
 
@@ -444,12 +446,12 @@ Avec des échantillons, l'intégrale devient une simple **addition des erreurs**
 | Temps (ms) | Erreur | Somme des erreurs |
 | ---------: | -----: | ----------------: |
 | 0          | +5     | 5                 |
-| 20         | +5     | 10                |
-| 40         | +4     | 14                |
-| 60         | +3     | 17                |
-| 80         | +1     | 18                |
+| 40         | +5     | 10                |
+| 80         | +4     | 14                |
+| 120        | +3     | 17                |
+| 160        | +1     | 18                |
 
-À 80 ms, l'intégrale vaut donc :
+À 160 ms, l'intégrale vaut donc :
 
 $$ \text{somme des erreurs} = 5 + 5 + 4 + 3 + 1 = 18 $$
 
@@ -457,7 +459,7 @@ Avec un coefficient $k_\text{i} = 0.1$, le terme intégral donne :
 
 $$ k_\text{i} \times \text{somme des erreurs} = 0.1 \times 18 = 1.8 $$
 
-Pas besoin de multiplier par le temps : les lectures sont toujours espacées de 20 ms, le coefficient $k_\text{i}$ s'en charge.
+Pas besoin de multiplier par le temps : les lectures sont toujours espacées de 40 ms, le coefficient $k_\text{i}$ s'en charge.
 
 Même si l'erreur diminue, la somme continue de grossir tant que l'erreur reste positive. C'est ce qui permet au terme intégral de corriger une petite erreur qui persiste dans le temps.
 
@@ -466,7 +468,7 @@ En code, il suffit d'une variable qui accumule l'erreur à chaque lecture :
 ```cpp
 float errorSum = 0;  // Somme des erreurs, conservée d'une lecture à l'autre
 
-// À chaque lecture de l'encodeur (toutes les 20 ms)
+// À chaque lecture de l'encodeur (toutes les 40 ms)
 float error = target - current;
 errorSum += error;           // L'intégrale : on additionne l'erreur
 integ = ki * errorSum;       // Terme intégral
@@ -485,7 +487,7 @@ La hauteur $y_2 - y_1$ correspond au changement de l'erreur entre les deux lectu
 
     $$ \frac{\mathrm{d}e(t)}{\mathrm{d}t} = \lim_{\Delta t \to 0} \frac{e(t) - e(t - \Delta t)}{\Delta t} $$
 
-    Comme $\Delta t$ est toujours le même (20 ms), on le regroupe dans $k_\text{d}$. C'est pourquoi le code ne fait que soustraire les erreurs.
+    Comme $\Delta t$ est toujours le même (40 ms), on le regroupe dans $k_\text{d}$. C'est pourquoi le code ne fait que soustraire les erreurs.
 
     Référence : [Dérivée (Wikipédia)](https://fr.wikipedia.org/wiki/D%C3%A9riv%C3%A9e)
 
@@ -493,13 +495,13 @@ Reprenons le tableau de la correction simple :
 
 | Temps (ms) | Erreur | Erreur précédente | Variation de l'erreur |
 | ---------: | -----: | ----------------: | --------------------: |
-| 40         | +4     | +5                | -1                    |
-| 60         | +3     | +4                | -1                    |
-| 80         | +1     | +3                | -2                    |
-| 100        | -3     | +1                | -4                    |
-| 120        | -8     | -3                | -5                    |
+| 80         | +4     | +5                | -1                    |
+| 120        | +3     | +4                | -1                    |
+| 160        | +1     | +3                | -2                    |
+| 200        | -3     | +1                | -4                    |
+| 240        | -8     | -3                | -5                    |
 
-À 100 ms, la variation de l'erreur vaut donc :
+À 200 ms, la variation de l'erreur vaut donc :
 
 $$ \text{erreur actuelle} - \text{erreur précédente} = -3 - 1 = -4 $$
 
@@ -507,7 +509,7 @@ Avec un coefficient $k_\text{d} = 0.5$, le terme dérivé donne :
 
 $$ k_\text{d} \times \text{variation de l'erreur} = 0.5 \times (-4) = -2 $$
 
-Comme pour l'intégrale, pas besoin de diviser par le temps : les lectures sont toujours espacées de 20 ms, le coefficient $k_\text{d}$ s'en charge.
+Comme pour l'intégrale, pas besoin de diviser par le temps : les lectures sont toujours espacées de 40 ms, le coefficient $k_\text{d}$ s'en charge.
 
 Plus la variation est grande, plus la vitesse change rapidement. Ici, l'erreur diminue de plus en plus vite : le moteur accélère et va dépasser la consigne. Le terme dérivé est négatif, donc il réduit le PWM. Il agit comme un **frein** qui anticipe le dépassement.
 
@@ -516,7 +518,7 @@ En code, il suffit de garder l'erreur de la lecture précédente :
 ```cpp
 float errorPrevious = 0;  // Erreur de la lecture précédente, conservée d'une lecture à l'autre
 
-// À chaque lecture de l'encodeur (toutes les 20 ms)
+// À chaque lecture de l'encodeur (toutes les 40 ms)
 float error = target - current;
 diff = kd * (error - errorPrevious);  // La dérivée : on soustrait l'erreur précédente
 errorPrevious = error;                // Garder l'erreur pour la prochaine lecture
@@ -524,7 +526,7 @@ errorPrevious = error;                // Garder l'erreur pour la prochaine lectu
 
 ### La correction finale
 
-Récapitulons. À chaque lecture de l'encodeur (toutes les 20 ms), on calcule trois termes à partir de l'erreur :
+Récapitulons. À chaque lecture de l'encodeur (toutes les 40 ms), on calcule trois termes à partir de l'erreur :
 
 | Terme | Ce qu'on calcule                              | En code                               | Rôle                                         |
 | :---: | --------------------------------------------- | ------------------------------------- | -------------------------------------------- |
@@ -536,7 +538,7 @@ La **correction** est la somme des trois termes. Comme pour la correction simple
 
 #### Exemple concret
 
-Reprenons la lecture à 100 ms du tableau de la correction simple, avec $k_\text{p} = 1.0$, $k_\text{i} = 0.1$ et $k_\text{d} = 0.5$ :
+Reprenons la lecture à 200 ms du tableau de la correction simple, avec $k_\text{p} = 1.0$, $k_\text{i} = 0.1$ et $k_\text{d} = 0.5$ :
 
 - Erreur : $-3$
 - Erreur précédente : $+1$
@@ -563,7 +565,7 @@ float pwm = 150;           // PWM actuel
 float errorSum = 0;        // Somme des erreurs (intégrale)
 float errorPrevious = 0;   // Erreur de la lecture précédente (dérivée)
 
-// Exemple représentatif d'un calcul PID, appelé à chaque lecture (toutes les 20 ms)
+// Exemple représentatif d'un calcul PID, appelé à chaque lecture (toutes les 40 ms)
 void calculatePid(float kp, float ki, float kd) {
     float current = encodeur.getCurrentSpeed();  // Lire la vitesse actuelle
     float error = target - current;              // Calculer l'erreur
@@ -598,7 +600,18 @@ Encoder_1.setSpeedPid(0.18,0,0);
 ```
 
 !!! info "Extra"
-    Si vous avez de l'intérêt pour fouiller un peu, regardez les fonctions `PID_angle_compute` et `PID_speed_compute` dans l'exemple `Firmware_for_Auriga`. Essayez de trouver les éléments vus dans la théorie précédente.
+    Si vous avez de l'intérêt pour fouiller un peu, regardez la méthode `speedWithoutPos()` dans le fichier `src/MeEncoderOnBoard.cpp` de la [bibliothèque](https://github.com/nbourre/Makeblock-Libraries). C'est le PID utilisé par `runSpeed()`. Essayez d'y trouver les éléments vus dans la théorie précédente :
+
+    - la somme des erreurs (`Integral += speed_error`);
+    - la soustraction de l'erreur précédente (`speed_error - last_error`);
+    - la correction ajoutée au PWM actuel.
+
+    Vous remarquerez quelques différences :
+
+    - L'erreur est calculée à l'envers (`vitesse actuelle - consigne`). La correction est donc soustraite du PWM plutôt qu'ajoutée.
+    - La somme des erreurs est limitée à ±500 et cesse de grossir lorsque le PWM est au maximum.
+    - La correction est limitée à ±25 par calcul.
+    - Le calcul est fait dans `encoderMove()`, environ toutes les 40 ms.
 
 ---
 

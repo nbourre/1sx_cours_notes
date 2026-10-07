@@ -82,7 +82,7 @@ ax.text(t1 + 0.15, y_dt, "largeur d'une bande = temps entre deux lectures", colo
 ax.set_xticks(lectures, [""] * len(lectures))
 ax.set_yticks([])
 
-ax.set_xlabel("Temps (une lecture toutes les 20 ms)", loc="right")
+ax.set_xlabel("Temps (une lecture toutes les 40 ms)", loc="right")
 ax.set_ylabel("Valeur", loc="center")
 ax.set_xlim(0, T_FIN + 0.3)
 ax.set_ylim(0, CONSIGNE * 1.2)

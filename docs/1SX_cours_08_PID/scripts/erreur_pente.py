@@ -78,12 +78,12 @@ ax.text(
     fontweight="bold",
     va="center",
 )
-ax.text(3.6, 16, "Δt est toujours le même : 20 ms", color=GRIS, fontsize=11, va="center")
+ax.text(3.6, 16, "Δt est toujours le même : 40 ms", color=GRIS, fontsize=11, va="center")
 
 ax.set_xticks(lectures, [""] * len(lectures))
 ax.set_yticks([])
 
-ax.set_xlabel("Temps (une lecture toutes les 20 ms)", loc="right")
+ax.set_xlabel("Temps (une lecture toutes les 40 ms)", loc="right")
 ax.set_ylabel("Valeur", loc="center")
 ax.set_xlim(0, T_FIN + 0.3)
 ax.set_ylim(0, CONSIGNE * 1.2)
