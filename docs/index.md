@@ -32,10 +32,9 @@
     - Utiliser la classe `MeEncoderOnBoard`, pivoter à un angle précis
 - [Cours 09 - Communication série via Bluetooth](1SX_cours_09_comm_bt/index.md)
     - Bluetooth Low Energy, communication avec Python
-- [Cours 10 - Examen intrasemestriel 2](1SX_cours_10_examen_intra_2/index.md)
-- [Cours 11 - Le capteur de ligne](1SX_cours_11_line_tracker/index.md)
+- [Cours 10 - Le capteur de ligne](1SX_cours_10_line_tracker/index.md)
     - Suivi de lignes
-- [ArduinoJson](1SX_cours_12_ArduinoJson/index.md)
+- [Cours 11 - ArduinoJson](1SX_cours_11_ArduinoJson/index.md)
     - Sérialisation et désérialisation de données JSON
 
 # Extras

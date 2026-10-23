@@ -82,10 +82,9 @@ nav:
   - Cours 09:
     - Communication série via Bluetooth: 1SX_cours_09_comm_bt/index.md
   - Cours 10:
-    - Examen intrasemestriel 2: 1SX_cours_10_examen_intra_2/index.md
+    - Le capteur de ligne: 1SX_cours_10_line_tracker/index.md
   - Cours 11:
-    - Le capteur de ligne: 1SX_cours_11_line_tracker/index.md
-  - ArduinoJson: 1SX_cours_12_ArduinoJson/index.md
+    - ArduinoJson: 1SX_cours_11_ArduinoJson/index.md
   - Extras:
     - Prototypes de fonctions: extra/prototype_fonction/index.md
     - Spécifications du robot Ranger: extra/ranger_specs.md

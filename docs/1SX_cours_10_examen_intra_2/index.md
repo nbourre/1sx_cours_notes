@@ -1,1 +1,0 @@
-# Examen intrasemestriel 2

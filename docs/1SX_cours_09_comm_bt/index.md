@@ -16,9 +16,25 @@ Le module Bluetooth est connecté sur le port série 0 du robot. Ainsi, il s'agi
 ---
 
 # Bluetooth Low Energy (BLE)
-Le module Bluetooth du robot est un module Bluetooth Low Energy (BLE). Cette technologie permet de réduire la consommation d'énergie des appareils connectés. Elle est particulièrement adaptée pour les appareils qui ont une faible consommation d'énergie, comme les capteurs ou les objets connectés.
+Le module Bluetooth du robot utilise le **Bluetooth Low Energy**, qu'on abrège **BLE**. Comme son nom l'indique, c'est une version du Bluetooth qui consomme très peu d'énergie.
 
-La plupart des nouveaux appareils électroniques Bluetooth sont équipés de la technologie BLE. Elle est devenue la norme pour les appareils connectés, car elle permet de prolonger la durée de vie de la batterie des appareils. Par exemple, les tags de localisation Bluetooth peuvent avoir une autonomie de plusieurs mois, voire de plusieurs années sur une pile de montre grâce à la technologie BLE.
+Le truc est simple : au lieu de rester toujours allumé, le module dort la plupart du temps. Il se réveille juste assez longtemps pour envoyer ou recevoir quelques données, puis se rendort. C'est un peu comme votre `loop()` avec `millis()` : on ne fait quelque chose que lorsque c'est nécessaire.
+
+C'est pour ça que le BLE est idéal pour les petits appareils sur pile qui envoient peu de données : capteurs, montres intelligentes, bracelets d'entraînement, etc. Par exemple, une balise de localisation comme un AirTag peut fonctionner environ un an sur une seule pile bouton.
+
+!!! warning "BLE et Bluetooth « classique », ce n'est pas pareil"
+    Il existe deux sortes de Bluetooth :
+
+    - **Bluetooth classique** : utilisé pour les écouteurs, les haut-parleurs, etc. Il peut envoyer beaucoup de données, mais consomme plus.
+    - **Bluetooth Low Energy (BLE)** : utilisé pour les capteurs et les objets connectés. Il envoie peu de données, mais consomme très peu.
+
+    Les deux **ne peuvent pas se parler directement**. Votre téléphone ou votre ordinateur supporte habituellement les deux, mais ce sont deux « langues » différentes.
+
+    Conséquence pratique : le robot n'apparaîtra **pas** forcément dans le menu Bluetooth de Windows comme vos écouteurs. C'est normal! On va plutôt s'y connecter avec un script Python.
+
+!!! note "Côté robot vs côté ordinateur"
+    - **Côté robot** : le module s'occupe de tout le BLE pour vous. Pour l'Arduino, c'est juste un port série. Vous utilisez `Serial.print()` et `Serial.read()` comme d'habitude.
+    - **Côté ordinateur** : le BLE n'a pas de « port série » comme tel. Le script Python doit se connecter au module et lire/écrire les données à un endroit précis du module. C'est pourquoi on utilise la librairie `bleak` et que le script est un peu plus complexe qu'un simple `Serial`.
 
 ---
 
