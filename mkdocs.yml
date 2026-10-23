@@ -79,8 +79,10 @@ nav:
     - Les moteurs avec encodeur: 1SX_cours_07_gyro_encodeurs/index.md
   - Cours 08:
     - PID: 1SX_cours_08_PID/index.md
+  - Cours 09:
+    - Communication série via Bluetooth: 1SX_cours_09_comm_bt/index.md
   - Cours 10:
-    - Communication série via Bluetooth: 1SX_cours_10_comm_bt/index.md
+    - Examen intrasemestriel 2: 1SX_cours_10_examen_intra_2/index.md
   - Cours 11:
     - Le capteur de ligne: 1SX_cours_11_line_tracker/index.md
   - ArduinoJson: 1SX_cours_12_ArduinoJson/index.md

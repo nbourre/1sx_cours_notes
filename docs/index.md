@@ -30,8 +30,9 @@
     - Gyroscope et encodeurs
 - [Cours 08 - PID](1SX_cours_08_PID/index.md)
     - Utiliser la classe `MeEncoderOnBoard`, pivoter à un angle précis
-- [Cours 10 - Communication série via Bluetooth](1SX_cours_10_comm_bt/index.md)
+- [Cours 09 - Communication série via Bluetooth](1SX_cours_09_comm_bt/index.md)
     - Bluetooth Low Energy, communication avec Python
+- [Cours 10 - Examen intrasemestriel 2](1SX_cours_10_examen_intra_2/index.md)
 - [Cours 11 - Le capteur de ligne](1SX_cours_11_line_tracker/index.md)
     - Suivi de lignes
 - [ArduinoJson](1SX_cours_12_ArduinoJson/index.md)
