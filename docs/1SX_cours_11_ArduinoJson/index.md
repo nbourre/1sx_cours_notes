@@ -126,7 +126,24 @@ void setup() {
 
 void loop() {
   // Données simulées
-  unsigned long ts = millis();
+  unsigned long currentTime = millis();
+
+  telemetryTask(currentTime); // Appel de la fonction de télémétrie
+}
+
+void telemetryTask(unsigned long ct) {
+  static unsigned long lastTime = 0;
+  const int rate = 1000; // 1 seconde
+
+  if (ct - lastTime < rate) {
+    return;
+  }
+
+  lastTime = ct;
+
+  // Move the telemetry code here, similar to the loop() function above
+  // Données simulées
+  unsigned long ts = ct;
   unsigned long chrono = 124000;
   float gz = 0.03;
   int etat = 2;
@@ -154,9 +171,8 @@ void loop() {
   // Envoi au port série
   serializeJson(doc, Serial);
   Serial.println();
-
-  delay(1000);
 }
+
 ```
 
 **Sortie série :**
