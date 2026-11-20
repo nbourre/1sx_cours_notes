@@ -152,22 +152,36 @@ Le montage utilisé est le même que celui vu au cours sur l'initiation au mBot 
     V_{in} = V_{out} \times \frac{R_1 + R_2}{R_2}
     \]
 
-    C'est exactement ce que fait la ligne `voltage = raw * (VREF / 1023.0) * ((R1 + R2) / R2);` dans le code plus bas : `raw * (VREF / 1023.0)` calcule Vout, puis la multiplication par `(R1 + R2) / R2` retrouve Vin.
+    C'est exactement ce que fait la ligne `tension = raw * (vrefReel / 1023.0) * ((R1 + R2) / R2);` dans le code plus bas : `raw * (vrefReel / 1023.0)` calcule Vout, puis la multiplication par `(R1 + R2) / R2` retrouve Vin.
 
 Une fois la tension réelle retrouvée, on peut la convertir en pourcentage de charge à l'aide d'un mappage linéaire entre une tension "vide" et une tension "pleine".
 
 **Question :** Pourquoi ne peut-on pas brancher directement le bloc de piles sur une entrée analogique de l'Arduino?
 
 ??? question "Réponse"
-    L'entrée analogique de l'Arduino Mega (utilisé par l'Auriga) ne peut mesurer qu'une tension entre 0V et 5V (VREF). Une tension de 7.2V (ou plus, en pleine charge) endommagerait la broche. Le diviseur de tension permet de ramener la tension dans une plage sécuritaire.
+    L'entrée analogique de l'Arduino Mega (utilisé par l'Auriga) ne peut mesurer qu'une tension entre 0V et 5V (la référence de l'ADC). Une tension de 7.2V (ou plus, en pleine charge) endommagerait la broche. Le diviseur de tension permet de ramener la tension dans une plage sécuritaire.
+
+## Problème : la référence de l'ADC n'est pas toujours 5V
+
+L'ADC de l'Arduino convertit une tension en nombre (0 à 1023) **par rapport à sa tension de référence** (VREF). Par défaut, cette référence est le rail d'alimentation de la carte (nominalement 5V). Or, ce rail n'est pas parfaitement stable : quand la batterie se décharge ou que les moteurs tirent beaucoup de courant, il peut descendre sous 5V. Si le code suppose toujours `5.0`, la tension calculée devient fausse.
+
+Pour corriger ça, on mesure la vraie valeur de VREF avant chaque lecture. L'ATmega2560 possède une **référence interne de 1.1V** très stable. On lit cette référence avec l'ADC : comme on connaît sa vraie valeur (1.1V), on peut en déduire la vraie valeur de VREF.
+
+\[
+V_{ref} = \frac{1.1 \times 1023}{\text{résultat de l'ADC}}
+\]
+
+!!! warning "Code à prendre tel quel"
+    La fonction `lireVrefReel()` manipule directement les **registres** du microcontrôleur (`ADMUX`, `ADCSRB`, `ADCSRA`). Cette notion dépasse le cadre du cours : **copiez simplement cette fonction telle quelle** dans votre programme, sans la modifier. Vous n'avez qu'à l'appeler pour obtenir la tension réelle du rail.
 
 ## Exemple de code
+
+La lecture de la batterie est effectuée dans une tâche qui s'exécute toutes les 100 ms, sans utiliser `delay()`.
 
 ```cpp
 const int BATT_PIN = A4;
 
 // Diviseur de tension : R1 entre le + de la batterie et A4, R2 entre A4 et la masse
-const float VREF = 5.0;      // Référence ADC (VCC de la carte)
 const float R1 = 100000.0;   // 100 kOhm
 const float R2 = 51000.0;    // 51 kOhm
 
@@ -176,23 +190,62 @@ const float R2 = 51000.0;    // 51 kOhm
 const float TENSION_PLEINE = 8.4; // ~1.4V/cellule, juste après une charge complète
 const float TENSION_VIDE   = 6.0; // ~1.0V/cellule, seuil de décharge sécuritaire
 
+// Référence interne de l'ATmega2560 (à ajuster finement si besoin)
+const float VREF_INTERNE = 1.10;
+
+unsigned long tempsActuel = 0;
+
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop() {
-  int raw = analogRead(BATT_PIN);
-  float tension = raw * (VREF / 1023.0) * ((R1 + R2) / R2);
+  tempsActuel = millis();
+  tacheBatterie();
+}
 
-  int pourcentage = calculerPourcentageBatterie(tension);
+// Tâche exécutée toutes les 100 ms
+void tacheBatterie() {
+  static unsigned long dernierTemps = 0;
+  const unsigned long delai = 100;
 
-  Serial.print("Tension : ");
-  Serial.print(tension);
-  Serial.print(" V\tNiveau : ");
-  Serial.print(pourcentage);
-  Serial.println(" %");
+  if (tempsActuel - dernierTemps >= delai) {
+    dernierTemps = tempsActuel;
 
-  delay(500);
+    // 1. Mesure du vrai VREF (rail 5V actuel)
+    float vrefReel = lireVrefReel();
+
+    // 2. Lecture de la batterie avec ce VREF exact
+    int raw = analogRead(BATT_PIN);
+    float tension = raw * (vrefReel / 1023.0) * ((R1 + R2) / R2);
+
+    int pourcentage = calculerPourcentageBatterie(tension);
+
+    Serial.print("VREF reel : ");
+    Serial.print(vrefReel);
+    Serial.print(" V\tTension : ");
+    Serial.print(tension);
+    Serial.print(" V\tNiveau : ");
+    Serial.print(pourcentage);
+    Serial.println(" %");
+  }
+}
+
+// ============================================================
+// À PRENDRE TEL QUEL : manipulation des registres (hors cours)
+// Mesure la tension réelle du rail 5V grâce à la référence interne 1.1V
+// ============================================================
+float lireVrefReel() {
+  // Sélectionne AVCC comme référence et la référence interne 1.1V comme entrée (spécifique ATmega2560)
+  ADMUX = _BV(REFS0) | _BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
+  ADCSRB &= ~_BV(MUX5);
+
+  delay(2); // Temps de stabilisation indispensable
+  ADCSRA |= _BV(ADSC); // Démarre la conversion
+  while (bit_is_set(ADCSRA, ADSC)); // Attend la fin
+
+  uint16_t resultat = ADC;
+  return (VREF_INTERNE * 1023.0) / (float)resultat;
 }
 
 // Convertit une tension en pourcentage de charge (mappage linéaire)
@@ -206,6 +259,22 @@ int calculerPourcentageBatterie(float tension) {
   return (int)pourcentage;
 }
 ```
+
+??? info "Explication du code"
+    **Tâche toutes les 100 ms.** `tacheBatterie()` est appelée à chaque passage dans `loop()`, mais elle ne fait son travail que si 100 ms se sont écoulées depuis la dernière exécution (`tempsActuel - dernierTemps >= delai`). Les variables `static` conservent leur valeur d'un appel à l'autre. Comme il n'y a pas de `delay()`, le reste du programme n'est jamais bloqué.
+
+    **`lireVrefReel()`.**
+
+    - Elle configure l'ADC pour qu'il lise la référence interne de 1.1V plutôt qu'une broche (c'est la partie sur les registres, à prendre telle quelle).
+    - Elle démarre une conversion et attend qu'elle se termine.
+    - Le résultat vaut `1.1 × 1023 / VREF`. En isolant VREF, on obtient `VREF = 1.1 × 1023 / résultat`. C'est la valeur retournée.
+    - Exemple : si le rail est à 5.0V, le résultat est d'environ 225. S'il descend à 4.6V, le résultat monte à environ 245, et la fonction retourne alors 4.6V.
+
+    **Calcul de la tension.** Dans la tâche, `vrefReel` remplace le `5.0` fixe : `raw * (vrefReel / 1023.0)` donne Vout avec la vraie référence, puis `* ((R1 + R2) / R2)` retrouve la tension de la batterie (voir le rappel sur le diviseur de tension).
+
+    **Calibration.** La référence interne de 1.1V varie un peu d'une puce à l'autre (environ ±10 %). Si la tension affichée ne correspond pas à celle mesurée au multimètre, ajustez `VREF_INTERNE`.
+
+    **Pourcentage.** `calculerPourcentageBatterie()` fait un mappage linéaire entre `TENSION_VIDE` (0 %) et `TENSION_PLEINE` (100 %), puis limite le résultat entre 0 et 100 avec `constrain()`.
 
 !!! note "Batterie au lithium 7.4V"
     Certains robots sont plutôt équipés d'une batterie **au lithium 7.4V** (facilement reconnaissable à sa forme rectangulaire) plutôt que du bloc NiMH 7.2V. Cette batterie est composée de 2 cellules Li-ion/LiPo (3.7V nominal chacune).
